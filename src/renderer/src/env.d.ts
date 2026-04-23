@@ -5,8 +5,8 @@ declare global {
     api: {
       import: {
         openFile(): Promise<{ path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] } | null>
-        readSheet(filePath: string, sheetName: string): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
-        commit(filePath: string, mapping: FieldMapping, sheetName?: string): Promise<{ imported: number; warnings: string[] }>
+        readSheet(filePath: string, sheetName: string, skipRows: number): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
+        commit(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number): Promise<{ imported: number; warnings: string[] }>
       }
       sightings: {
         list(): Promise<Sighting[]>

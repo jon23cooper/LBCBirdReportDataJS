@@ -3,10 +3,10 @@ import { contextBridge, ipcRenderer } from 'electron'
 contextBridge.exposeInMainWorld('api', {
   import: {
     openFile: () => ipcRenderer.invoke('import:open-file'),
-    readSheet: (filePath: string, sheetName: string) =>
-      ipcRenderer.invoke('import:read-sheet', filePath, sheetName),
-    commit: (filePath: string, mapping: object, sheetName?: string) =>
-      ipcRenderer.invoke('import:commit', filePath, mapping, sheetName)
+    readSheet: (filePath: string, sheetName: string, skipRows: number) =>
+      ipcRenderer.invoke('import:read-sheet', filePath, sheetName, skipRows),
+    commit: (filePath: string, mapping: object, sheetName?: string, skipRows?: number) =>
+      ipcRenderer.invoke('import:commit', filePath, mapping, sheetName, skipRows)
   },
   sightings: {
     list: () => ipcRenderer.invoke('sightings:list')

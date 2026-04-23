@@ -22,17 +22,17 @@ export function registerIpcHandlers(): void {
     return { path: filePath, sheets, headers, preview: rows.slice(0, 5) }
   })
 
-  // Return headers + preview for a specific sheet without opening a dialog
-  ipcMain.handle('import:read-sheet', async (_e: Electron.IpcMainInvokeEvent, filePath: string, sheetName: string) => {
-    const { headers, rows } = readSpreadsheet(filePath, sheetName)
+  // Return headers + preview for a specific sheet/skipRows without opening a dialog
+  ipcMain.handle('import:read-sheet', async (_e: Electron.IpcMainInvokeEvent, filePath: string, sheetName: string, skipRows: number) => {
+    const { headers, rows } = readSpreadsheet(filePath, sheetName, skipRows)
     return { headers, preview: rows.slice(0, 5) }
   })
 
   // Confirm field mapping and import rows into DB
   ipcMain.handle(
     'import:commit',
-    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string) => {
-      const { rows } = readSpreadsheet(filePath, sheetName)
+    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string, skipRows = 0) => {
+      const { rows } = readSpreadsheet(filePath, sheetName, skipRows)
       const { rows: parsed, warnings } = normaliseRows(rows, mapping)
 
       const db = getDb()

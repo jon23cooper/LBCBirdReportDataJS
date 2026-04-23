@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import type { FieldMapping } from '../../../shared/types'
 
-type FileInfo = { path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] }
+type FileInfo = { path: string; sheets: string[] }
+type SheetData = { headers: string[]; preview: Record<string, unknown>[] }
 
 const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required: boolean }[] = [
   { key: 'species', label: 'Species', required: true },
@@ -17,50 +18,72 @@ const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required: boole
 export default function ImportPage(): JSX.Element {
   const [file, setFile] = useState<FileInfo | null>(null)
   const [selectedSheet, setSelectedSheet] = useState<string>('')
-  const [headers, setHeaders] = useState<string[]>([])
-  const [preview, setPreview] = useState<Record<string, unknown>[]>([])
+  const [skipRows, setSkipRows] = useState(0)
+  const [sheetData, setSheetData] = useState<SheetData>({ headers: [], preview: [] })
   const [mapping, setMapping] = useState<Partial<FieldMapping>>({})
   const [result, setResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [busy, setBusy] = useState(false)
 
+  // Incremented on every new file open or reload; stale async callbacks check this before writing state
+  const reloadToken = useRef(0)
+
   async function openFile(): Promise<void> {
     const info = await window.api.import.openFile()
-    if (info) {
-      setFile(info)
-      setSelectedSheet(info.sheets[0] ?? '')
-      setHeaders(info.headers)
-      setPreview(info.preview)
+    if (!info) return
+    reloadToken.current += 1
+    setFile({ path: info.path, sheets: info.sheets })
+    setSelectedSheet(info.sheets[0] ?? '')
+    setSkipRows(0)
+    setSheetData({ headers: info.headers, preview: info.preview })
+    setMapping({})
+    setResult(null)
+  }
+
+  async function reload(sheet: string, skip: number): Promise<void> {
+    if (!file) return
+    const token = reloadToken.current
+    setBusy(true)
+    try {
+      const data = await window.api.import.readSheet(file.path, sheet, skip)
+      if (reloadToken.current !== token) return
+      setSheetData({ headers: data.headers, preview: data.preview })
       setMapping({})
       setResult(null)
+    } finally {
+      if (reloadToken.current === token) setBusy(false)
     }
   }
 
-  async function changeSheet(name: string): Promise<void> {
-    if (!file) return
+  function handleSheetChange(name: string): void {
+    reloadToken.current += 1
     setSelectedSheet(name)
-    setMapping({})
-    setResult(null)
-    setBusy(true)
-    try {
-      const info = await window.api.import.readSheet(file.path, name)
-      setHeaders(info.headers)
-      setPreview(info.preview)
-    } finally {
-      setBusy(false)
-    }
+    reload(name, skipRows)
+  }
+
+  function handleSkipRows(value: number): void {
+    const n = Math.max(0, value)
+    reloadToken.current += 1
+    setSkipRows(n)
+    reload(selectedSheet, n)
   }
 
   async function commit(): Promise<void> {
     if (!file) return
     setBusy(true)
     try {
-      const r = await window.api.import.commit(file.path, mapping as FieldMapping, selectedSheet || undefined)
+      const r = await window.api.import.commit(
+        file.path,
+        mapping as FieldMapping,
+        selectedSheet || undefined,
+        skipRows || undefined
+      )
       setResult(r)
     } finally {
       setBusy(false)
     }
   }
 
+  const { headers, preview } = sheetData
   const canCommit = mapping.species && mapping.date
 
   return (
@@ -75,20 +98,33 @@ export default function ImportPage(): JSX.Element {
             {file.path} &mdash; {headers.length} columns
           </p>
 
-          {file.sheets.length > 1 && (
-            <div style={{ margin: '8px 0 12px' }}>
-              <label style={{ fontSize: 13, marginRight: 8 }}>Worksheet:</label>
-              <select
-                value={selectedSheet}
-                onChange={(e) => changeSheet(e.target.value)}
-                style={{ fontSize: 13 }}
-              >
-                {file.sheets.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
+          <div style={{ display: 'flex', gap: 24, alignItems: 'center', margin: '8px 0 12px', flexWrap: 'wrap' }}>
+            {file.sheets.length > 1 && (
+              <div>
+                <label style={labelStyle}>Worksheet:</label>
+                <select
+                  value={selectedSheet}
+                  onChange={(e) => handleSheetChange(e.target.value)}
+                  style={{ fontSize: 13 }}
+                >
+                  {file.sheets.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+            <div>
+              <label style={labelStyle}>Skip rows:</label>
+              <input
+                type="number"
+                min={0}
+                value={skipRows}
+                onChange={(e) => handleSkipRows(parseInt(e.target.value, 10) || 0)}
+                style={{ width: 60, fontSize: 13, padding: '2px 4px' }}
+              />
+              <span style={{ fontSize: 12, color: '#888', marginLeft: 6 }}>rows before the header</span>
             </div>
-          )}
+          </div>
 
           <h2 style={h2}>Map columns</h2>
           <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: 16 }}>
@@ -162,6 +198,7 @@ export default function ImportPage(): JSX.Element {
 
 const h1: React.CSSProperties = { fontSize: 22, marginBottom: 16 }
 const h2: React.CSSProperties = { fontSize: 15, margin: '16px 0 8px' }
+const labelStyle: React.CSSProperties = { fontSize: 13, marginRight: 6 }
 const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', fontSize: 13 }
 const td: React.CSSProperties = { padding: '5px 10px', border: '1px solid #dee2e6', fontSize: 13 }
 const btnPrimary: React.CSSProperties = { padding: '8px 16px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }

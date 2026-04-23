@@ -19,7 +19,7 @@
 
 The app follows the standard Electron three-process model:
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │  Main process  (Node.js / src/main/)         │
 │  • SQLite database (better-sqlite3 + Drizzle)│
@@ -49,7 +49,7 @@ The renderer never touches the filesystem or database directly — all data acce
 
 ## Project structure
 
-```
+```text
 src/
 ├── main/                   Main process
 │   ├── index.ts            Entry point — creates window, initialises DB
@@ -99,7 +99,7 @@ electron.vite.config.ts     electron-vite build configuration
 ## Technology stack
 
 | Layer | Library | Notes |
-|---|---|---|
+| --- | --- | --- |
 | Desktop shell | [Electron](https://electronjs.org) v32 | |
 | Build tool | [electron-vite](https://electron-vite.org) v3 | Vite-based, handles main + preload + renderer |
 | Packaging | [electron-builder](https://www.electron.build) v25 | Creates signed .app and DMG |
@@ -136,7 +136,13 @@ npm install
 npm run dev
 ```
 
-This runs `electron-vite build` (compiles main + preload + renderer) followed by `electron-builder --dir` (packages a signed `.app` without a DMG), then opens the result.
+This compiles main + preload + renderer, packages a signed `.app` via `electron-builder --dir`, copies it into `/Applications`, and re-signs it. When the build finishes you'll see:
+
+```text
+Build complete — open LBC Bird Report from Spotlight or Applications
+```
+
+Open the app from Spotlight (`⌘ Space`, type `LBC Bird Report`) or from the Applications folder in Finder.
 
 **Hot-reload is not available** — see macOS build notes below.
 
@@ -154,9 +160,9 @@ npm run typecheck
 
 On macOS 15 (Sequoia) with Apple Silicon, the ad-hoc-signed Electron binary that ships in the `electron` npm package cannot register its internal module system when launched directly from the terminal. As a result, `require('electron')` does not return the Electron API, and the app crashes silently.
 
-This is a macOS 15 security model restriction. The workaround is to package the app with electron-builder, which signs it with the developer's Apple Development certificate. The signed `.app` bundle, when launched through macOS LaunchServices (`open`), initialises correctly.
+This is a macOS 15 security model restriction. The workaround is to package the app with electron-builder, which signs it with the developer's Apple Development certificate. The signed `.app` bundle, when launched through macOS LaunchServices, initialises correctly.
 
-**Practical consequence:** Each code change requires a rebuild cycle (~15–20 seconds). Edit your code, run `npm run dev`, and the new version opens.
+**Practical consequence:** Each code change requires a rebuild cycle (~15–20 seconds). Edit your code, run `npm run dev`, then open the app from Spotlight or Applications.
 
 ### Code signing
 
@@ -177,7 +183,7 @@ Defined in [src/main/db/schema.ts](../src/main/db/schema.ts) using Drizzle ORM.
 ### `locations`
 
 | Column | Type | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `id` | INTEGER PK | Auto-increment |
 | `name` | TEXT | Required |
 | `grid_ref` | TEXT | OS or Irish grid reference |
@@ -190,7 +196,7 @@ Defined in [src/main/db/schema.ts](../src/main/db/schema.ts) using Drizzle ORM.
 ### `import_batches`
 
 | Column | Type | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `id` | INTEGER PK | |
 | `filename` | TEXT | Original filename |
 | `format` | TEXT | `csv` / `xlsx` / `ods` |
@@ -201,7 +207,7 @@ Defined in [src/main/db/schema.ts](../src/main/db/schema.ts) using Drizzle ORM.
 ### `sightings`
 
 | Column | Type | Notes |
-|---|---|---|
+| --- | --- | --- |
 | `id` | INTEGER PK | |
 | `import_batch_id` | INTEGER FK | → `import_batches.id` |
 | `location_id` | INTEGER FK | → `locations.id` (nullable) |
@@ -235,13 +241,15 @@ All communication between renderer and main process goes through `window.api`, d
 
 Opens a system file picker filtered to `.csv`, `.xlsx`, `.xls`, `.ods`.
 
-Returns `{ path, headers, preview }` or `null` if cancelled.
+Returns `{ path, sheets, headers, preview }` or `null` if cancelled. `sheets` is an empty array for CSV files.
 
-### `window.api.import.commit(filePath, mapping)`
+### `window.api.import.readSheet(filePath, sheetName, skipRows)`
 
-Parses and imports the file at `filePath` using the provided `FieldMapping`.
+Reads headers and a 5-row preview from the given sheet, skipping the specified number of rows before the header. Used when the user changes worksheet or adjusts the skip-rows setting.
 
-Returns `{ imported: number, warnings: string[] }`.
+### `window.api.import.commit(filePath, mapping, sheetName?, skipRows?)`
+
+Parses and imports the file using the provided `FieldMapping`. Returns `{ imported: number, warnings: string[] }`.
 
 ### `window.api.sightings.list()`
 
@@ -266,18 +274,18 @@ Opens a save dialog, writes a Postgres-compatible `.sql` file, and returns the p
 All format-specific reading is in [src/main/importers/index.ts](../src/main/importers/index.ts). The `readSpreadsheet()` function dispatches on file extension:
 
 ```typescript
-export function readSpreadsheet(filePath: string): { headers: string[]; rows: RawRow[] } {
+export function readSpreadsheet(filePath: string, sheetName?: string, skipRows = 0) {
   const ext = extname(filePath).toLowerCase()
-  if (ext === '.csv') return readCsv(filePath)
-  if (ext === '.xlsx' || ext === '.xls') return readXlsx(filePath)
-  if (ext === '.ods') return readOds(filePath)
+  if (ext === '.csv') return readCsv(filePath, skipRows)
+  if (ext === '.xlsx' || ext === '.xls') return readXlsx(filePath, sheetName, skipRows)
+  if (ext === '.ods') return readOds(filePath, sheetName, skipRows)
   throw new Error(`Unsupported file format: ${ext}`)
 }
 ```
 
 To add a new format:
 
-1. Add a `readXxx(filePath)` function in the same file that returns `{ headers: string[]; rows: RawRow[] }`.
+1. Add a `readXxx(filePath, skipRows)` function in the same file that returns `{ headers: string[]; rows: RawRow[] }`.
 2. Add the extension to the dispatch block above.
 3. Add the extension to the `filters` array in the `import:open-file` IPC handler in [src/main/ipc/index.ts](../src/main/ipc/index.ts).
 
@@ -302,6 +310,7 @@ npm run dist
 ```
 
 Produces:
+
 - `release/mac-arm64/LBC Bird Report.app` — the signed app bundle
 - `release/LBC Bird Report-x.x.x-arm64.dmg` — the distributable DMG
 
