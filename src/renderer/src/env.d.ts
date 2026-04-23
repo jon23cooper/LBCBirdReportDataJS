@@ -4,8 +4,9 @@ declare global {
   interface Window {
     api: {
       import: {
-        openFile(): Promise<{ path: string; headers: string[]; preview: Record<string, unknown>[] } | null>
-        commit(filePath: string, mapping: FieldMapping): Promise<{ imported: number; warnings: string[] }>
+        openFile(): Promise<{ path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] } | null>
+        readSheet(filePath: string, sheetName: string): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
+        commit(filePath: string, mapping: FieldMapping, sheetName?: string): Promise<{ imported: number; warnings: string[] }>
       }
       sightings: {
         list(): Promise<Sighting[]>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FieldMapping } from '../../../shared/types'
 
-type FileInfo = { path: string; headers: string[]; preview: Record<string, unknown>[] }
+type FileInfo = { path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] }
 
 const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required: boolean }[] = [
   { key: 'species', label: 'Species', required: true },
@@ -16,6 +16,9 @@ const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required: boole
 
 export default function ImportPage(): JSX.Element {
   const [file, setFile] = useState<FileInfo | null>(null)
+  const [selectedSheet, setSelectedSheet] = useState<string>('')
+  const [headers, setHeaders] = useState<string[]>([])
+  const [preview, setPreview] = useState<Record<string, unknown>[]>([])
   const [mapping, setMapping] = useState<Partial<FieldMapping>>({})
   const [result, setResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [busy, setBusy] = useState(false)
@@ -24,8 +27,26 @@ export default function ImportPage(): JSX.Element {
     const info = await window.api.import.openFile()
     if (info) {
       setFile(info)
+      setSelectedSheet(info.sheets[0] ?? '')
+      setHeaders(info.headers)
+      setPreview(info.preview)
       setMapping({})
       setResult(null)
+    }
+  }
+
+  async function changeSheet(name: string): Promise<void> {
+    if (!file) return
+    setSelectedSheet(name)
+    setMapping({})
+    setResult(null)
+    setBusy(true)
+    try {
+      const info = await window.api.import.readSheet(file.path, name)
+      setHeaders(info.headers)
+      setPreview(info.preview)
+    } finally {
+      setBusy(false)
     }
   }
 
@@ -33,7 +54,7 @@ export default function ImportPage(): JSX.Element {
     if (!file) return
     setBusy(true)
     try {
-      const r = await window.api.import.commit(file.path, mapping as FieldMapping)
+      const r = await window.api.import.commit(file.path, mapping as FieldMapping, selectedSheet || undefined)
       setResult(r)
     } finally {
       setBusy(false)
@@ -51,8 +72,23 @@ export default function ImportPage(): JSX.Element {
       {file && (
         <>
           <p style={{ margin: '12px 0 4px', color: '#555', fontSize: 13 }}>
-            {file.path} &mdash; {file.headers.length} columns
+            {file.path} &mdash; {headers.length} columns
           </p>
+
+          {file.sheets.length > 1 && (
+            <div style={{ margin: '8px 0 12px' }}>
+              <label style={{ fontSize: 13, marginRight: 8 }}>Worksheet:</label>
+              <select
+                value={selectedSheet}
+                onChange={(e) => changeSheet(e.target.value)}
+                style={{ fontSize: 13 }}
+              >
+                {file.sheets.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <h2 style={h2}>Map columns</h2>
           <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: 16 }}>
@@ -73,7 +109,7 @@ export default function ImportPage(): JSX.Element {
                       style={{ width: '100%' }}
                     >
                       <option value="">(none)</option>
-                      {file.headers.map((h) => (
+                      {headers.map((h) => (
                         <option key={h} value={h}>{h}</option>
                       ))}
                     </select>
@@ -87,12 +123,12 @@ export default function ImportPage(): JSX.Element {
           <div style={{ overflowX: 'auto', marginBottom: 16 }}>
             <table style={{ borderCollapse: 'collapse', fontSize: 12 }}>
               <thead>
-                <tr>{file.headers.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
+                <tr>{headers.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
               </thead>
               <tbody>
-                {file.preview.map((row, i) => (
+                {preview.map((row, i) => (
                   <tr key={i}>
-                    {file.headers.map((h) => (
+                    {headers.map((h) => (
                       <td key={h} style={td}>{String(row[h] ?? '')}</td>
                     ))}
                   </tr>

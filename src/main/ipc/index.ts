@@ -1,5 +1,5 @@
 import { ipcMain, dialog } from 'electron'
-import { readSpreadsheet } from '../importers'
+import { getSheetNames, readSpreadsheet } from '../importers'
 import { normaliseRows } from '../importers/normalise'
 import { resolveLocationId } from '../locations/match'
 import { getDb } from '../db'
@@ -16,15 +16,23 @@ export function registerIpcHandlers(): void {
       properties: ['openFile']
     })
     if (canceled || filePaths.length === 0) return null
-    const { headers, rows } = readSpreadsheet(filePaths[0])
-    return { path: filePaths[0], headers, preview: rows.slice(0, 5) }
+    const filePath = filePaths[0]
+    const sheets = getSheetNames(filePath)
+    const { headers, rows } = readSpreadsheet(filePath)
+    return { path: filePath, sheets, headers, preview: rows.slice(0, 5) }
+  })
+
+  // Return headers + preview for a specific sheet without opening a dialog
+  ipcMain.handle('import:read-sheet', async (_e: Electron.IpcMainInvokeEvent, filePath: string, sheetName: string) => {
+    const { headers, rows } = readSpreadsheet(filePath, sheetName)
+    return { headers, preview: rows.slice(0, 5) }
   })
 
   // Confirm field mapping and import rows into DB
   ipcMain.handle(
     'import:commit',
-    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping) => {
-      const { rows } = readSpreadsheet(filePath)
+    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string) => {
+      const { rows } = readSpreadsheet(filePath, sheetName)
       const { rows: parsed, warnings } = normaliseRows(rows, mapping)
 
       const db = getDb()
