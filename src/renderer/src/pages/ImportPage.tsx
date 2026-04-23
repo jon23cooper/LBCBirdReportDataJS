@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import type { FieldMapping } from '../../../shared/types'
 
 type FileInfo = { path: string; sheets: string[] }
@@ -24,47 +24,33 @@ export default function ImportPage(): JSX.Element {
   const [result, setResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [busy, setBusy] = useState(false)
 
-  // Incremented on every new file open or reload; stale async callbacks check this before writing state
-  const reloadToken = useRef(0)
+  // Reload headers + preview whenever file, sheet, or skip rows changes
+  useEffect(() => {
+    if (!file) return
+    let cancelled = false
+    setBusy(true)
+    window.api.import.readSheet(file.path, selectedSheet, skipRows)
+      .then(data => {
+        if (cancelled) return
+        setSheetData({ headers: data.headers, preview: data.preview })
+        setMapping({})
+        setResult(null)
+        setBusy(false)
+      })
+      .catch(() => { if (!cancelled) setBusy(false) })
+    return () => { cancelled = true }
+  }, [file, selectedSheet, skipRows])
 
   async function openFile(): Promise<void> {
     const info = await window.api.import.openFile()
     if (!info) return
-    reloadToken.current += 1
-    setFile({ path: info.path, sheets: info.sheets })
-    setSelectedSheet(info.sheets[0] ?? '')
-    setSkipRows(0)
-    setSheetData({ headers: info.headers, preview: info.preview })
+    // Clear stale data immediately; the effect above will populate sheetData
+    setSheetData({ headers: [], preview: [] })
     setMapping({})
     setResult(null)
-  }
-
-  async function reload(sheet: string, skip: number): Promise<void> {
-    if (!file) return
-    const token = reloadToken.current
-    setBusy(true)
-    try {
-      const data = await window.api.import.readSheet(file.path, sheet, skip)
-      if (reloadToken.current !== token) return
-      setSheetData({ headers: data.headers, preview: data.preview })
-      setMapping({})
-      setResult(null)
-    } finally {
-      if (reloadToken.current === token) setBusy(false)
-    }
-  }
-
-  function handleSheetChange(name: string): void {
-    reloadToken.current += 1
-    setSelectedSheet(name)
-    reload(name, skipRows)
-  }
-
-  function handleSkipRows(value: number): void {
-    const n = Math.max(0, value)
-    reloadToken.current += 1
-    setSkipRows(n)
-    reload(selectedSheet, n)
+    setSkipRows(0)
+    setSelectedSheet(info.sheets[0] ?? '')
+    setFile({ path: info.path, sheets: info.sheets })
   }
 
   async function commit(): Promise<void> {
@@ -104,7 +90,7 @@ export default function ImportPage(): JSX.Element {
                 <label style={labelStyle}>Worksheet:</label>
                 <select
                   value={selectedSheet}
-                  onChange={(e) => handleSheetChange(e.target.value)}
+                  onChange={(e) => setSelectedSheet(e.target.value)}
                   style={{ fontSize: 13 }}
                 >
                   {file.sheets.map((s) => (
@@ -119,63 +105,69 @@ export default function ImportPage(): JSX.Element {
                 type="number"
                 min={0}
                 value={skipRows}
-                onChange={(e) => handleSkipRows(parseInt(e.target.value, 10) || 0)}
+                onChange={(e) => setSkipRows(Math.max(0, parseInt(e.target.value, 10) || 0))}
                 style={{ width: 60, fontSize: 13, padding: '2px 4px' }}
               />
               <span style={{ fontSize: 12, color: '#888', marginLeft: 6 }}>rows before the header</span>
             </div>
           </div>
 
-          <h2 style={h2}>Map columns</h2>
-          <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: 16 }}>
-            <thead>
-              <tr>
-                <th style={th}>Standard field</th>
-                <th style={th}>Source column</th>
-              </tr>
-            </thead>
-            <tbody>
-              {STANDARD_FIELDS.map(({ key, label, required }) => (
-                <tr key={key}>
-                  <td style={td}>{label}{required && <span style={{ color: 'red' }}> *</span>}</td>
-                  <td style={td}>
-                    <select
-                      value={mapping[key] ?? ''}
-                      onChange={(e) => setMapping({ ...mapping, [key]: e.target.value || undefined })}
-                      style={{ width: '100%' }}
-                    >
-                      <option value="">(none)</option>
-                      {headers.map((h) => (
-                        <option key={h} value={h}>{h}</option>
-                      ))}
-                    </select>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <h2 style={h2}>Preview (first 5 rows)</h2>
-          <div style={{ overflowX: 'auto', marginBottom: 16 }}>
-            <table style={{ borderCollapse: 'collapse', fontSize: 12 }}>
-              <thead>
-                <tr>{headers.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
-              </thead>
-              <tbody>
-                {preview.map((row, i) => (
-                  <tr key={i}>
-                    {headers.map((h) => (
-                      <td key={h} style={td}>{String(row[h] ?? '')}</td>
-                    ))}
+          {busy ? (
+            <p style={{ color: '#888', fontSize: 13 }}>Loading…</p>
+          ) : (
+            <>
+              <h2 style={h2}>Map columns</h2>
+              <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: 16 }}>
+                <thead>
+                  <tr>
+                    <th style={th}>Standard field</th>
+                    <th style={th}>Source column</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {STANDARD_FIELDS.map(({ key, label, required }) => (
+                    <tr key={key}>
+                      <td style={td}>{label}{required && <span style={{ color: 'red' }}> *</span>}</td>
+                      <td style={td}>
+                        <select
+                          value={mapping[key] ?? ''}
+                          onChange={(e) => setMapping({ ...mapping, [key]: e.target.value || undefined })}
+                          style={{ width: '100%' }}
+                        >
+                          <option value="">(none)</option>
+                          {headers.map((h) => (
+                            <option key={h} value={h}>{h}</option>
+                          ))}
+                        </select>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-          <button onClick={commit} disabled={!canCommit || busy} style={btnPrimary}>
-            {busy ? 'Importing…' : 'Import'}
-          </button>
+              <h2 style={h2}>Preview (first 5 rows)</h2>
+              <div style={{ overflowX: 'auto', marginBottom: 16 }}>
+                <table style={{ borderCollapse: 'collapse', fontSize: 12 }}>
+                  <thead>
+                    <tr>{headers.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
+                  </thead>
+                  <tbody>
+                    {preview.map((row, i) => (
+                      <tr key={i}>
+                        {headers.map((h) => (
+                          <td key={h} style={td}>{String(row[h] ?? '')}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <button onClick={commit} disabled={!canCommit} style={btnPrimary}>
+                Import
+              </button>
+            </>
+          )}
         </>
       )}
 
