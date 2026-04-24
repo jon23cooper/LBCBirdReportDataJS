@@ -6,38 +6,40 @@ type FileInfo = { path: string; sheets: string[] }
 type SheetData = { headers: string[]; preview: Record<string, unknown>[] }
 
 const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required?: boolean }[] = [
-  { key: 'species',                label: 'Species (common name)' },
+  // Required fields first
   { key: 'date',                   label: 'First Date',                required: true },
   { key: 'originalCommonName',     label: 'Original Common Name',      required: true },
-  { key: 'commonName',             label: 'Common Name (display)' },
   { key: 'originalScientificName', label: 'Original Scientific Name',  required: true },
-  { key: 'scientificName',         label: 'Scientific Name' },
+  { key: 'originalCount',          label: 'Original Total Count',      required: true },
+  // Remaining fields alphabetically
+  { key: 'age',                    label: 'Age' },
+  { key: 'behaviorCode',           label: 'Behavior code' },
+  { key: 'breedingCategory',       label: 'Breeding category' },
+  { key: 'breedingCode',           label: 'Breeding code' },
+  { key: 'circa',                  label: 'Circa' },
+  { key: 'commonName',             label: 'Common Name (display)' },
+  { key: 'dataset',                label: 'Dataset' },
+  { key: 'endTime',                label: 'End Time' },
   { key: 'family',                 label: 'Family' },
+  { key: 'geometryType',           label: 'Geometry type' },
+  { key: 'lastDate',               label: 'Last Date' },
+  { key: 'lat',                    label: 'Latitude' },
+  { key: 'lbcId',                  label: 'LBC ID' },
+  { key: 'locationName',           label: 'Location' },
+  { key: 'lon',                    label: 'Longitude' },
+  { key: 'notes',                  label: 'Notes' },
+  { key: 'occurrenceKey',          label: 'Occurrence Key' },
+  { key: 'originalLocation',       label: 'Original Location' },
+  { key: 'observer',               label: 'Observers' },
+  { key: 'scientificName',         label: 'Scientific Name' },
+  { key: 'species',                label: 'Species (common name)' },
+  { key: 'time',                   label: 'Start Time' },
+  { key: 'status',                 label: 'Status' },
   { key: 'subspeciesCommon',       label: 'Subspecies (common)' },
   { key: 'subspeciesScientific',   label: 'Subspecies (scientific)' },
-  { key: 'locationName',           label: 'Location' },
-  { key: 'originalLocation',       label: 'Original Location' },
-  { key: 'lastDate',               label: 'Last Date' },
-  { key: 'time',                   label: 'Start Time' },
-  { key: 'endTime',                label: 'End Time' },
   { key: 'count',                  label: 'Total Count' },
-  { key: 'originalCount',          label: 'Original Total Count' },
-  { key: 'circa',                  label: 'Circa' },
-  { key: 'observer',               label: 'Observers' },
-  { key: 'notes',                  label: 'Notes' },
-  { key: 'status',                 label: 'Status' },
-  { key: 'age',                    label: 'Age' },
-  { key: 'breedingCode',           label: 'Breeding code' },
-  { key: 'breedingCategory',       label: 'Breeding category' },
-  { key: 'behaviorCode',           label: 'Behavior code' },
   { key: 'tripMapRef',             label: 'Trip MapRef' },
-  { key: 'lat',                    label: 'Latitude' },
-  { key: 'lon',                    label: 'Longitude' },
   { key: 'uncertaintyRadius',      label: 'Uncertainty radius' },
-  { key: 'geometryType',           label: 'Geometry type' },
-  { key: 'occurrenceKey',          label: 'Occurrence Key' },
-  { key: 'dataset',                label: 'Dataset' },
-  { key: 'lbcId',                  label: 'LBC ID' },
 ]
 
 function autoMap(headers: string[]): Record<string, string> {
@@ -163,10 +165,10 @@ export default function ImportPage({ onValidationFailed }: {
   const { headers, preview } = sheetData
   const assignedFields = new Set(Object.values(columnMap).filter(Boolean))
   const hasName = assignedFields.has('originalCommonName') || assignedFields.has('originalScientificName')
-  const canCommit = assignedFields.has('date') && hasName
+  const canCommit = assignedFields.has('date') && hasName && assignedFields.has('originalCount')
 
   return (
-    <div style={{ maxWidth: 800 }}>
+    <div>
       <h1 style={h1}>Import</h1>
 
       <button onClick={openFile} style={btnPrimary}>Choose file…</button>
@@ -209,7 +211,7 @@ export default function ImportPage({ onValidationFailed }: {
                 <span style={{ background: '#ffffff', border: '1px solid #dee2e6', padding: '1px 6px', marginRight: 6 }}>White</span> = mapped &nbsp;&nbsp;
                 <span style={{ background: '#fffbf0', border: '1px solid #dee2e6', padding: '1px 6px', marginRight: 6 }}>Yellow</span> = not mapped (will be ignored)
               </p>
-              <table style={{ borderCollapse: 'collapse', width: '100%', marginBottom: 16 }}>
+              <table style={{ borderCollapse: 'collapse', marginBottom: 16 }}>
                 <thead>
                   <tr>
                     <th style={th}>Spreadsheet column</th>
@@ -239,15 +241,9 @@ export default function ImportPage({ onValidationFailed }: {
                 </tbody>
               </table>
 
-              {!canCommit && (
-                <p style={{ fontSize: 12, color: '#c0392b', marginBottom: 8 }}>
-                  First Date ★ and at least one of Original Common Name ★ or Original Scientific Name ★ must be mapped before importing.
-                </p>
-              )}
-
               <h2 style={h2}>Preview (first 5 rows)</h2>
               <div style={{ overflowX: 'auto', marginBottom: 16 }}>
-                <table style={{ borderCollapse: 'collapse', fontSize: 12 }}>
+                <table style={{ borderCollapse: 'collapse', fontSize: 12, width: '100%' }}>
                   <thead>
                     <tr>{headers.map((h) => <th key={h} style={th}>{h}</th>)}</tr>
                   </thead>
@@ -261,9 +257,20 @@ export default function ImportPage({ onValidationFailed }: {
                 </table>
               </div>
 
-              <button onClick={commit} disabled={!canCommit || busy} style={btnPrimary}>
-                {busy ? 'Importing…' : 'Import'}
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                <button
+                  onClick={commit}
+                  disabled={!canCommit || busy}
+                  style={canCommit ? btnPrimary : btnDisabled}
+                >
+                  {busy ? 'Importing…' : 'Import'}
+                </button>
+                {!canCommit && (
+                  <span style={{ fontSize: 13, color: '#c0392b' }}>
+                    Map the required fields (★) above before importing.
+                  </span>
+                )}
+              </div>
             </>
           )}
         </>
@@ -298,3 +305,4 @@ const labelStyle: React.CSSProperties = { fontSize: 13, marginRight: 6 }
 const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', fontSize: 13 }
 const td: React.CSSProperties = { padding: '5px 10px', border: '1px solid #dee2e6', fontSize: 13 }
 const btnPrimary: React.CSSProperties = { padding: '8px 16px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }
+const btnDisabled: React.CSSProperties = { padding: '8px 16px', background: '#adb5bd', color: '#fff', border: 'none', borderRadius: 4, cursor: 'not-allowed', fontSize: 14 }

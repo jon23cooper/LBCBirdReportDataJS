@@ -56,6 +56,29 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
   const [initError, setInitError] = useState<string | null>(null)
 
   useEffect(() => {
+    let resizeTimer: ReturnType<typeof setTimeout>
+    const handleResize = () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(() => {
+        const instance = instanceRef.current
+        if (!instance) return
+        const ws = Array.isArray(instance) ? instance[0] : (instance.worksheets?.[0] ?? instance)
+        const w = window.innerWidth - 228
+        const h = window.innerHeight - 90
+        if (ws?.content) {
+          ws.content.style.width = `${w}px`
+          ws.content.style.maxHeight = `${h}px`
+        }
+      }, 100)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(resizeTimer)
+    }
+  }, [])
+
+  useEffect(() => {
     const el = divRef.current
     if (!el) return
 

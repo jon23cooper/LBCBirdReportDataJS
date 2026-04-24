@@ -47,7 +47,7 @@ export default function App(): JSX.Element {
         )}
       </nav>
 
-      <main style={{ flex: 1, overflow: 'hidden', padding: 24, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, overflow: page === 'edit' ? 'hidden' : 'auto', padding: 24, display: 'flex', flexDirection: 'column' }}>
         {page === 'import'    && <ImportPage onValidationFailed={handleValidationFailed} />}
         {page === 'sightings' && <SightingsPage />}
         {page === 'map'       && <MapPage />}

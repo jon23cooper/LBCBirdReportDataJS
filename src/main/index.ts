@@ -5,15 +5,14 @@ import { registerIpcHandlers } from './ipc'
 
 function createWindow(): void {
   const win = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    minWidth: 900,
-    minHeight: 600,
+    width: 2200,
+    height: 1400,
+    minWidth: 960,
+    minHeight: 700,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
     },
-    titleBarStyle: 'hiddenInset'
   })
 
   win.webContents.setWindowOpenHandler(({ url }: { url: string }) => {

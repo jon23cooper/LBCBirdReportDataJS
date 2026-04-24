@@ -30,10 +30,12 @@ export function normaliseRows(rows: RawRow[], mapping: FieldMapping): ImportResu
     const rawSpecies = (mapping.species && row[mapping.species])
       || (mapping.originalCommonName && row[mapping.originalCommonName])
       || (mapping.originalScientificName && row[mapping.originalScientificName])
+    const rawOriginalCount = mapping.originalCount && row[mapping.originalCount]
 
-    if (!rawSpecies || !rawDate) {
+    if (!rawSpecies || !rawDate || !rawOriginalCount) {
       result.unmapped.push(row)
-      const reason = 'Missing required field (species name or date)'
+      const missing = [!rawDate && 'date', !rawSpecies && 'species name', !rawOriginalCount && 'original total count'].filter(Boolean).join(', ')
+      const reason = `Missing required field (${missing})`
       result.warnings.push(`${lineRef}: ${reason}`)
       result.failures.push({ index: i, reason })
       continue
