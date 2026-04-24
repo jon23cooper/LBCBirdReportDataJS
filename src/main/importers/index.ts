@@ -38,22 +38,40 @@ function readCsv(filePath: string, skipRows = 0): { headers: string[]; rows: Raw
   return { headers, rows }
 }
 
+function datesToIso(rows: RawRow[]): RawRow[] {
+  return rows.map(row =>
+    Object.fromEntries(
+      Object.entries(row).map(([k, v]) => {
+        if (v instanceof Date) {
+          const y = v.getFullYear()
+          const m = String(v.getMonth() + 1).padStart(2, '0')
+          const d = String(v.getDate()).padStart(2, '0')
+          return [k, `${y}-${m}-${d}`]
+        }
+        return [k, v]
+      })
+    )
+  )
+}
+
 function readXlsx(filePath: string, sheetName?: string, skipRows = 0): { headers: string[]; rows: RawRow[] } {
-  const wb = XLSX.readFile(filePath)
+  const wb = XLSX.readFile(filePath, { cellDates: true })
   const name = (sheetName && wb.SheetNames.includes(sheetName)) ? sheetName : wb.SheetNames[0]
   const ws = wb.Sheets[name]
-  const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: null, raw: false, range: skipRows })
-  const headers = data.length > 0 ? Object.keys(data[0]) : []
-  return { headers, rows: data }
+  const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: null, raw: true, range: skipRows })
+  const rows = datesToIso(data)
+  const headers = rows.length > 0 ? Object.keys(rows[0]) : []
+  return { headers, rows }
 }
 
 function readOds(filePath: string, sheetName?: string, skipRows = 0): { headers: string[]; rows: RawRow[] } {
-  const wb = XLSX.readFile(filePath, { type: 'file' })
+  const wb = XLSX.readFile(filePath, { cellDates: true, type: 'file' })
   const name = (sheetName && wb.SheetNames.includes(sheetName)) ? sheetName : wb.SheetNames[0]
   const ws = wb.Sheets[name]
-  const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: null, raw: false, range: skipRows })
-  const headers = data.length > 0 ? Object.keys(data[0]) : []
-  return { headers, rows: data }
+  const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: null, raw: true, range: skipRows })
+  const rows = datesToIso(data)
+  const headers = rows.length > 0 ? Object.keys(rows[0]) : []
+  return { headers, rows }
 }
 
 function makeUniqueHeaders(raw: (string | null | undefined)[]): string[] {

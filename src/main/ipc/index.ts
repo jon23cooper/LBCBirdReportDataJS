@@ -31,18 +31,18 @@ async function validateAndInsert(
   )
 
   const db = getDb()
-  await db.transaction(async (tx) => {
-    const [batch] = await tx.insert(importBatches).values({
+  db.transaction((tx) => {
+    const [batch] = tx.insert(importBatches).values({
       filename,
       format,
       importedAt: new Date().toISOString(),
       rowCount: parsed.length,
       fieldMapping: JSON.stringify(mapping)
-    }).returning()
+    }).returning().all()
 
     for (let i = 0; i < parsed.length; i++) {
       const s = parsed[i]
-      await tx.insert(sightings).values({
+      tx.insert(sightings).values({
         importBatchId:          batch.id,
         locationId:             locationIds[i],
         originalLocation:       s.originalLocation,
@@ -77,7 +77,7 @@ async function validateAndInsert(
         geometryType:           s.geometryType,
         tripMapRef:             s.tripMapRef,
         rawData:                s.rawData
-      })
+      }).run()
     }
   })
 
