@@ -106,6 +106,21 @@ export type CommitResult =
   | { status: 'success'; imported: number; warnings: string[] }
   | { status: 'validation-failed'; headers: string[]; allRows: RawRow[]; failures: RowFailure[] }
 
+export interface SpeciesRecord {
+  id?: number
+  commonName: string
+  commonNameRegex?: string | null
+  scientificName: string
+  scientificNameRegex?: string | null
+  family?: string | null
+}
+
+export interface BatchOptions {
+  dataset?: string
+  defaultObserver?: string
+  lbcSeqStart?: number
+}
+
 export interface Location {
   id?: number
   name: string

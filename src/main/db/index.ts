@@ -5,6 +5,16 @@ import { join } from 'path'
 import * as schema from './schema'
 
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null
+let _sqlite: InstanceType<typeof Database> | null = null
+
+export function reserveLbcSequence(count: number): number {
+  if (!_sqlite) throw new Error('Database not initialised')
+  const row = _sqlite.prepare("SELECT value FROM settings WHERE key='lbc_sequence'").get() as { value: string } | undefined
+  const current = row ? parseInt(row.value) : 0
+  const next = current + count
+  _sqlite.prepare("INSERT INTO settings(key,value) VALUES('lbc_sequence',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").run(String(next))
+  return current + 1
+}
 
 const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS locations (
@@ -69,6 +79,18 @@ CREATE TABLE IF NOT EXISTS sightings (
 
 // Columns added after initial release — safe to ignore "duplicate column" errors
 const MIGRATIONS: string[] = [
+  `CREATE TABLE IF NOT EXISTS species (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    common_name TEXT NOT NULL,
+    common_name_regex TEXT,
+    scientific_name TEXT NOT NULL,
+    scientific_name_regex TEXT,
+    family TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  )`,
   'ALTER TABLE sightings ADD COLUMN original_common_name TEXT',
   'ALTER TABLE sightings ADD COLUMN original_scientific_name TEXT',
   'ALTER TABLE sightings ADD COLUMN original_location TEXT',
@@ -92,14 +114,14 @@ const MIGRATIONS: string[] = [
 
 export function initDb(): void {
   const dbPath = join(app.getPath('userData'), 'birdreport.db')
-  const sqlite = new Database(dbPath)
-  sqlite.pragma('journal_mode = WAL')
-  sqlite.pragma('foreign_keys = ON')
-  sqlite.exec(SCHEMA_SQL)
+  _sqlite = new Database(dbPath)
+  _sqlite.pragma('journal_mode = WAL')
+  _sqlite.pragma('foreign_keys = ON')
+  _sqlite.exec(SCHEMA_SQL)
   for (const sql of MIGRATIONS) {
-    try { sqlite.exec(sql) } catch { /* column already exists */ }
+    try { _sqlite.exec(sql) } catch { /* column already exists */ }
   }
-  _db = drizzle(sqlite, { schema })
+  _db = drizzle(_sqlite, { schema })
 }
 
 export function getDb(): ReturnType<typeof drizzle<typeof schema>> {

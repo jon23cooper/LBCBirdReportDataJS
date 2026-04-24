@@ -75,3 +75,18 @@ export const importBatches = sqliteTable('import_batches', {
   rowCount: integer('row_count'),
   fieldMapping: text('field_mapping')
 })
+
+export const species = sqliteTable('species', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  commonName: text('common_name').notNull(),
+  commonNameRegex: text('common_name_regex'),
+  scientificName: text('scientific_name').notNull(),
+  scientificNameRegex: text('scientific_name_regex'),
+  family: text('family'),
+})
+
+// Key-value store for app-wide settings (e.g. LBC ID sequence counter)
+export const settings = sqliteTable('settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+})

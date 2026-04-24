@@ -3,16 +3,18 @@ import ImportPage from './pages/ImportPage'
 import SightingsPage from './pages/SightingsPage'
 import MapPage from './pages/MapPage'
 import LocationsPage from './pages/LocationsPage'
+import SpeciesPage from './pages/SpeciesPage'
 import ExportPage from './pages/ExportPage'
 import EditPage, { type EditData } from './pages/EditPage'
 
-type Page = 'import' | 'sightings' | 'map' | 'locations' | 'export' | 'edit'
+type Page = 'import' | 'sightings' | 'map' | 'locations' | 'species' | 'export' | 'edit'
 
 const NAV: { id: Page; label: string }[] = [
   { id: 'import',    label: 'Import' },
   { id: 'sightings', label: 'Sightings' },
   { id: 'map',       label: 'Map' },
   { id: 'locations', label: 'Locations' },
+  { id: 'species',   label: 'Species' },
   { id: 'export',    label: 'Export' },
 ]
 
@@ -52,6 +54,7 @@ export default function App(): JSX.Element {
         {page === 'sightings' && <SightingsPage />}
         {page === 'map'       && <MapPage />}
         {page === 'locations' && <LocationsPage />}
+        {page === 'species'   && <SpeciesPage />}
         {page === 'export'    && <ExportPage />}
         {page === 'edit' && editData && (
           <EditPage

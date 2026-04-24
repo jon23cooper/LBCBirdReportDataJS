@@ -1,0 +1,662 @@
+common_name, common_name_regex, scientific_name, scientific_name_regex
+Pale-bellied Brent Goose,(?=.*(Pale|light)(-|\s)bellied)(?=.*Br(e|a)nt),Branta bernicla hrota,^Branta bernicla hrota
+Red-breasted Goose,^Red-breasted Goose$,Branta ruficollis,^Branta ruficollis
+Canada Goose,^Canada Goose,Branta canadensis,^Branta canadensis$
+Barnacle Goose,^Barnacle Goose$,Branta leucopsis,^Branta leucopsis$
+Cackling Goose,^Cackling Goose$,Branta hutchinsii,^Branta hutchinsii
+Ross's Goose,^Ross's Goose$,Anser rossii,^Anser rossii
+Snow Goose,^Snow Goose$,Anser caerulescens,^Anser caerulescens
+Greylag Goose,^Gr(e|a)y\s?lag( Goose)?,Anser anser,^Anser anser
+Taiga Bean Goose,^Taiga Bean Goose$,Anser fabalis,^Anser fabalis$
+Pink-footed Goose,^Pink-footed Goose$,Anser brachyrhynchus,^Anser brachyrhynchus
+Tundra Bean Goose,^Tundra Bean Goose,Anser serrirostris,^Anser serrirostris$
+White-fronted Goose,^(Greater ?|European ?| Russian ?)?White(-|\s)fronted Goose,Anser albifrons,^Anser albifrons
+Lesser White-fronted Goose,^Lesser White-fronted Goose$,Anser erythropus,^Anser erythropus
+Mute Swan,^Mute Swan$,Cygnus olor,^Cygnus olor
+Bewick's Swan,^Bewick's Swan$|^Tundra Swan$,Cygnus columbianus,^Cygnus columbianus
+Whooper Swan,^Whooper Swan$,Cygnus cygnus,^Cygnus cygnus
+Egyptian Goose,^Egyptian Goose$,Alopochen aegyptiaca,^Alopochen aegyptiaca
+Shelduck,^Shelduck$|^Common Shelduck$,Tadorna tadorna,^Tadorna tadorna
+Ruddy Shelduck,^Ruddy Shelduck$,Tadorna ferruginea,^Tadorna ferruginea
+Mandarin Duck,^Mandarin( Duck)?$,Aix galericulata,^Aix galericulata
+Baikal Teal,^Baikal Teal$,Sibirionetta formosa,^Sibirionetta formosa
+Garganey,^Garganey$,Spatula querquedula,^Spatula querquedula
+Blue-winged Teal,^Blue-winged Teal$,Spatula discors,^Spatula discors
+Shoveler,^Shoveler$|^Northern Shoveler$,Spatula clypeata,^Spatula clypeata
+Gadwall,^Gadwall,Mareca strepera,^Mareca strepera
+Falcated Duck,^Falcated Duck$,Mareca falcata,^Mareca falcata
+Wigeon,^(Eurasian )?Wigeon,Mareca penelope,^Mareca penelope
+American Wigeon,^(American Wigeon),Mareca americana,^Mareca americana
+Mallard,^Mallard,Anas platyrhynchos,^Anas platyrhynchos
+Black Duck,^Black Duck$|^American Black Duck$,Anas rubripes,^Anas rubripes
+Pintail,^(Northern )?Pintail,Anas acuta,^Anas acuta
+Teal,^Teal$|^Eurasian Teal$,Anas crecca,^Anas crecca$
+Green-winged Teal,^Green-winged Teal$,Anas carolinensis,^Anas carolinensis$
+Red-crested Pochard,^Red-crested Pochard$,Netta rufina,^Netta rufina
+Canvasback,^Canvasback$,Aythya valisineria,^Aythya valisineria
+Redhead,^Redhead$,Aythya americana,^Aythya americana
+Pochard,^Pochard$|^Common Pochard$,Aythya ferina,^Aythya ferina
+Ferruginous Duck,^Ferruginous Duck$,Aythya nyroca,^Aythya nyroca
+Ring-necked Duck,^Ring-necked Duck$,Aythya collaris,^Aythya collaris
+Tufted Duck,^Tufted Duck$,Aythya fuligula,^Aythya fuligula
+Scaup,^(Greater )?Scaup,Aythya marila,^Aythya marila
+Lesser Scaup,^Lesser Scaup$,Aythya affinis,^Aythya affinis
+Steller's Eider,^Steller's Eider$,Polysticta stelleri,^Polysticta stelleri
+King Eider,^King Eider$,Somateria spectabilis,^Somateria spectabilis
+Eider,^(Common )?Eider,Somateria mollissima,^Somateria mollissima
+Harlequin Duck,^Harlequin Duck$,Histrionicus histrionicus,^Histrionicus histrionicus
+Surf Scoter,^Surf Scoter$,Melanitta perspicillata,^Melanitta perspicillata
+Velvet Scoter,^Velvet Scoter$,Melanitta fusca,^Melanitta fusca
+White-winged Scoter,^White-winged Scoter$,Melanitta deglandi,^Melanitta deglandi
+Common Scoter,^Common Scoter$,Melanitta nigra,^Melanitta nigra
+Black Scoter,^Black Scoter$,Melanitta americana,^Melanitta americana
+Long-tailed Duck,^Long-tailed Duck$,Clangula hyemalis,^Clangula hyemalis
+Bufflehead,^Bufflehead$,Bucephala albeola,^Bucephala albeola
+Goldeneye,^(Common )?Goldeneye,Bucephala clangula,^Bucephala clangula
+Barrow's Goldeneye,^Barrow's Goldeneye$,Bucephala islandica,^Bucephala islandica
+Smew,^Smew$,Mergellus albellus,^Mergellus albellus
+Hooded Merganser,^Hooded Merganser$,Lophodytes cucullatus,^Lophodytes cucullatus
+Goosander,^(Goosander|Common Merganser),Mergus merganser,^Mergus merganser
+Red-breasted Merganser,^Red-breasted Merganser$,Mergus serrator,^Mergus serrator
+Ruddy Duck,^Ruddy Duck$,Oxyura jamaicensis,^Oxyura jamaicensis
+Red Grouse,^Red Grouse$|^Willow Ptarmigan$,Lagopus lagopus,^Lagopus lagopus
+Ptarmigan,^Ptarmigan$|^Rock Ptarmigan$,Lagopus muta,^Lagopus muta
+Capercaillie,^Capercaillie$|^Western Capercaillie$,Tetrao urogallus,^Tetrao urogallus
+Black Grouse,^Black Grouse$,Lyrurus tetrix,^Lyrurus tetrix
+Grey Partridge,^Gr(e|a)y Partridge,Perdix perdix,^Perdix perdix
+Golden Pheasant,^Golden Pheasant$,Chrysolophus pictus,^Chrysolophus pictus
+Lady Amherst's Pheasant,^Lady Amherst's Pheasant$,Chrysolophus amherstiae,^Chrysolophus amherstiae
+Pheasant,^(Common |Ring-necked )?Pheasant$,Phasianus colchicus,^Phasianus colchicus
+Quail,^Quail$|^Common Quail$,Coturnix coturnix,^Coturnix coturnix
+Red-legged Partridge,^Red-legged Partridge$,Alectoris rufa,^Alectoris rufa
+Common Nighthawk,^Common Nighthawk$,Chordeiles minor,^Chordeiles minor
+Red-necked Nightjar,^Red-necked Nightjar$,Caprimulgus ruficollis,^Caprimulgus ruficollis
+Nightjar,^Nightjar$|^European Nightjar$,Caprimulgus europaeus,^Caprimulgus europaeus
+Egyptian Nightjar,^Egyptian Nightjar$,Caprimulgus aegyptius,^Caprimulgus aegyptius
+White-throated Needletail,^White-throated Needletail$,Hirundapus caudacutus,^Hirundapus caudacutus
+Chimney Swift,^Chimney Swift$,Chaetura pelagica,^Chaetura pelagica
+Alpine Swift,^Alpine Swift,Tachymarptis melba,^Tachymarptis melba
+Swift,^(Common )?Swift,Apus apus,^Apus apus
+Pallid Swift,^Pallid Swift$,Apus pallidus,^Apus pallidus
+Pacific Swift,^Pacific Swift$,Apus pacificus,^Apus pacificus
+Little Swift,^Little Swift$,Apus affinis,^Apus affinis
+White-rumped Swift,^White-rumped Swift$,Apus caffer,^Apus caffer
+Great Bustard,^Great Bustard$,Otis tarda,^Otis tarda
+Macqueen's Bustard,^Macqueen's Bustard$,Chlamydotis macqueenii,^Chlamydotis macqueenii
+Little Bustard,^Little Bustard$,Tetrax tetrax,^Tetrax tetrax
+Great Spotted Cuckoo,^Great Spotted Cuckoo$,Clamator glandarius,^Clamator glandarius
+Yellow-billed Cuckoo,^Yellow-billed Cuckoo$,Coccyzus americanus,^Coccyzus americanus
+Black-billed Cuckoo,^Black-billed Cuckoo$,Coccyzus erythropthalmus,^Coccyzus erythropthalmus
+Cuckoo,^(Common )?Cuckoo,Cuculus canorus,^Cuculus canorus
+Pallas's Sandgrouse,^Pallas's Sandgrouse$,Syrrhaptes paradoxus,^Syrrhaptes paradoxus
+Rock Dove,^(Rock Dove|Feral Pigeon),Columba livia,^Columba livia
+Stock Dove,^Stock (Dove|Pigeon),Columba oenas,^Columba oenas
+Woodpigeon,^(Common )?Wood(-|\s)?Pigeon,Columba palumbus,^Columba palumbus
+Turtle Dove,^(European )?Turtle(-|\s)Dove$,Streptopelia turtur,^Streptopelia turtur
+Oriental Turtle Dove,^Oriental Turtle Dove$,Streptopelia orientalis,^Streptopelia orientalis
+Collared Dove,^(Eurasian )?Coll?are?d(-|\s)Dove$,Streptopelia decaocto,^Streptopelia decaocto
+Mourning Dove,^Mourning Dove$,Zenaida macroura,^Zenaida macroura
+Water Rail,^Water Rail,Rallus aquaticus,^Rallus aquaticus
+Corncrake,^Corncrake$|^Corn Crake$,Crex crex,^Crex crex
+Sora Rail,^Sora Rail$|^Sora$,Porzana carolina,^Porzana carolina
+Spotted Crake,^Spotted Crake$,Porzana porzana,^Porzana porzana
+Moorhen,^(Common |Eurasian )?Moorhen,Gallinula chloropus,^Gallinula chloropus
+Coot,^(Eurasian|Common)?\s?Coot,Fulica atra,^Fulica atra
+American Coot,^American Coot$,Fulica americana,^Fulica americana
+Allen's Gallinule,^Allen's Gallinule$,Porphyrio alleni,^Porphyrio alleni
+American Purple Gallinule,^American Purple Gallinule$|^Purple Gallinule$,Porphyrio martinica,^Porphyrio martinica
+Western Swamphen,^Western Swamphen$,Porphyrio porphyrio,^Porphyrio porphyrio
+Baillon's Crake,^Baillon's Crake$,Zapornia pusilla,^Zapornia pusilla
+Little Crake,^Little Crake$,Zapornia parva,^Zapornia parva
+Sandhill Crane,^Sandhill Crane$,Antigone canadensis,^Antigone canadensis
+Crane,^Crane$|^Common Crane$,Grus grus,^Grus grus
+Little Grebe,^Little Grebe,Tachybaptus ruficollis,^Tachybaptus ruficollis
+Pied-billed Grebe,^Pied-billed Grebe$,Podilymbus podiceps,^Podilymbus podiceps
+Red-necked Grebe,^Red-necked Grebe$,Podiceps grisegena,^Podiceps grisegena
+Great Crested Grebe,^Great(-|\s)Crested Grebe,Podiceps cristatus,^Podiceps cristatus
+Slavonian Grebe,^\b(Slavonian|Horned) Grebe\b,Podiceps auritus,^Podiceps auritus
+Black-necked Grebe,^(Black-necked|Eared) Grebe$,Podiceps nigricollis,^Podiceps nigricollis
+Stone-curlew,^Stone-curlew$|^Eurasian Stone-curlew$,Burhinus oedicnemus,^Burhinus oedicnemus
+Oystercatcher,^(Eurasian )?Oystercatcher,Haematopus ostralegus,^Haematopus ostralegus
+Black-winged Stilt,^Black-winged Stilt$,Himantopus himantopus,^Himantopus himantopus
+Avocet,^Avocet$|^Pied Avocet$,Recurvirostra avosetta,^Recurvirostra avosetta
+Lapwing,^(Northern )?Lapwing$,Vanellus vanellus,^Vanellus vanellus
+Sociable Plover,^Sociable Plover$|^Sociable Lapwing$,Vanellus gregarius,^Vanellus gregarius
+White-tailed Plover,^White-tailed Plover$|^White-tailed Lapwing$,Vanellus leucurus,^Vanellus leucurus
+Golden Plover,^(European )?Golden(-|\s)Plover,Pluvialis apricaria,^Pluvialis apricaria
+Pacific Golden Plover,^Pacific Golden Plover$,Pluvialis fulva,^Pluvialis fulva
+American Golden Plover,^American Golden Plover$,Pluvialis dominica,^Pluvialis dominica
+Grey Plover,^(Grey|Black-bellied) Plover,Pluvialis squatarola,^Pluvialis squatarola
+Ringed Plover,^(Common |Greater )?Ringed Plover,Charadrius hiaticula,^Charadrius hiaticula
+Semipalmated Plover,^Semipalmated Plover$,Charadrius semipalmatus,^Charadrius semipalmatus
+Little Ringed Plover,^Little Ringed Plover,Charadrius dubius,^Charadrius dubius
+Killdeer,^Killdeer$,Charadrius vociferus,^Charadrius vociferus
+Kentish Plover,^Kentish Plover$,Charadrius alexandrinus,^Charadrius alexandrinus
+Greater Sand Plover,^Greater Sand Plover$,Charadrius leschenaultii,^Charadrius leschenaultii
+Siberian Sand Plover,^Siberian Sand Plover$,Charadrius mongolus,^Charadrius mongolus
+Tibetan Sand Plover,^Tibetan Sand Plover$,Charadrius atrifrons,^Charadrius atrifrons
+Caspian Plover,^Caspian Plover$,Charadrius asiaticus,^Charadrius asiaticus
+Dotterel,^Dotterel$|^Eurasian Dotterel$,Charadrius morinellus,^Charadrius morinellus
+Upland Sandpiper,^Upland Sandpiper$,Bartramia longicauda,^Bartramia longicauda
+Whimbrel,^(Eurasian )?Whimbrel,Numenius phaeopus,^Numenius phaeopus
+Hudsonian Whimbrel,^Hudsonian Whimbrel$,Numenius hudsonicus,^Numenius hudsonicus
+Little Whimbrel,^Little Whimbrel$|^Little Curlew$,Numenius minutus,^Numenius minutus
+Eskimo Curlew,^Eskimo Curlew$,Numenius borealis,^Numenius borealis
+Curlew,^(?!.*Sandpiper)(Eurasian )?Curlew,Numenius arquata,^Numenius arquata
+Bar-tailed Godwit,^Bar(-|\s)tailed Godwit,Limosa lapponica,^Limosa lapponica
+Black-tailed Godwit,^Black(-|\s)tailed Godwit,Limosa limosa,^Limosa limosa
+Hudsonian Godwit,^Hudsonian Godwit$,Limosa haemastica,^Limosa haemastica
+Turnstone,^(Ruddy )?Turnstone,Arenaria interpres,^Arenaria interpres
+Great Knot,^Great Knot$,Calidris tenuirostris,^Calidris tenuirostris
+Knot,^(Red )?Knot,Calidris canutus,^Calidris canutus
+Ruff,^Ruff$,Calidris pugnax,^Calidris pugnax
+Broad-billed Sandpiper,^Broad-billed Sandpiper$,Calidris falcinellus,^Calidris falcinellus
+Sharp-tailed Sandpiper,^Sharp-tailed Sandpiper$,Calidris acuminata,^Calidris acuminata
+Stilt Sandpiper,^Stilt Sandpiper$,Calidris himantopus,^Calidris himantopus
+Curlew Sandpiper,^Curlew Sandpiper,Calidris ferruginea,^Calidris ferruginea
+Temminck's Stint,^Temminck's Stint$,Calidris temminckii,^Calidris temminckii
+Long-toed Stint,^Long-toed Stint$,Calidris subminuta,^Calidris subminuta
+Red-necked Stint,^Red-necked Stint$,Calidris ruficollis,^Calidris ruficollis
+Sanderling,^Sanderling,Calidris alba,^Calidris alba
+Dunlin,^Dunlin,Calidris alpina,^Calidris alpina
+Purple Sandpiper,^Purple Sandpiper$,Calidris maritima,^Calidris maritima
+Baird's Sandpiper,^Baird's Sandpiper$,Calidris bairdii,^Calidris bairdii
+Little Stint,^Little Stint$,Calidris minuta,^Calidris minuta
+Least Sandpiper,^Least Sandpiper$,Calidris minutilla,^Calidris minutilla
+White-rumped Sandpiper,^White-rumped Sandpiper$,Calidris fuscicollis,^Calidris fuscicollis
+Buff-breasted Sandpiper,^Buff-breasted Sandpiper$,Calidris subruficollis,^Calidris subruficollis
+Pectoral Sandpiper,^Pectoral Sandpiper$,Calidris melanotos,^Calidris melanotos
+Semipalmated Sandpiper,^Semipalmated Sandpiper$,Calidris pusilla,^Calidris pusilla
+Western Sandpiper,^Western Sandpiper$,Calidris mauri,^Calidris mauri
+Long-billed Dowitcher,^Long-billed Dowitcher$,Limnodromus scolopaceus,^Limnodromus scolopaceus
+Short-billed Dowitcher,^Short-billed Dowitcher$,Limnodromus griseus,^Limnodromus griseus
+Woodcock,^Woodcock$|^Eurasian Woodcock$,Scolopax rusticola,^Scolopax rusticola
+Jack Snipe,^Jack Snipe$,Lymnocryptes minimus,^Lymnocryptes minimus
+Great Snipe,^Great Snipe$,Gallinago media,^Gallinago media
+Snipe,^(Common )?Snipe,Gallinago gallinago,^Gallinago gallinago
+Wilson's Snipe,^Wilson's Snipe$,Gallinago delicata,^Gallinago delicata
+Terek Sandpiper,^Terek Sandpiper$,Xenus cinereus,^Xenus cinereus
+Wilson's Phalarope,^Wilson's Phalarope$,Phalaropus tricolor,^Phalaropus tricolor
+Red-necked Phalarope,^Red-necked Phalarope$,Phalaropus lobatus,^Phalaropus lobatus
+Grey Phalarope,^Grey Phalarope$|^Red Phalarope$,Phalaropus fulicarius,^Phalaropus fulicarius
+Common Sandpiper,^Common Sandpiper$,Actitis hypoleucos,^Actitis hypoleucos
+Spotted Sandpiper,^Spotted Sandpiper$,Actitis macularius,^Actitis macularius
+Green Sandpiper,^Green Sandpi?p?per$,Tringa ochropus,^Tringa ochropus
+Solitary Sandpiper,^Solitary Sandpiper$,Tringa solitaria,^Tringa solitaria
+Grey-tailed Tattler,^Grey-tailed Tattler$,Tringa brevipes,^Tringa brevipes
+Lesser Yellowlegs,^Lesser Yellowlegs$,Tringa flavipes,^Tringa flavipes
+Redshank,^(Common )?Redshank,Tringa totanus,^Tringa totanus
+Marsh Sandpiper,^Marsh Sandpiper$,Tringa stagnatilis,^Tringa stagnatilis
+Wood Sandpiper,^Wood Sandpiper$,Tringa glareola,^Tringa glareola
+Spotted Redshank,^Spotted Redshank$,Tringa erythropus,^Tringa erythropus
+Greenshank,^Greenshank$|^Common Greenshank$,Tringa nebularia,^Tringa nebularia
+Greater Yellowlegs,^Greater Yellowlegs$,Tringa melanoleuca,^Tringa melanoleuca
+Cream-coloured Courser,^Cream-coloured Courser$|^Cream-colored Courser$,Cursorius cursor,^Cursorius cursor
+Collared Pratincole,^Collared Pratincole$,Glareola pratincola,^Glareola pratincola
+Oriental Pratincole,^Oriental Pratincole$,Glareola maldivarum,^Glareola maldivarum
+Black-winged Pratincole,^Black-winged Pratincole$,Glareola nordmanni,^Glareola nordmanni
+Kittiwake,^(\bKittiwake\b|Black-legged Kittiwake),Rissa tridactyla,^Rissa tridactyla
+Ivory Gull,^Ivory Gull$,Pagophila eburnea,^Pagophila eburnea
+Sabine's Gull,^Sabine's Gull$,Xema sabini,^Xema sabini
+Slender-billed Gull,^Slender-billed Gull$,Chroicocephalus genei,^Chroicocephalus genei
+Bonaparte's Gull,^Bonaparte's Gull$,Chroicocephalus philadelphia,^Chroicocephalus philadelphia
+Black-headed Gull,^Black-headed Gull$,Chroicocephalus ridibundus,^Chroicocephalus ridibundus
+Little Gull,^Little Gull$,Hydrocoloeus minutus,^Hydrocoloeus minutus
+Ross's Gull,^Ross's Gull$,Rhodostethia rosea,^Rhodostethia rosea
+Laughing Gull,^Laughing Gull$,Leucophaeus atricilla,^Leucophaeus atricilla
+Franklin's Gull,^Franklin's Gull$,Leucophaeus pipixcan,^Leucophaeus pipixcan
+Audouin's Gull,^Audouin's Gull$,Ichthyaetus audouinii,^Ichthyaetus audouinii
+Mediterranean Gull,^Mediterranean Gull$,Ichthyaetus melanocephalus,^Ichthyaetus melanocephalus
+Great Black-headed Gull,^Great Black-headed Gull$|^Pallas's Gull$,Ichthyaetus ichthyaetus,^Ichthyaetus ichthyaetus
+Common Gull,^(Common|Mew) Gull,Larus canus,^Larus canus
+Ring-billed Gull,^Ring-billed Gull$,Larus delawarensis,^Larus delawarensis
+Great Black-backed Gull,^Great(er)? Black-backed Gull$,Larus marinus,^Larus marinus
+Kelp Gull,^Kelp Gull$,Larus dominicanus,^Larus dominicanus
+Glaucous-winged Gull,^Glaucous-winged Gull$,Larus glaucescens,^Larus glaucescens
+Glaucous Gull,^Glaucous Gull$,Larus hyperboreus,^Larus hyperboreus
+Iceland Gull,^Iceland Gull,Larus glaucoides,^Larus glaucoides
+Herring Gull,^(European )?Herring Gull,Larus argentatus,^Larus argentatus
+American Herring Gull,^American Herring Gull$,Larus smithsonianus,^Larus smithsonianus
+Caspian Gull,^Caspian Gull$,Larus cachinnans,^Larus cachinnans
+Yellow-legged Gull,^Yellow-legged Gull,Larus michahellis,^Larus michahellis
+Slaty-backed Gull,^Slaty-backed Gull$,Larus schistisagus,^Larus schistisagus
+Lesser Black-backed Gull,^Lesser Black-backed Gull,Larus fuscus,^Larus fuscus
+Gull-billed Tern,^Gull-billed Tern$,Gelochelidon nilotica,^Gelochelidon nilotica
+Caspian Tern,^Caspian Tern$,Hydroprogne caspia,^Hydroprogne caspia
+Royal Tern,^Royal Tern$,Thalasseus maximus,^Thalasseus maximus
+Lesser Crested Tern,^Lesser Crested Tern$,Thalasseus bengalensis,^Thalasseus bengalensis
+Sandwich Tern,^Sandwich Tern$,Thalasseus sandvicensis,^Thalasseus sandvicensis
+Cabot's Tern,^Cabot's Tern$,Thalasseus acuflavidus,^Thalasseus acuflavidus
+Elegant Tern,^Elegant Tern$,Thalasseus elegans,^Thalasseus elegans
+Little Tern,^Little Tern$,Sternula albifrons,^Sternula albifrons
+Least Tern,^Least Tern$,Sternula antillarum,^Sternula antillarum
+Aleutian Tern,^Aleutian Tern$,Onychoprion aleuticus,^Onychoprion aleuticus
+Bridled Tern,^Bridled Tern$,Onychoprion anaethetus,^Onychoprion anaethetus
+Sooty Tern,^Sooty Tern$,Onychoprion fuscatus,^Onychoprion fuscatus
+Roseate Tern,^Roseate Tern$,Sterna dougallii,^Sterna dougallii
+Common Tern,^Common Tern,Sterna hirundo,^Sterna hirundo
+Arctic Tern,^Arctic Tern$,Sterna paradisaea,^Sterna paradisaea
+Forster's Tern,^Forster's Tern$,Sterna forsteri,^Sterna forsteri
+Whiskered Tern,^Whiskered Tern$,Chlidonias hybrida,^Chlidonias hybrida
+White-winged Black Tern,^White-winged Black Tern$|^White-winged Tern$,Chlidonias leucopterus,^Chlidonias leucopterus
+Black Tern,^Black Tern( \(eurasian\))?$,Chlidonias niger,^Chlidonias niger
+South Polar Skua,^South Polar Skua$,Stercorarius maccormicki,^Stercorarius maccormicki
+Great Skua,Great Skua,Stercorarius skua,^Stercorarius skua
+Pomarine Skua,^Pomarine Skua$|^Pomarine Jaeger$,Stercorarius pomarinus,^Stercorarius pomarinus
+Arctic Skua,^Arctic Skua$|^Parasitic Jaeger$,Stercorarius parasiticus,^Stercorarius parasiticus
+Long-tailed Skua,^Long-tailed (Skua|Jaeger),Stercorarius longicaudus,^Stercorarius longicaudus
+Little Auk,^Little Auk$,Alle alle,^Alle alle
+Brünnich's Guillemot,^Brünnich's Guillemot$|^Thick-billed Murre$,Uria lomvia,^Uria lomvia
+Common Guillemot,^(Common )?(Guillemot|Murre),Uria aalge,^Uria aalge
+Razorbill,^Razorbill,Alca torda,^Alca torda
+Great Auk,^Great Auk$,Pinguinus impennis,^Pinguinus impennis
+Black Guillemot,^Black Guillemot$,Cepphus grylle,^Cepphus grylle
+Long-billed Murrelet,^Long-billed Murrelet$,Brachyramphus perdix,^Brachyramphus perdix
+Ancient Murrelet,^Ancient Murrelet$,Synthliboramphus antiquus,^Synthliboramphus antiquus
+Puffin,^Puffin$|^Atlantic Puffin$,Fratercula arctica,^Fratercula arctica
+Tufted Puffin,^Tufted Puffin$,Fratercula cirrhata,^Fratercula cirrhata
+Red-billed Tropicbird,^Red-billed Tropicbird$,Phaethon aethereus,^Phaethon aethereus
+Red-throated Diver,^Red-throated (Diver|Loon),Gavia stellata,^Gavia stellata
+Black-throated Diver,^(Black-throated|Arctic) (Diver|Loon),Gavia arctica,^Gavia arctica
+Pacific Diver,^Pacific Diver$|^Pacific Loon$,Gavia pacifica,^Gavia pacifica
+Great Northern Diver,^Great Northern Diver$|^Common Loon$,Gavia immer,^Gavia immer
+White-billed Diver,^White-billed Diver$|^Yellow-billed Loon$,Gavia adamsii,^Gavia adamsii
+Wilson's Petrel,^Wilson's Petrel$|^Wilson's Storm Petrel$,Oceanites oceanicus,^Oceanites oceanicus
+White-faced Storm Petrel,^White-faced Storm Petrel$,Pelagodroma marina,^Pelagodroma marina
+Black-browed Albatross,^Black-browed Albatross$,Thalassarche melanophris,^Thalassarche melanophris
+Atlantic Yellow-nosed Albatross,^Atlantic Yellow-nosed Albatross$,Thalassarche chlororhynchos,^Thalassarche chlororhynchos
+Storm Petrel,^(European )?Storm-?Petrel,Hydrobates pelagicus,^Hydrobates pelagicus
+Swinhoe's Petrel,^Swinhoe's Petrel$|^Swinhoe's Storm Petrel$,Hydrobates monorhis,^Hydrobates monorhis
+Leach's Petrel,Leach's (Storm-?)?Petrel,Hydrobates leucorhous,^Hydrobates leucorhous
+Fulmar,^Fulmar$|^Northern Fulmar$,Fulmarus glacialis,^Fulmarus glacialis
+Zino's Petrel,^Zino's Petrel$,Pterodroma madeira,^Pterodroma madeira
+Black-capped Petrel,^Black-capped Petrel$,Pterodroma hasitata,^Pterodroma hasitata
+White-chinned Petrel,^White-chinned Petrel$,Procellaria aequinoctialis,^Procellaria aequinoctialis
+Scopoli's Shearwater,^Scopoli's Shearwater$,Calonectris diomedea,^Calonectris diomedea
+Cory's Shearwater,^Cory's Shearwater$,Calonectris borealis,^Calonectris borealis
+Sooty Shearwater,^Sooty Shearwater$,Ardenna grisea,^Ardenna grisea
+Great Shearwater,^Great Shearwater$,Ardenna gravis,^Ardenna gravis
+Manx Shearwater,^Manx Shearwater$,Puffinus puffinus,^Puffinus puffinus
+Yelkouan Shearwater,^Yelkouan Shearwater$,Puffinus yelkouan,^Puffinus yelkouan
+Balearic Shearwater,^Balearic Shearwater$,Puffinus mauretanicus,^Puffinus mauretanicus
+Barolo Shearwater,^Barolo Shearwater$,Puffinus baroli,^Puffinus baroli
+Black Stork,^Black Stork$,Ciconia nigra,^Ciconia nigra
+White Stork,^White Stork$,Ciconia ciconia,^Ciconia ciconia
+Ascension Frigatebird,^Ascension Frigatebird$,Fregata aquila,^Fregata aquila
+Magnificent Frigatebird,^Magnificent Frigatebird$,Fregata magnificens,^Fregata magnificens
+Gannet,^Gannet$|^Northern Gannet$,Morus bassanus,^Morus bassanus
+Red-footed Booby,^Red-footed Booby$,Sula sula,^Sula sula
+Brown Booby,^Brown Booby$,Sula leucogaster,^Sula leucogaster
+Cormorant,^(Great )?Cormorant,Phalacrocorax carbo,^Phalacrocorax carbo
+Shag,^(European)?\s?\bShag\b,Gulosus aristotelis,^Gulosus aristotelis
+Double-crested Cormorant,^Double-crested Cormorant$,Nannopterum auritum,^Nannopterum auritum
+Glossy Ibis,^Glossy Ibis$,Plegadis falcinellus,^Plegadis falcinellus
+Spoonbill,^(Eurasian )?Spoonbill,Platalea leucorodia,^Platalea leucorodia
+Bittern,^(Eurasian )?Bittern,Botaurus stellaris,^Botaurus stellaris
+American Bittern,^American Bittern$,Botaurus lentiginosus,^Botaurus lentiginosus
+Least Bittern,^Least Bittern$,Ixobrychus exilis,^Ixobrychus exilis
+Little Bittern,^Little Bittern$,Ixobrychus minutus,^Ixobrychus minutus
+Night-heron,^Night-heron$|^Black-crowned Night Heron$,Nycticorax nycticorax,^Nycticorax nycticorax
+Green Heron,^Green Heron$,Butorides virescens,^Butorides virescens
+Squacco Heron,^Squacco Heron$,Ardeola ralloides,^Ardeola ralloides
+Chinese Pond Heron,^Chinese Pond Heron$,Ardeola bacchus,^Ardeola bacchus
+Cattle Egret,^Cattle Egret$|^Western Cattle(-|\s)Egret$,Bubulcus ibis,^Bubulcus ibis
+Grey Heron,^(Gr(e|a)y )?Heron,Ardea cinerea,^Ardea cinerea
+Great Blue Heron,^Great Blue Heron$,Ardea herodias,^Ardea herodias
+Purple Heron,^Purple Heron$,Ardea purpurea,^Ardea purpurea
+Great White Egret,^Great (White )?Egret,Ardea alba,^Ardea alba
+Snowy Egret,^Snowy Egret$,Egretta thula,^Egretta thula
+Little Egret,^Little Egret,Egretta garzetta,^Egretta garzetta
+Dalmatian Pelican,^Dalmatian Pelican$,Pelecanus crispus,^Pelecanus crispus
+Osprey,^(Western )?Osprey,Pandion haliaetus,^Pandion haliaetus
+Egyptian Vulture,^Egyptian Vulture$,Neophron percnopterus,^Neophron percnopterus
+Honey-buzzard,^Honey-buzzard$|^European Honey Buzzard$,Pernis apivorus,^Pernis apivorus
+Short-toed Eagle,^Short-toed Eagle$|^Short-toed Snake Eagle$,Circaetus gallicus,^Circaetus gallicus
+Spotted Eagle,^Spotted Eagle$|^Greater Spotted Eagle$,Clanga clanga,^Clanga clanga
+Golden Eagle,^Golden Eagle$,Aquila chrysaetos,^Aquila chrysaetos
+Sparrowhawk,^(Eurasian )?Sparrowhawk,Accipiter nisus,^Accipiter nisus
+Goshawk,^Goshawk$|^Eurasian Goshawk$,Accipiter gentilis,^Accipiter gentilis
+Marsh Harrier,^(Western |Eurasian )?Marsh(-|\s)Harrier,Circus aeruginosus,^Circus aeruginosus
+Hen Harrier,^Hen Harrier$,Circus cyaneus,^Circus cyaneus
+Northern Harrier,^Northern Harrier$,Circus hudsonius,^Circus hudsonius
+Pallid Harrier,^Pallid Harrier$,Circus macrourus,^Circus macrourus
+Montagu's Harrier,Montagu(‘|’)s Harrier,Circus pygargus,^Circus pygargus
+Red Kite,^Red Kite,Milvus milvus,^Milvus milvus
+Black Kite,^Black Kite$,Milvus migrans,^Milvus migrans
+White-tailed Eagle,^\bWhite(-|\s)tailed Eagle\b,Haliaeetus albicilla,^Haliaeetus albicilla
+Rough-legged Buzzard,^Rough-legged Buzzard$,Buteo lagopus,^Buteo lagopus
+Long-legged Buzzard,^Long-legged Buzzard$,Buteo rufinus,^Buteo rufinus
+Buzzard,^(Comm?on |Eurasian )?Buzzard,Buteo buteo,^Buteo buteo
+Barn Owl,^(Western )?Barn Owl,Tyto alba,^Tyto alba
+Tengmalm's Owl,^Tengmalm's Owl$|^Boreal Owl$,Aegolius funereus,^Aegolius funereus
+Little Owl,^Little Owl,Athene noctua,^Athene noctua
+Hawk Owl,^Hawk Owl$|^Northern Hawk-Owl$,Surnia ulula,^Surnia ulula
+Scops Owl,^Scops Owl$|^Eurasian Scops Owl$,Otus scops,^Otus scops
+Long-eared Owl,^Long(-|\s)eared Owl,Asio otus,^Asio otus
+Short-eared Owl,^Short-eared Owl,Asio flammeus,^Asio flammeus
+Snowy Owl,^Snowy Owl$,Bubo scandiacus,^Bubo scandiacus
+Tawny Owl,^Tawny Owl,Strix aluco,^Strix aluco
+Hoopoe,^(Eurasian )?Hoopoe,Upupa epops,^Upupa epops
+Roller,^Roller$|^European Roller$,Coracias garrulus,^Coracias garrulus
+Kingfisher,^(Common )?\bKingfisher\b,Alcedo atthis,^Alcedo atthis
+Belted Kingfisher,^Belted Kingfisher$,Megaceryle alcyon,^Megaceryle alcyon
+Blue-cheeked Bee-eater,^Blue-cheeked Bee-eater$,Merops persicus,^Merops persicus
+Bee-eater,^Bee-eater$|^European Bee-eater$,Merops apiaster,^Merops apiaster
+Wryneck,^Wryneck$|^Eurasian Wryneck$,Jynx torquilla,^Jynx torquilla
+Yellow-bellied Sapsucker,^Yellow-bellied Sapsucker$,Sphyrapicus varius,^Sphyrapicus varius
+Lesser Spotted Woodpecker,^Lesser Spotted Woodpecker$,Dryobates minor,^Dryobates minor
+Great Spotted Woodpecker,^Great(er)?(-|\s)Spotted Woodpecker,Dendrocopos major,^Dendrocopos major
+Green Woodpecker,^(European )?Green Woodpecker,Picus viridis,^Picus viridis
+Lesser Kestrel,^Lesser Kestrel$,Falco naumanni,^Falco naumanni
+Kestrel,^(Common |Eurasian )?\bKestrel\b,Falco tinnunculus,^Falco tinnunculus
+American Kestrel,^American Kestrel$,Falco sparverius,^Falco sparverius
+Red-footed Falcon,^Red-footed Falcon$,Falco vespertinus,^Falco vespertinus
+Amur Falcon,^Amur Falcon$,Falco amurensis,^Falco amurensis
+Eleonora's Falcon,^Eleonora's Falcon$,Falco eleonorae,^Falco eleonorae
+Merlin,^Merlin,Falco columbarius,^Falco columbarius
+Hobby,^(Eurasian )?Hobby,Falco subbuteo,^Falco subbuteo
+Gyr Falcon,^Gyr Falcon$|^Gyrfalcon$,Falco rusticolus,^Falco rusticolus
+Peregrine,^Peregrine( Falcon)?,Falco peregrinus,^Falco peregrinus
+Ring-necked Parakeet,^Ring-necked Parakeet$|^Rose-ringed Parakeet$,Psittacula krameri,^Psittacula krameri
+Eastern Phoebe,^Eastern Phoebe$,Sayornis phoebe,^Sayornis phoebe
+Yellow-bellied Flycatcher,^Yellow-bellied Flycatcher$,Empidonax flaviventris,^Empidonax flaviventris
+Acadian Flycatcher,^Acadian Flycatcher$,Empidonax virescens,^Empidonax virescens
+Alder Flycatcher,^Alder Flycatcher$,Empidonax alnorum,^Empidonax alnorum
+Eastern Kingbird,^Eastern Kingbird$,Tyrannus tyrannus,^Tyrannus tyrannus
+Great Grey Shrike,^\bGreat Gr(e|a)y Shrike\b,Lanius excubitor,^Lanius excubitor
+Masked Shrike,^Masked Shrike$,Lanius nubicus,^Lanius nubicus
+Lesser Grey Shrike,^Lesser Grey Shrike$,Lanius minor,^Lanius minor
+Woodchat Shrike,^Woodchat Shrike$,Lanius senator,^Lanius senator
+Daurian Shrike,^Daurian Shrike$|^Isabelline Shrike$,Lanius isabellinus,^Lanius isabellinus
+Red-backed Shrike,^Red-backed Shrike$,Lanius collurio,^Lanius collurio
+Turkestan Shrike,^Turkestan Shrike$|^Red-tailed Shrike$,Lanius phoenicuroides,^Lanius phoenicuroides
+Brown Shrike,^Brown Shrike$,Lanius cristatus,^Lanius cristatus
+Long-tailed Shrike,^Long-tailed Shrike$,Lanius schach,^Lanius schach
+Red-eyed Vireo,^Red-eyed Vireo$,Vireo olivaceus,^Vireo olivaceus
+Philadelphia Vireo,^Philadelphia Vireo$,Vireo philadelphicus,^Vireo philadelphicus
+Yellow-throated Vireo,^Yellow-throated Vireo$,Vireo flavifrons,^Vireo flavifrons
+Golden Oriole,^Golden Oriole$|^Eurasian Golden Oriole$,Oriolus oriolus,^Oriolus oriolus
+Jay,^(Eurasian )?Jay,Garrulus glandarius,^Garrulus glandarius
+Magpie,^(Eurasian )?Magpie,Pica pica,^Pica pica
+Nutcracker,^Nutcracker$|^Spotted Nutcracker$,Nucifraga caryocatactes,^Nucifraga caryocatactes
+Chough,^Chough$|^Red-billed Chough$,Pyrrhocorax pyrrhocorax,^Pyrrhocorax pyrrhocorax
+Jackdaw,^(Western |Eurasian )?Jackdaw,Coloeus monedula,^Coloeus monedula
+Rook,^Rook,Corvus frugilegus,^Corvus frugilegus
+Carrion Crow,^(Carrion )?Crow,Corvus corone,^Corvus corone
+Hooded Crow,^\bHooded Crow\b,Corvus cornix,^Corvus cornix
+Raven,^(Common|Northern)?\s?Raven,Corvus corax,^Corvus corax
+Waxwing,^(Bohemian )?Waxwing,Bombycilla garrulus,^Bombycilla garrulus
+Cedar Waxwing,^Cedar Waxwing$,Bombycilla cedrorum,^Bombycilla cedrorum
+Coal Tit,^Coal Tit,Periparus ater,^Periparus ater
+Crested Tit,^Crested Tit$,Lophophanes cristatus,^Lophophanes cristatus
+Marsh Tit,^Marsh Tit,Poecile palustris,^Poecile palustris
+Willow Tit,^Willow Tit$,Poecile montanus,^Poecile montanus
+Blue Tit,^(Eurasian )?Blue Tit,Cyanistes caeruleus,^Cyanistes caeruleus
+Great Tit,^Great Tit,Parus major,^Parus major
+Penduline Tit,^Penduline Tit$|^Eurasian Penduline Tit$,Remiz pendulinus,^Remiz pendulinus
+Bearded Tit,^Bearded (Tit|Reedling),Panurus biarmicus,^Panurus biarmicus
+Woodlark,^Woodlark( \[arborea\])?$,Lullula arborea,^Lullula arborea
+White-winged Lark,^White-winged Lark$,Alauda leucoptera,^Alauda leucoptera
+Skylark,^(Eurasian )?Sky(\s)?lark,Alauda arvensis,^Alauda arvensis
+Crested Lark,^Crested Lark$,Galerida cristata,^Galerida cristata
+Shore Lark,^(Shore|Horned) Lark,Eremophila alpestris,^Eremophila alpestris
+Short-toed Lark,^Short-toed Lark$|^Greater Short-toed Lark$,Calandrella brachydactyla,^Calandrella brachydactyla
+Bimaculated Lark,^Bimaculated Lark$,Melanocorypha bimaculata,^Melanocorypha bimaculata
+Calandra Lark,^Calandra Lark$,Melanocorypha calandra,^Melanocorypha calandra
+Black Lark,^Black Lark$,Melanocorypha yeltoniensis,^Melanocorypha yeltoniensis
+Mediterranean Short-toed Lark,^Mediterranean Short-toed Lark$,Alaudala rufescens,^Alaudala rufescens
+Sand Martin,^(Sand Martin|Bank Swallow),Riparia riparia,^Riparia riparia
+Tree Swallow,^Tree Swallow$,Tachycineta bicolor,^Tachycineta bicolor
+Purple Martin,^Purple Martin$,Progne subis,^Progne subis
+Crag Martin,^Crag Martin$|^Eurasian Crag Martin$,Ptyonoprogne rupestris,^Ptyonoprogne rupestris
+Swallow,^Swallow$|^Barn Swallow( \(white-bellied\))?,Hirundo rustica,^Hirundo rustica
+House Martin,^(Common |Western )?House(-|\s)Martin,Delichon urbicum,^Delichon urbicum
+Red-rumped Swallow,^(European )?Red-rumped Swallow,Cecropis daurica,^Cecropis daurica
+American Cliff Swallow,^American Cliff Swallow$,Petrochelidon pyrrhonota,^Petrochelidon pyrrhonota
+Cetti's Warbler,^Cetti('|’)?s Warbler,Cettia cetti,^Cettia cetti
+Long-tailed Tit,^Long-tailed Tit,Aegithalos caudatus,^Aegithalos caudatus
+Wood Warbler,^Wood Warbler$,Phylloscopus sibilatrix,^Phylloscopus sibilatrix
+Western Bonelli's Warbler,^Western Bonelli's Warbler$,Phylloscopus bonelli,^Phylloscopus bonelli
+Eastern Bonelli's Warbler,^Eastern Bonelli's Warbler$,Phylloscopus orientalis,^Phylloscopus orientalis
+Hume's Warbler,^Hume's Warbler$|^Hume's Leaf Warbler$,Phylloscopus humei,^Phylloscopus humei
+Yellow-browed Warbler,^Yellow-browed Warbler$,Phylloscopus inornatus,^Phylloscopus inornatus
+Pallas's Warbler,^Pallas's Warbler$|^Pallas's Leaf Warbler$,Phylloscopus proregulus,^Phylloscopus proregulus
+Radde's Warbler,^Radde's Warbler$,Phylloscopus schwarzi,^Phylloscopus schwarzi
+Sulphur-bellied Warbler,^Sulphur-bellied Warbler$,Phylloscopus griseolus,^Phylloscopus griseolus
+Dusky Warbler,^Dusky Warbler$,Phylloscopus fuscatus,^Phylloscopus fuscatus
+Willow Warbler,^Willow Warbler,Phylloscopus trochilus,^Phylloscopus trochilus
+Chiffchaff,^(?!.*(Siberian|tristis|Iberian)).*(Common )?.*Chiffchaff,Phylloscopus collybita,^(?!.*(tristis)).*Phylloscopus( collybita)? collybita
+Iberian Chiffchaff,^Iberian Chiffchaff$,Phylloscopus ibericus,^Phylloscopus ibericus
+Eastern Crowned Warbler,^Eastern Crowned Warbler$,Phylloscopus coronatus,^Phylloscopus coronatus
+Green Warbler,^Green Warbler$,Phylloscopus nitidus,^Phylloscopus nitidus
+Two-barred Greenish Warbler,^Two-barred Greenish Warbler$|^Two-barred Warbler$,Phylloscopus plumbeitarsus,^Phylloscopus plumbeitarsus
+Greenish Warbler,^Greenish Warbler$,Phylloscopus trochiloides,^Phylloscopus trochiloides
+Pale-legged Leaf Warbler,^Pale-legged Leaf Warbler$,Phylloscopus tenellipes,^Phylloscopus tenellipes
+Arctic Warbler,^Arctic Warbler$,Phylloscopus borealis,^Phylloscopus borealis
+Great Reed Warbler,^Great Reed Warbler$,Acrocephalus arundinaceus,^Acrocephalus arundinaceus
+Aquatic Warbler,^Aquatic Warbler$,Acrocephalus paludicola,^Acrocephalus paludicola
+Sedge Warbler,^Sedge Warbler$,Acrocephalus schoenobaenus,^Acrocephalus schoenobaenus
+Paddyfield Warbler,^Paddyfield Warbler$,Acrocephalus agricola,^Acrocephalus agricola
+Blyth's Reed Warbler,^Blyth's Reed Warbler$,Acrocephalus dumetorum,^Acrocephalus dumetorum
+Reed Warbler,^(Common|Eurasian)?\s?Reed(-|\s)Warbler,Acrocephalus scirpaceus,^Acrocephalus scirpaceus
+Marsh Warbler,^Marsh Warbler$,Acrocephalus palustris,^Acrocephalus palustris
+Thick-billed Warbler,^Thick-billed Warbler$,Arundinax aedon,^Arundinax aedon
+Booted Warbler,^Booted Warbler$,Iduna caligata,^Iduna caligata
+Sykes's Warbler,^Sykes's Warbler$,Iduna rama,^Iduna rama
+Eastern Olivaceous Warbler,^Eastern Olivaceous Warbler$,Iduna pallida,^Iduna pallida
+Olive-tree Warbler,^Olive-tree Warbler$,Hippolais olivetorum,^Hippolais olivetorum
+Melodious Warbler,^Melodious Warbler$,Hippolais polyglotta,^Hippolais polyglotta
+Icterine Warbler,^Icterine Warbler$,Hippolais icterina,^Hippolais icterina
+Pallas's Grasshopper Warbler,^Pallas's Grasshopper Warbler$,Helopsaltes certhiola,^Helopsaltes certhiola
+Lanceolated Warbler,^Lanceolated Warbler$,Locustella lanceolata,^Locustella lanceolata
+River Warbler,^River Warbler$,Locustella fluviatilis,^Locustella fluviatilis
+Savi's Warbler,^Savi's Warbler$,Locustella luscinioides,^Locustella luscinioides
+Grasshopper Warbler,^(Common )?Grasshopper(-|\s)Warbler$,Locustella naevia,^Locustella naevia
+Fan-tailed Warbler,^Fan-tailed Warbler$|^Zitting Cisticola$,Cisticola juncidis,^Cisticola juncidis
+Blackcap,^(Eurasian )?Blackcap,Sylvia atricapilla,^Sylvia atricapilla
+Garden Warbler,^Garden Warbler,Sylvia borin,^Sylvia borin
+Barred Warbler,^Barred Warbler$,Curruca nisoria,^Curruca nisoria
+Lesser Whitethroat,^Lesser Whitethroat(?!.*(Siberian)),Curruca curruca,^(Curruca|Sylvia) curruca(?!.*(blythi))
+Western Orphean Warbler,^Western Orphean Warbler$,Curruca hortensis,^Curruca hortensis
+Eastern Orphean Warbler,^Eastern Orphean Warbler$,Curruca crassirostris,^Curruca crassirostris
+Asian Desert Warbler,^Asian Desert Warbler$,Curruca nana,^Curruca nana
+Rüppell's Warbler,^Rüppell's Warbler$,Curruca ruppeli,^Curruca ruppeli
+Sardinian Warbler,^Sardinian Warbler$,Curruca melanocephala,^Curruca melanocephala
+Western Subalpine Warbler,^Western Subalpine Warbler$,Curruca iberiae,^Curruca iberiae
+Moltoni's Subalpine Warbler,^Moltoni's Subalpine Warbler$|^Moltoni's Warbler$,Curruca subalpina,^Curruca subalpina
+Eastern Subalpine Warbler,^Eastern Subalpine Warbler$,Curruca cantillans,^Curruca cantillans
+Whitethroat,^(Common |Greater )?Whitethroat,Curruca communis,^Curruca communis
+Spectacled Warbler,^Spectacled Warbler$,Curruca conspicillata,^Curruca conspicillata
+Marmora's Warbler,^Marmora's Warbler$,Curruca sarda,^Curruca sarda
+Dartford Warbler,^Dartford Warbler$,Curruca undata,^Curruca undata
+Ruby-crowned Kinglet,^Ruby-crowned Kinglet$,Corthylio calendula,^Corthylio calendula
+Firecrest,^Firecrest$|^Common Firecrest$,Regulus ignicapilla,^Regulus ignicapilla
+Goldcrest,^Goldcrest,Regulus regulus,^Regulus regulus
+Wren,^(Eurasian )?Wren,Troglodytes troglodytes,^Troglodytes troglodytes
+Red-breasted Nuthatch,^Red-breasted Nuthatch$,Sitta canadensis,^Sitta canadensis
+Nuthatch,^(Eurasian )?Nuthatch,Sitta europaea,^Sitta europaea
+Wallcreeper,^Wallcreeper$,Tichodroma muraria,^Tichodroma muraria
+Treecreeper,^(Eurasian )?Treecreeper,Certhia familiaris,^Certhia familiaris
+Short-toed Treecreeper,^Short-toed Treecreeper$,Certhia brachydactyla,^Certhia brachydactyla
+Grey Catbird,^Grey Catbird$,Dumetella carolinensis,^Dumetella carolinensis
+Northern Mockingbird,^Northern Mockingbird$,Mimus polyglottos,^Mimus polyglottos
+Brown Thrasher,^Brown Thrasher$,Toxostoma rufum,^Toxostoma rufum
+Rose-coloured Starling,^Rose-coloured Starling$|^Rosy Starling$,Pastor roseus,^Pastor roseus
+Starling,^(Common |European )?Starling,Sturnus vulgaris,^Sturnus vulgaris
+Varied Thrush,^Varied Thrush$,Ixoreus naevius,^Ixoreus naevius
+Wood Thrush,^Wood Thrush$,Hylocichla mustelina,^Hylocichla mustelina
+Swainson's Thrush,^Swainson's Thrush$,Catharus ustulatus,^Catharus ustulatus
+Hermit Thrush,^Hermit Thrush$,Catharus guttatus,^Catharus guttatus
+Grey-cheeked Thrush,^Grey-cheeked Thrush$,Catharus minimus,^Catharus minimus
+Veery,^Veery$,Catharus fuscescens,^Catharus fuscescens
+White's Thrush,^White's Thrush$,Zoothera aurea,^Zoothera aurea
+Siberian Thrush,^Siberian Thrush$,Geokichla sibirica,^Geokichla sibirica
+Song Thrush,^Song Thrush,Turdus philomelos,^Turdus philomelos
+Mistle Thrush,^Mistle Thrush,Turdus viscivorus,^Turdus viscivorus
+Redwing,^Redwing,Turdus iliacus,^Turdus iliacus
+Blackbird,^(Common |Eurasian )?Blackbird,Turdus merula,^Turdus merula
+Eyebrowed Thrush,^Eyebrowed Thrush$,Turdus obscurus,^Turdus obscurus
+Fieldfare,^Fie(l)?dfare$,Turdus pilaris,^Turdus pilaris
+Ring Ouzel,^Ring Ouzel$,Turdus torquatus,^Turdus torquatus
+Black-throated Thrush,^Black-throated Thrush$,Turdus atrogularis,^Turdus atrogularis
+Red-throated Thrush,^Red-throated Thrush$,Turdus ruficollis,^Turdus ruficollis
+Dusky Thrush,^Dusky Thrush$,Turdus eunomus,^Turdus eunomus
+Naumann's Thrush,^Naumann's Thrush$,Turdus naumanni,^Turdus naumanni
+American Robin,^American Robin$,Turdus migratorius,^Turdus migratorius
+Rufous-tailed Scrub Robin,^Rufous-tailed Scrub Robin$,Cercotrichas galactotes,^Cercotrichas galactotes
+Spotted Flycatcher,^Spotted Flycatcher,Muscicapa striata,^Muscicapa striata
+Asian Brown Flycatcher,^Asian Brown Flycatcher$,Muscicapa dauurica,^Muscicapa dauurica
+Robin,^(European )?Robin,Erithacus rubecula,^Erithacus rubecula
+Siberian Blue Robin,^Siberian Blue Robin$,Larvivora cyane,^Larvivora cyane
+Rufous-tailed Robin,^Rufous-tailed Robin$,Larvivora sibilans,^Larvivora sibilans
+Bluethroat,^Bluethroat$,Luscinia svecica,^Luscinia svecica
+Thrush Nightingale,^Thrush Nightingale$,Luscinia luscinia,^Luscinia luscinia
+Nightingale,^Nightingale$|^Common Nightingale$,Luscinia megarhynchos,^Luscinia megarhynchos
+White-throated Robin,^White-throated Robin$,Irania gutturalis,^Irania gutturalis
+Siberian Rubythroat,^Siberian Rubythroat$,Calliope calliope,^Calliope calliope
+Red-flanked Bluetail,^Red-flanked Bluetail$,Tarsiger cyanurus,^Tarsiger cyanurus
+Taiga Flycatcher,^Taiga Flycatcher$,Ficedula albicilla,^Ficedula albicilla
+Red-breasted Flycatcher,^Red-breasted Flycatcher$,Ficedula parva,^Ficedula parva
+Pied Flycatcher,^Pied Flycatcher$|^European Pied Flycatcher$,Ficedula hypoleuca,^Ficedula hypoleuca
+Collared Flycatcher,^Collared Flycatcher$,Ficedula albicollis,^Ficedula albicollis
+Black Redstart,^Black Redstart$,Phoenicurus ochruros,^Phoenicurus ochruros
+Redstart,^Redstart$|^Common Redstart$,Phoenicurus phoenicurus,^Phoenicurus phoenicurus
+Moussier's Redstart,^Moussier's Redstart$,Phoenicurus moussieri,^Phoenicurus moussieri
+Rock Thrush,^Rock Thrush$|^Common Rock Thrush$,Monticola saxatilis,^Monticola saxatilis
+Blue Rock Thrush,^Blue Rock Thrush$,Monticola solitarius,^Monticola solitarius
+Whinchat,^Whinchat$,Saxicola rubetra,^Saxicola rubetra
+Stonechat,^(European )?Stonechat,Saxicola rubicola,^Saxicola rubicola
+Siberian Stonechat,^Siberian Stonechat$,Saxicola maurus,^Saxicola maurus
+Amur Stonechat,^Amur Stonechat$,Saxicola stejnegeri,^Saxicola stejnegeri
+Wheatear,^(Northern )?Wheatear,Oenanthe oenanthe,^Oenanthe oenanthe
+Isabelline Wheatear,^Isabelline Wheatear$,Oenanthe isabellina,^Oenanthe isabellina
+Desert Wheatear,^Desert Wheatear$,Oenanthe deserti,^Oenanthe deserti
+Western Black-eared Wheatear,^Western Black-eared Wheatear$,Oenanthe hispanica,^Oenanthe hispanica
+Eastern Black-eared Wheatear,^Eastern Black-eared Wheatear$,Oenanthe melanoleuca,^Oenanthe melanoleuca
+Pied Wheatear,^Pied Wheatear$,Oenanthe pleschanka,^Oenanthe pleschanka
+White-crowned Black Wheatear,^White-crowned Black Wheatear$|^White-crowned Wheatear$,Oenanthe leucopyga,^Oenanthe leucopyga
+Dipper,^Dipper$|^White-throated Dipper$,Cinclus cinclus,^Cinclus cinclus
+Rock Sparrow,^Rock Sparrow$,Petronia petronia,^Petronia petronia
+Tree Sparrow,^(Eurasian )?Tree Sparrow$,Passer montanus,^Passer montanus
+Spanish Sparrow,^Spanish Sparrow$,Passer hispaniolensis,^Passer hispaniolensis
+House Sparrow,^House Sparrow,Passer domesticus,^Passer domesticus
+Alpine Accentor,^Alpine Accentor$,Prunella collaris,^Prunella collaris
+Siberian Accentor,^Siberian Accentor$,Prunella montanella,^Prunella montanella
+Dunnock,^Dunnock,Prunella modularis,^Prunella modularis
+Yellow Wagtail,^(Western )?Yellow Wagtail(\s\(.*\))?$,Motacilla flava,^Motacilla flava$
+Eastern Yellow Wagtail,^Eastern Yellow Wagtail$,Motacilla tschutschensis,^Motacilla tschutschensis
+Citrine Wagtail,^Citrine Wagtail$,Motacilla citreola,^Motacilla citreola
+Grey Wagtail,^Gr(e|a)y Wagtail,Motacilla cinerea,^Motacilla cinerea$
+Pied Wagtail,^Pied Wagtail,Motacilla alba,^motacilla alba(?!\s+alba(?:\s|$)).*$
+Richard's Pipit,^Richard's Pipit$,Anthus richardi,^Anthus richardi$
+Blyth's Pipit,^Blyth's Pipit$,Anthus godlewskii,^Anthus godlewskii$
+Tawny Pipit,^Tawny Pipit$,Anthus campestris,^Anthus campestris$
+Meadow Pipit,^Meadow Pipit$,Anthus pratensis,^Anthus pratensis
+Tree Pipit,^Tree Pipit,Anthus trivialis,^Anthus trivialis
+Olive-backed Pipit,^Olive-backed Pipit$,Anthus hodgsoni,^Anthus hodgsoni
+Pechora Pipit,^Pechora Pipit$,Anthus gustavi,^Anthus gustavi
+Red-throated Pipit,^Red-throated Pipit$,Anthus cervinus,^Anthus cervinus
+Buff-bellied Pipit,^Buff-bellied Pipit$,Anthus rubescens,^Anthus rubescens
+Water Pipit,^Water Pipit,Anthus spinoletta,^Anthus spinoletta$
+Rock Pipit,^(\bEuropean\b)?\s?\bRock Pipit\b,Anthus petrosus,^Anthus petrosus$
+Chaffinch,^(Eurasian|Common)?\s?Chaffinch,Fringilla coelebs,^Fringilla coelebs
+Brambling,^Brambling$,Fringilla montifringilla,^Fringilla montifringilla
+Evening Grosbeak,^Evening Grosbeak$,Hesperiphona vespertina,^Hesperiphona vespertina
+Hawfinch,^\bHawfinch\b,Coccothraustes coccothraustes,^Coccothraustes coccothraustes
+Pine Grosbeak,^Pine Grosbeak$,Pinicola enucleator,^Pinicola enucleator
+Bullfinch,^(Eurasian )?Bullfinch,Pyrrhula pyrrhula,^Pyrrhula pyrrhula
+Trumpeter Finch,^Trumpeter Finch$,Bucanetes githagineus,^Bucanetes githagineus
+Common Rosefinch,^Common Rosefinch$,Carpodacus erythrinus,^Carpodacus erythrinus
+Greenfinch,^(European )?Green(\s)?finch,Chloris chloris,^Chloris chloris
+Twite,^Twite,Linaria flavirostris,^Linaria flavirostris
+Linnet,^(Common |Eurasian )?\bLinnet\b,Linaria cannabina,^Linaria cannabina
+Redpoll,^Redpoll|^(Common |Mealy |Lesser |Arctic )Redpoll,Acanthis flammea,^(Acanthis|Carduelis) flammea
+Parrot Crossbill,^Parrot Crossbill$,Loxia pytyopsittacus,^Loxia pytyopsittacus
+Scottish Crossbill,^Scottish Crossbill$,Loxia scotica,^Loxia scotica
+Crossbill,^(Common |Red )?Crossbill$,Loxia curvirostra,^Loxia curvirostra
+Two-barred Crossbill,^Two-barred Crossbill$,Loxia leucoptera,^Loxia leucoptera
+Goldfinch,^(European )?Goldfinch,Carduelis carduelis,^Carduelis carduelis
+Citril Finch,^Citril Finch$,Carduelis citrinella,^Carduelis citrinella
+Serin,^Serin$|^European Serin$,Serinus serinus,^Serinus serinus
+Siskin,^Siskin$|^Eurasian Siskin$,Spinus spinus,^Spinus spinus
+Lapland Bunting,^\bLapland (Bunting|Longspur)\b,Calcarius lapponicus,^Calcarius lapponicus
+Snow Bunting,^\bSnow Bunting\b,Plectrophenax nivalis,^Plectrophenax nivalis
+Corn Bunting,^Corn Bunting,Emberiza calandra,^Emberiza calandra
+Yellowhammer,^Yellow(\s)?hammer,Emberiza citrinella,^Emberiza citrinella
+Pine Bunting,^Pine Bunting$,Emberiza leucocephalos,^Emberiza leucocephalos
+Rock Bunting,^Rock Bunting$,Emberiza cia,^Emberiza cia
+Ortolan Bunting,^Ortolan Bunting$,Emberiza hortulana,^Emberiza hortulana
+Cretzschmar's Bunting,^Cretzschmar's Bunting$,Emberiza caesia,^Emberiza caesia
+Cirl Bunting,^Cirl Bunting$,Emberiza cirlus,^Emberiza cirlus
+Chestnut-eared Bunting,^Chestnut-eared Bunting$,Emberiza fucata,^Emberiza fucata
+Little Bunting,^Little Bunting$,Emberiza pusilla,^Emberiza pusilla
+Yellow-browed Bunting,^Yellow-browed Bunting$,Emberiza chrysophrys,^Emberiza chrysophrys
+Rustic Bunting,^Rustic Bunting$,Emberiza rustica,^Emberiza rustica
+Yellow-breasted Bunting,^Yellow-breasted Bunting$,Emberiza aureola,^Emberiza aureola
+Chestnut Bunting,^Chestnut Bunting$,Emberiza rutila,^Emberiza rutila
+Black-headed Bunting,^Black-headed Bunting$,Emberiza melanocephala,^Emberiza melanocephala
+Black-faced Bunting,^Black-faced Bunting$,Emberiza spodocephala,^Emberiza spodocephala
+Pallas's Reed Bunting,^Pallas's Reed Bunting$,Emberiza pallasi,^Emberiza pallasi
+Reed Bunting,^(Common )?Reed Bunting,Emberiza schoeniclus,^Emberiza schoeniclus
+Lark Sparrow,^Lark Sparrow$,Chondestes grammacus,^Chondestes grammacus
+Dark-eyed Junco,^Dark-eyed Junco$,Junco hyemalis,^Junco hyemalis
+White-crowned Sparrow,^White-crowned Sparrow$,Zonotrichia leucophrys,^Zonotrichia leucophrys
+White-throated Sparrow,^White-throated Sparrow$,Zonotrichia albicollis,^Zonotrichia albicollis
+Savannah Sparrow,^Savannah Sparrow$,Passerculus sandwichensis,^Passerculus sandwichensis
+Song Sparrow,^Song Sparrow$,Melospiza melodia,^Melospiza melodia
+Eastern Towhee,^Eastern Towhee$,Pipilo erythrophthalmus,^Pipilo erythrophthalmus
+Bobolink,^Bobolink$,Dolichonyx oryzivorus,^Dolichonyx oryzivorus
+Baltimore Oriole,^Baltimore Oriole$,Icterus galbula,^Icterus galbula
+Red-winged Blackbird,^Red-winged Blackbird$,Agelaius phoeniceus,^Agelaius phoeniceus
+Brown-headed Cowbird,^Brown-headed Cowbird$,Molothrus ater,^Molothrus ater
+Ovenbird,^Ovenbird$,Seiurus aurocapilla,^Seiurus aurocapilla
+Northern Waterthrush,^Northern Waterthrush$,Parkesia noveboracensis,^Parkesia noveboracensis
+Golden-winged Warbler,^Golden-winged Warbler$,Vermivora chrysoptera,^Vermivora chrysoptera
+Black-and-white Warbler,^Black-and-white Warbler$,Mniotilta varia,^Mniotilta varia
+Tennessee Warbler,^Tennessee Warbler$,Leiothlypis peregrina,^Leiothlypis peregrina
+Common Yellowthroat,^Common Yellowthroat$,Geothlypis trichas,^Geothlypis trichas
+Hooded Warbler,^Hooded Warbler$,Setophaga citrina,^Setophaga citrina
+American Redstart,^American Redstart$,Setophaga ruticilla,^Setophaga ruticilla
+Cape May Warbler,^Cape May Warbler$,Setophaga tigrina,^Setophaga tigrina
+Northern Parula,^Northern Parula$,Setophaga americana,^Setophaga americana
+Magnolia Warbler,^Magnolia Warbler$,Setophaga magnolia,^Setophaga magnolia
+Bay-breasted Warbler,^Bay-breasted Warbler$,Setophaga castanea,^Setophaga castanea
+Blackburnian Warbler,^Blackburnian Warbler$,Setophaga fusca,^Setophaga fusca
+Yellow Warbler,^Yellow Warbler$|^American Yellow Warbler$,Setophaga aestiva,^Setophaga aestiva
+Chestnut-sided Warbler,^Chestnut-sided Warbler$,Setophaga pensylvanica,^Setophaga pensylvanica
+Blackpoll Warbler,^Blackpoll Warbler$,Setophaga striata,^Setophaga striata
+Yellow-rumped Warbler,^Yellow-rumped Warbler$|^Myrtle Warbler$,Setophaga coronata,^Setophaga coronata
+Wilson's Warbler,^Wilson's Warbler$,Cardellina pusilla,^Cardellina pusilla
+Summer Tanager,^Summer Tanager$,Piranga rubra,^Piranga rubra
+Scarlet Tanager,^Scarlet Tanager$,Piranga olivacea,^Piranga olivacea
+Rose-breasted Grosbeak,^Rose-breasted Grosbeak$,Pheucticus ludovicianus,^Pheucticus ludovicianus
+Indigo Bunting,^Indigo Bunting$,Passerina cyanea,^Passerina cyanea
+Dark-bellied Brent Goose,^((?=.*(Dark(-|\s)Bellied)))?(?=.*(Brent Goose|Brant))(?!.*(Pale|Black|light)),Branta bernicla bernicla,^Branta bernicla bernicla
+Black Brant,^(?=.*Black)(?=.*Brant),Branta bernicla nigricans,^Branta bernicla nigricans
+Comic Tern,^Comm?ic Tern,Sterna sp.,^Sterna sp.
+Black Swan,^Black Swan$,Cygnus atratus,^Cygnus atratus
+Unidentified Auk,^(Unidentified )?Auk|alcid sp.?,Auk sp.,^Auk sp.
+Domestic Goose Type,^Domestic Goose,Anser sp.,^Anser sp.
+Siberian Chiffchaff,^Siberian Chiffchaff,Phylloscopus collybita tristis,^Phylloscopus collybita tristis$
+White Wagtail,^White Wagtail,Motacilla alba alba,^Motacilla alba alba
+Bar-headed Goose,Bar-headed Goose,Anser indicus,^Anser indicus
+SIberian Lesser Whitethroat,Siberian Lesser Whitethroat,Curruca curruca blythi,Curruca curruca blythi
+Diver Sp.,Divers? Sp\.?(iecies)?,Gavia Sp.,Gavia Sp\.?(iecies)?
+Indian Peafowl,Indian Peafowl|Peacock,Pavo cristatus,Pavo cristatus
+Petrel Sp.,Petrel Sp.,Pterodroma spp.,Pterodroma spp.
+Fulvous Whistling-Duck,Fulvous Whistling\-?Duck,Dendrocygna bicolor,Dendrocygna bicolor
+Emu,Emu,Dromaius novaehollandiae ,Dromaius novaehollandiae 
+Delete,Delete,Delete,Delete
+Alexandrine Parakeet,Alexandrine Parakeet,Psittacula eupatria,Psittacula eupatria
+Reeves's Pheasant,Reeves'?s? Pheasant,Syrmaticus reevesii,Syrmaticus reevesii
+Puna Teal,Pu(m|n)a Teal,Spatula puna,Spatula puna
+Pratincole Species,Pratincole sp(ecies)\.?,Glareola sp.,Glareola sp\.
+Skua species,Skua sp\.?|Unidentified Skua,Stercorarius|stercorariidae sp.,Stercorarius sp\.?
+Wood Duck,Wood Duck,Aix sponsa,Aix sponsa
+Muscovy Duck,Muscovy Duck,Cairina moschata,Cairina moschata
+Zebra Finch,Zebra Finch,Taeniopygia guttata,Taeniopygia guttata
+Unidentified,^(?!.*(Auk|Petrel|Skua)).*Unidentified,Unidentified,Unidentified
+Hybrid,^(?!.*Channel).*Hybrid|\sx\s,Hybrid,\bHybrid\b|\sx\s
+Channel Wagtail,Channel.*wagtail,motacilla.*(?:flava).*(?:flavissima).*,Motacilla(?:flava)(?:flavissima)
+Helmeted Guineafowl,Helmeted guinea(-|\s)?fowl,Numida meleagris,Numida meleagris
+Bernier's Teal,(Bernier['']?s|Madagascar) Teal,Anas bernieri,Anas bernieri

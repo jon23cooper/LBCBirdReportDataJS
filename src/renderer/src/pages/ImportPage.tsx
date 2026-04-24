@@ -103,6 +103,8 @@ export default function ImportPage({ onValidationFailed }: {
   const [skipRows, setSkipRows] = useState(0)
   const [sheetData, setSheetData] = useState<SheetData>({ headers: [], preview: [] })
   const [columnMap, setColumnMap] = useState<Record<string, string>>({})
+  const [dataset, setDataset] = useState('')
+  const [defaultObserver, setDefaultObserver] = useState('')
   const [result, setResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [importError, setImportError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -141,8 +143,9 @@ export default function ImportPage({ onValidationFailed }: {
     setResult(null)
     try {
       const mapping = buildFieldMapping(columnMap)
+      const batchOptions = { dataset: dataset.trim() || undefined, defaultObserver: defaultObserver.trim() || undefined }
       const r = await window.api.import.commit(
-        file.path, mapping as FieldMapping, selectedSheet || undefined, skipRows || undefined
+        file.path, mapping as FieldMapping, selectedSheet || undefined, skipRows || undefined, batchOptions
       )
       if (r.status === 'validation-failed') {
         onValidationFailed({
@@ -151,6 +154,7 @@ export default function ImportPage({ onValidationFailed }: {
           rows: r.allRows,
           mapping,
           filename: file.path.split('/').pop() ?? file.path,
+          batchOptions,
         })
       } else {
         setResult({ imported: r.imported, warnings: r.warnings })
@@ -165,7 +169,8 @@ export default function ImportPage({ onValidationFailed }: {
   const { headers, preview } = sheetData
   const assignedFields = new Set(Object.values(columnMap).filter(Boolean))
   const hasName = assignedFields.has('originalCommonName') || assignedFields.has('originalScientificName')
-  const canCommit = assignedFields.has('date') && hasName && assignedFields.has('originalCount')
+  const observerMapped = assignedFields.has('observer')
+  const canCommit = assignedFields.has('date') && hasName && assignedFields.has('originalCount') && !!dataset.trim() && (observerMapped || !!defaultObserver.trim())
 
   return (
     <div>
@@ -257,6 +262,32 @@ export default function ImportPage({ onValidationFailed }: {
                 </table>
               </div>
 
+              <h2 style={h2}>Batch details</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <label style={{ ...labelStyle, width: 120, flexShrink: 0 }}>Dataset <span style={{ color: '#c0392b' }}>★</span></label>
+                  <input
+                    type="text"
+                    value={dataset}
+                    onChange={e => setDataset(e.target.value)}
+                    placeholder="e.g. LBC 2024"
+                    style={{ fontSize: 13, padding: '4px 8px', width: 260 }}
+                  />
+                </div>
+                {!observerMapped && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <label style={{ ...labelStyle, width: 120, flexShrink: 0 }}>Default observer <span style={{ color: '#c0392b' }}>★</span></label>
+                    <input
+                      type="text"
+                      value={defaultObserver}
+                      onChange={e => setDefaultObserver(e.target.value)}
+                      placeholder="Name applied to all rows"
+                      style={{ fontSize: 13, padding: '4px 8px', width: 260 }}
+                    />
+                  </div>
+                )}
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                 <button
                   onClick={commit}
@@ -267,7 +298,9 @@ export default function ImportPage({ onValidationFailed }: {
                 </button>
                 {!canCommit && (
                   <span style={{ fontSize: 13, color: '#c0392b' }}>
-                    Map the required fields (★) above before importing.
+                    {!dataset.trim() ? 'Enter a dataset name. ' : ''}
+                    {!observerMapped && !defaultObserver.trim() ? 'Enter a default observer (no observer column mapped). ' : ''}
+                    {(assignedFields.size === 0 || !assignedFields.has('date') || !hasName || !assignedFields.has('originalCount')) ? 'Map the required fields (★) above.' : ''}
                   </span>
                 )}
               </div>

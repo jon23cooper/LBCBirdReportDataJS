@@ -1,20 +1,26 @@
 import { ipcMain, dialog } from 'electron'
+import { parse as parseCsv } from 'csv-parse/sync'
+import { readFileSync } from 'fs'
 import { getSheetNames, readSpreadsheet } from '../importers'
 import { normaliseRows } from '../importers/normalise'
 import { resolveLocationId } from '../locations/match'
-import { getDb } from '../db'
-import { sightings, importBatches, locations } from '../db/schema'
+import { getDb, reserveLbcSequence } from '../db'
+import { sightings, importBatches, locations, species as speciesTable } from '../db/schema'
 import { FieldMapping, RawRow } from '../importers/types'
+import { BatchOptions } from '../../shared/types'
 import { basename, extname } from 'path'
+import { eq } from 'drizzle-orm'
 
 async function validateAndInsert(
   rows: RawRow[],
   mapping: FieldMapping,
   headers: string[],
   filename: string,
-  format: string
+  format: string,
+  batchOptions: BatchOptions = {},
 ) {
-  const { rows: parsed, warnings, failures } = normaliseRows(rows, mapping)
+  const lbcSeqStart = reserveLbcSequence(rows.length)
+  const { rows: parsed, warnings, failures } = normaliseRows(rows, mapping, { ...batchOptions, lbcSeqStart })
 
   if (failures.length > 0) {
     return { status: 'validation-failed' as const, headers, allRows: rows, failures }
@@ -98,17 +104,17 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle(
     'import:commit',
-    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string, skipRows = 0) => {
+    async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string, skipRows = 0, batchOptions?: BatchOptions) => {
       const { headers, rows } = readSpreadsheet(filePath, sheetName, skipRows)
-      return validateAndInsert(rows, mapping, headers, basename(filePath), extname(filePath).replace('.', ''))
+      return validateAndInsert(rows, mapping, headers, basename(filePath), extname(filePath).replace('.', ''), batchOptions)
     }
   )
 
   ipcMain.handle(
     'import:commit-rows',
-    async (_e: Electron.IpcMainInvokeEvent, rows: RawRow[], mapping: FieldMapping, filename: string) => {
+    async (_e: Electron.IpcMainInvokeEvent, rows: RawRow[], mapping: FieldMapping, filename: string, batchOptions?: BatchOptions) => {
       const headers = rows.length > 0 ? Object.keys(rows[0]) : []
-      return validateAndInsert(rows, mapping, headers, filename, 'edited')
+      return validateAndInsert(rows, mapping, headers, filename, 'edited', batchOptions)
     }
   )
 
@@ -129,6 +135,58 @@ export function registerIpcHandlers(): void {
     } else {
       await db.insert(locations).values(data)
     }
+  })
+
+  // Species handlers
+  ipcMain.handle('species:list', async () => {
+    const db = getDb()
+    return db.select().from(speciesTable).orderBy(speciesTable.commonName)
+  })
+
+  ipcMain.handle('species:upsert', async (_e: Electron.IpcMainInvokeEvent, record: typeof speciesTable.$inferInsert) => {
+    const db = getDb()
+    if (record.id) {
+      await db.update(speciesTable).set(record).where(eq(speciesTable.id, record.id))
+    } else {
+      await db.insert(speciesTable).values(record)
+    }
+  })
+
+  ipcMain.handle('species:open-csv-file', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: 'CSV', extensions: ['csv'] }],
+      properties: ['openFile']
+    })
+    return canceled || filePaths.length === 0 ? null : filePaths[0]
+  })
+
+  ipcMain.handle('species:import-csv', async (_e: Electron.IpcMainInvokeEvent, filePath: string) => {
+    const errors: string[] = []
+    let imported = 0
+    try {
+      const content = readFileSync(filePath, 'utf-8')
+      const records = parseCsv(content, { columns: true, skip_empty_lines: true, trim: true }) as Record<string, string>[]
+      const db = getDb()
+      for (const [idx, rec] of records.entries()) {
+        const commonName = rec.common_name?.trim()
+        const scientificName = rec.scientific_name?.trim()
+        if (!commonName || !scientificName) {
+          errors.push(`Row ${idx + 2}: missing common_name or scientific_name`)
+          continue
+        }
+        await db.insert(speciesTable).values({
+          commonName,
+          commonNameRegex: rec.common_name_regex?.trim() || null,
+          scientificName,
+          scientificNameRegex: rec.scientific_name_regex?.trim() || null,
+          family: rec.family?.trim() || null,
+        })
+        imported++
+      }
+    } catch (err) {
+      errors.push(err instanceof Error ? err.message : String(err))
+    }
+    return { imported, errors }
   })
 
   ipcMain.handle('export:sql', async () => {

@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import jspreadsheet from 'jspreadsheet-ce'
 import 'jspreadsheet-ce/dist/jspreadsheet.css'
 import 'jsuites/dist/jsuites.css'
-import type { RowFailure, FieldMapping } from '../../../shared/types'
+import type { RowFailure, FieldMapping, BatchOptions } from '../../../shared/types'
 
 export interface EditData {
   headers: string[]
@@ -10,7 +10,47 @@ export interface EditData {
   rows: Record<string, unknown>[]
   mapping: Partial<FieldMapping>
   filename: string
+  batchOptions: BatchOptions
 }
+
+// Friendly labels matching ImportPage STANDARD_FIELDS order
+const FIELD_LABELS: Record<string, string> = {
+  date:                   'First Date',
+  originalCommonName:     'Original Common Name',
+  originalScientificName: 'Original Scientific Name',
+  originalCount:          'Original Total Count',
+  age:                    'Age',
+  behaviorCode:           'Behavior code',
+  breedingCategory:       'Breeding category',
+  breedingCode:           'Breeding code',
+  circa:                  'Circa',
+  commonName:             'Common Name (display)',
+  dataset:                'Dataset',
+  endTime:                'End Time',
+  family:                 'Family',
+  geometryType:           'Geometry type',
+  lastDate:               'Last Date',
+  lat:                    'Latitude',
+  lbcId:                  'LBC ID',
+  locationName:           'Location',
+  lon:                    'Longitude',
+  notes:                  'Notes',
+  occurrenceKey:          'Occurrence Key',
+  originalLocation:       'Original Location',
+  observer:               'Observers',
+  scientificName:         'Scientific Name',
+  species:                'Species (common name)',
+  time:                   'Start Time',
+  status:                 'Status',
+  subspeciesCommon:       'Subspecies (common)',
+  subspeciesScientific:   'Subspecies (scientific)',
+  count:                  'Total Count',
+  tripMapRef:             'Trip MapRef',
+  uncertaintyRadius:      'Uncertainty radius',
+}
+
+// Stable order: required fields first, then the rest as defined in FIELD_LABELS
+const FIELD_ORDER = Object.keys(FIELD_LABELS)
 
 // Convert 0-based column index to spreadsheet letter (A, B, … Z, AA, AB, …)
 function colLetter(n: number): string {
@@ -23,7 +63,7 @@ function colLetter(n: number): string {
   return s
 }
 
-function buildStyle(rowCount: number, headerCount: number, failureMap: Map<number, string>) {
+function buildStyle(rowCount: number, colCount: number, failureMap: Map<number, string>) {
   const style: Record<string, string> = {}
   for (let r = 0; r < rowCount; r++) {
     const reason = failureMap.get(r)
@@ -31,7 +71,7 @@ function buildStyle(rowCount: number, headerCount: number, failureMap: Map<numbe
     style[`A${r + 1}`] = reason
       ? 'background-color: #fff5f5; color: #c0392b; font-weight: bold;'
       : 'color: #2f9e44;'
-    for (let c = 1; c <= headerCount; c++) {
+    for (let c = 1; c <= colCount; c++) {
       if (rowBg) style[`${colLetter(c)}${r + 1}`] = rowBg
     }
   }
@@ -54,6 +94,15 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
   const [error, setError] = useState<string | null>(null)
   const [successResult, setSuccessResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [initError, setInitError] = useState<string | null>(null)
+
+  // Derive display columns from mapping, in FIELD_ORDER sequence
+  const displayCols = FIELD_ORDER
+    .filter(fieldKey => editData.mapping[fieldKey as keyof FieldMapping])
+    .map(fieldKey => ({
+      fieldKey,
+      label: FIELD_LABELS[fieldKey] ?? fieldKey,
+      sourceCol: editData.mapping[fieldKey as keyof FieldMapping] as string,
+    }))
 
   useEffect(() => {
     let resizeTimer: ReturnType<typeof setTimeout>
@@ -82,7 +131,7 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
     const el = divRef.current
     if (!el) return
 
-    const w = window.innerWidth - 228   // 180 nav + 24*2 padding
+    const w = window.innerWidth - 228
     const h = window.innerHeight - 90
 
     const failureMap = new Map(failures.map(f => [f.index, f.reason]))
@@ -90,21 +139,20 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
 
     const data: string[][] = rows.map((row, i) => [
       failureMap.get(i) ?? '✓',
-      ...editData.headers.map(h => String(row[h] ?? '')),
+      ...displayCols.map(({ sourceCol }) => String(row[sourceCol] ?? '')),
     ])
 
     const columns = [
       { type: 'text', title: 'Status', width: 260, readOnly: true },
-      ...editData.headers.map(h => ({ type: 'text', title: h, width: 140 })),
+      ...displayCols.map(({ label }) => ({ type: 'text', title: label, width: 160 })),
     ]
 
     try {
-      // v5 API: all worksheet options go inside the worksheets array
       instanceRef.current = jspreadsheet(el, {
         worksheets: [{
           data,
           columns,
-          style: buildStyle(rows.length, editData.headers.length, failureMap),
+          style: buildStyle(rows.length, displayCols.length, failureMap),
           tableOverflow: true,
           tableWidth: `${w}px`,
           tableHeight: `${h}px`,
@@ -133,12 +181,11 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
     const instance = instanceRef.current
     if (!instance) return
 
-    // v5: getData() lives on the first worksheet
     const ws = Array.isArray(instance) ? instance[0] : (instance.worksheets?.[0] ?? instance)
     const rawData = ws.getData() as string[][]
     const editedRows: Record<string, unknown>[] = rawData.map(row => {
       const obj: Record<string, unknown> = {}
-      editData.headers.forEach((h, i) => { obj[h] = row[i + 1] })  // skip status col
+      displayCols.forEach(({ sourceCol }, i) => { obj[sourceCol] = row[i + 1] })
       return obj
     })
     editedRowsRef.current = editedRows
@@ -150,6 +197,7 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
         editedRows,
         editData.mapping as FieldMapping,
         editData.filename,
+        editData.batchOptions,
       )
       if (r.status === 'validation-failed') {
         setFailures(r.failures)
