@@ -10,24 +10,51 @@ import { FieldMapping, RawRow } from '../importers/types'
 import { BatchOptions } from '../../shared/types'
 import { basename, extname } from 'path'
 import { eq } from 'drizzle-orm'
+import { matchSpecies, invalidateSpeciesCache } from '../species/match'
+import type { ParsedSighting } from '../../shared/types'
 
-async function validateAndInsert(
+type ValidateResult =
+  | { status: 'ok'; rows: ParsedSighting[]; warnings: string[] }
+  | { status: 'validation-failed'; headers: string[]; allRows: RawRow[]; failures: { index: number; reason: string }[] }
+
+function validateAndMatch(
   rows: RawRow[],
   mapping: FieldMapping,
   headers: string[],
-  filename: string,
-  format: string,
   batchOptions: BatchOptions = {},
-) {
-  const lbcSeqStart = reserveLbcSequence(rows.length)
-  const { rows: parsed, warnings, failures } = normaliseRows(rows, mapping, { ...batchOptions, lbcSeqStart })
+): ValidateResult {
+  const { rows: parsed, warnings, failures } = normaliseRows(rows, mapping, batchOptions)
 
   if (failures.length > 0) {
-    return { status: 'validation-failed' as const, headers, allRows: rows, failures }
+    return { status: 'validation-failed', headers, allRows: rows, failures }
   }
 
+  for (const s of parsed) {
+    const match = matchSpecies(s.originalCommonName, s.originalScientificName)
+    s.speciesMatchQuality = match.quality
+    if (match.quality !== 'none') {
+      s.commonName = match.commonName
+      s.scientificName = match.scientificName
+      if (match.family) s.family = match.family
+    }
+  }
+
+  return { status: 'ok', rows: parsed, warnings }
+}
+
+async function commitParsed(
+  rows: ParsedSighting[],
+  filename: string,
+  format: string,
+  mapping: Partial<FieldMapping>,
+): Promise<{ imported: number }> {
+  const lbcSeqStart = reserveLbcSequence(rows.length)
+  rows.forEach((s, i) => {
+    s.lbcId = `LBC#${s.date.substring(0, 4)}#${lbcSeqStart + i}`
+  })
+
   const locationIds = await Promise.all(
-    parsed.map(s => resolveLocationId(s.locationName, s.lat, s.lon))
+    rows.map(s => resolveLocationId(s.locationName, s.lat, s.lon))
   )
 
   const db = getDb()
@@ -36,12 +63,12 @@ async function validateAndInsert(
       filename,
       format,
       importedAt: new Date().toISOString(),
-      rowCount: parsed.length,
-      fieldMapping: JSON.stringify(mapping)
+      rowCount: rows.length,
+      fieldMapping: JSON.stringify(mapping),
     }).returning().all()
 
-    for (let i = 0; i < parsed.length; i++) {
-      const s = parsed[i]
+    for (let i = 0; i < rows.length; i++) {
+      const s = rows[i]
       tx.insert(sightings).values({
         importBatchId:          batch.id,
         locationId:             locationIds[i],
@@ -76,12 +103,12 @@ async function validateAndInsert(
         uncertaintyRadius:      s.uncertaintyRadius,
         geometryType:           s.geometryType,
         tripMapRef:             s.tripMapRef,
-        rawData:                s.rawData
+        rawData:                s.rawData,
       }).run()
     }
   })
 
-  return { status: 'success' as const, imported: parsed.length, warnings }
+  return { imported: rows.length }
 }
 
 export function registerIpcHandlers(): void {
@@ -103,18 +130,25 @@ export function registerIpcHandlers(): void {
   })
 
   ipcMain.handle(
-    'import:commit',
+    'import:validate',
     async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string, skipRows = 0, batchOptions?: BatchOptions) => {
       const { headers, rows } = readSpreadsheet(filePath, sheetName, skipRows)
-      return validateAndInsert(rows, mapping, headers, basename(filePath), extname(filePath).replace('.', ''), batchOptions)
+      return validateAndMatch(rows, mapping, headers, batchOptions)
     }
   )
 
   ipcMain.handle(
-    'import:commit-rows',
-    async (_e: Electron.IpcMainInvokeEvent, rows: RawRow[], mapping: FieldMapping, filename: string, batchOptions?: BatchOptions) => {
+    'import:validate-rows',
+    async (_e: Electron.IpcMainInvokeEvent, rows: RawRow[], mapping: FieldMapping, batchOptions?: BatchOptions) => {
       const headers = rows.length > 0 ? Object.keys(rows[0]) : []
-      return validateAndInsert(rows, mapping, headers, filename, 'edited', batchOptions)
+      return validateAndMatch(rows, mapping, headers, batchOptions)
+    }
+  )
+
+  ipcMain.handle(
+    'import:commit-staged',
+    async (_e: Electron.IpcMainInvokeEvent, rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>) => {
+      return commitParsed(rows, filename, format, mapping)
     }
   )
 
@@ -150,6 +184,7 @@ export function registerIpcHandlers(): void {
     } else {
       await db.insert(speciesTable).values(record)
     }
+    invalidateSpeciesCache()
   })
 
   ipcMain.handle('species:open-csv-file', async () => {
@@ -183,6 +218,7 @@ export function registerIpcHandlers(): void {
         })
         imported++
       }
+      if (imported > 0) invalidateSpeciesCache()
     } catch (err) {
       errors.push(err instanceof Error ? err.message : String(err))
     }

@@ -5,10 +5,12 @@ contextBridge.exposeInMainWorld('api', {
     openFile: () => ipcRenderer.invoke('import:open-file'),
     readSheet: (filePath: string, sheetName: string, skipRows: number) =>
       ipcRenderer.invoke('import:read-sheet', filePath, sheetName, skipRows),
-    commit: (filePath: string, mapping: object, sheetName?: string, skipRows?: number, batchOptions?: object) =>
-      ipcRenderer.invoke('import:commit', filePath, mapping, sheetName, skipRows, batchOptions),
-    commitRows: (rows: object[], mapping: object, filename: string, batchOptions?: object) =>
-      ipcRenderer.invoke('import:commit-rows', rows, mapping, filename, batchOptions)
+    validate: (filePath: string, mapping: object, sheetName?: string, skipRows?: number, batchOptions?: object) =>
+      ipcRenderer.invoke('import:validate', filePath, mapping, sheetName, skipRows, batchOptions),
+    validateRows: (rows: object[], mapping: object, batchOptions?: object) =>
+      ipcRenderer.invoke('import:validate-rows', rows, mapping, batchOptions),
+    commitStaged: (rows: object[], filename: string, format: string, mapping: object) =>
+      ipcRenderer.invoke('import:commit-staged', rows, filename, format, mapping)
   },
   sightings: {
     list: () => ipcRenderer.invoke('sightings:list')

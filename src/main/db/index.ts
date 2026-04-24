@@ -128,3 +128,8 @@ export function getDb(): ReturnType<typeof drizzle<typeof schema>> {
   if (!_db) throw new Error('Database not initialised')
   return _db
 }
+
+export function getSqlite(): InstanceType<typeof Database> {
+  if (!_sqlite) throw new Error('Database not initialised')
+  return _sqlite
+}

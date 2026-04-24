@@ -1,4 +1,8 @@
-import type { FieldMapping, Location, Sighting, CommitResult, SpeciesRecord, BatchOptions } from '../../shared/types'
+import type { FieldMapping, Location, Sighting, ParsedSighting, RowFailure, RawRow, SpeciesRecord, BatchOptions } from '../../shared/types'
+
+type ValidateResult =
+  | { status: 'ok'; rows: ParsedSighting[]; warnings: string[] }
+  | { status: 'validation-failed'; headers: string[]; allRows: RawRow[]; failures: RowFailure[] }
 
 declare global {
   interface Window {
@@ -6,8 +10,9 @@ declare global {
       import: {
         openFile(): Promise<{ path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] } | null>
         readSheet(filePath: string, sheetName: string, skipRows: number): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
-        commit(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number, batchOptions?: BatchOptions): Promise<CommitResult>
-        commitRows(rows: Record<string, unknown>[], mapping: FieldMapping, filename: string, batchOptions?: BatchOptions): Promise<CommitResult>
+        validate(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number, batchOptions?: BatchOptions): Promise<ValidateResult>
+        validateRows(rows: Record<string, unknown>[], mapping: FieldMapping, batchOptions?: BatchOptions): Promise<ValidateResult>
+        commitStaged(rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>): Promise<{ imported: number }>
       }
       sightings: {
         list(): Promise<Sighting[]>

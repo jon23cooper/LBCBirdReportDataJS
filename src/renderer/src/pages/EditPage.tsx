@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import jspreadsheet from 'jspreadsheet-ce'
 import 'jspreadsheet-ce/dist/jspreadsheet.css'
 import 'jsuites/dist/jsuites.css'
-import type { RowFailure, FieldMapping, BatchOptions } from '../../../shared/types'
+import type { RowFailure, FieldMapping, BatchOptions, StagingData } from '../../../shared/types'
 
 export interface EditData {
   headers: string[]
@@ -81,9 +81,9 @@ function buildStyle(rowCount: number, colCount: number, failureMap: Map<number, 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type JssInstance = any
 
-export default function EditPage({ editData, onSuccess, onCancel }: {
+export default function EditPage({ editData, onValidated, onCancel }: {
   editData: EditData
-  onSuccess: (result: { imported: number; warnings: string[] }) => void
+  onValidated: (data: StagingData) => void
   onCancel: () => void
 }): JSX.Element {
   const divRef = useRef<HTMLDivElement>(null)
@@ -92,7 +92,6 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
   const [failures, setFailures] = useState<RowFailure[]>(editData.failures)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [successResult, setSuccessResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [initError, setInitError] = useState<string | null>(null)
 
   // Derive display columns from mapping, in FIELD_ORDER sequence
@@ -193,16 +192,22 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
     setBusy(true)
     setError(null)
     try {
-      const r = await window.api.import.commitRows(
+      const r = await window.api.import.validateRows(
         editedRows,
         editData.mapping as FieldMapping,
-        editData.filename,
         editData.batchOptions,
       )
       if (r.status === 'validation-failed') {
         setFailures(r.failures)
       } else {
-        setSuccessResult({ imported: r.imported, warnings: r.warnings })
+        onValidated({
+          rows: r.rows,
+          warnings: r.warnings,
+          filename: editData.filename,
+          format: 'edited',
+          mapping: editData.mapping,
+          batchOptions: editData.batchOptions,
+        })
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))
@@ -215,41 +220,23 @@ export default function EditPage({ editData, onSuccess, onCancel }: {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, flexWrap: 'wrap' }}>
         <button onClick={onCancel} style={btnSecondary}>← Back</button>
-        {!successResult && failures.length > 0 && (
+        {failures.length > 0 && (
           <span style={{ color: '#c0392b', fontSize: 13 }}>
             <strong>{failures.length} row{failures.length !== 1 ? 's' : ''} need fixing.</strong>
             {' '}Edit cells then re-import.
           </span>
         )}
-        {!successResult && failures.length === 0 && (
+        {failures.length === 0 && (
           <span style={{ color: '#555', fontSize: 13 }}>All rows valid — click Re-import to save.</span>
         )}
-        {!successResult && (
-          <button onClick={reimport} disabled={busy} style={{ ...btnPrimary, marginLeft: 'auto' }}>
-            {busy ? 'Importing…' : 'Re-import'}
-          </button>
-        )}
+        <button onClick={reimport} disabled={busy} style={{ ...btnPrimary, marginLeft: 'auto' }}>
+          {busy ? 'Validating…' : 'Re-import'}
+        </button>
       </div>
 
       {error && (
         <div style={{ padding: '8px 12px', background: '#ffe3e3', borderRadius: 4, color: '#c0392b', fontSize: 13, flexShrink: 0 }}>
           {error}
-        </div>
-      )}
-
-      {successResult && (
-        <div style={{ padding: '10px 14px', background: '#d3f9d8', borderRadius: 4, fontSize: 13, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 16 }}>
-          <strong>{successResult.imported} sightings imported.</strong>
-          {successResult.warnings.length > 0 && (
-            <details><summary>{successResult.warnings.length} warnings</summary>
-              <ul style={{ margin: '4px 0 0', paddingLeft: 16 }}>
-                {successResult.warnings.map((w, i) => <li key={i}>{w}</li>)}
-              </ul>
-            </details>
-          )}
-          <button onClick={() => onSuccess(successResult)} style={{ ...btnPrimary, marginLeft: 'auto', fontSize: 13 }}>
-            Go to Sightings →
-          </button>
         </div>
       )}
 

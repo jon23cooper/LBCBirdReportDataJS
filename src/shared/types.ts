@@ -88,6 +88,18 @@ export interface ParsedSighting {
   occurrenceKey?: string
   dataset?: string
   lbcId?: string
+
+  // Match quality (staging only, not persisted)
+  speciesMatchQuality?: string
+}
+
+export interface StagingData {
+  rows: ParsedSighting[]
+  warnings: string[]
+  filename: string
+  format: string
+  mapping: Partial<FieldMapping>
+  batchOptions: BatchOptions
 }
 
 export interface RowFailure {

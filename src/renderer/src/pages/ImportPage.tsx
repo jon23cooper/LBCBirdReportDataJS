@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { FieldMapping } from '../../../shared/types'
+import type { FieldMapping, StagingData } from '../../../shared/types'
 import type { EditData } from './EditPage'
 
 type FileInfo = { path: string; sheets: string[] }
@@ -95,8 +95,9 @@ function buildFieldMapping(columnMap: Record<string, string>): Partial<FieldMapp
   return fm
 }
 
-export default function ImportPage({ onValidationFailed }: {
+export default function ImportPage({ onValidationFailed, onValidated }: {
   onValidationFailed: (data: EditData) => void
+  onValidated: (data: StagingData) => void
 }): JSX.Element {
   const [file, setFile] = useState<FileInfo | null>(null)
   const [selectedSheet, setSelectedSheet] = useState<string>('')
@@ -105,7 +106,6 @@ export default function ImportPage({ onValidationFailed }: {
   const [columnMap, setColumnMap] = useState<Record<string, string>>({})
   const [dataset, setDataset] = useState('')
   const [defaultObserver, setDefaultObserver] = useState('')
-  const [result, setResult] = useState<{ imported: number; warnings: string[] } | null>(null)
   const [importError, setImportError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -118,7 +118,6 @@ export default function ImportPage({ onValidationFailed }: {
         if (cancelled) return
         setSheetData({ headers: data.headers, preview: data.preview })
         setColumnMap(autoMap(data.headers))
-        setResult(null)
         setBusy(false)
       })
       .catch(() => { if (!cancelled) setBusy(false) })
@@ -130,7 +129,6 @@ export default function ImportPage({ onValidationFailed }: {
     if (!info) return
     setSheetData({ headers: [], preview: [] })
     setColumnMap({})
-    setResult(null)
     setSkipRows(0)
     setSelectedSheet(info.sheets[0] ?? '')
     setFile({ path: info.path, sheets: info.sheets })
@@ -140,24 +138,18 @@ export default function ImportPage({ onValidationFailed }: {
     if (!file) return
     setBusy(true)
     setImportError(null)
-    setResult(null)
     try {
       const mapping = buildFieldMapping(columnMap)
       const batchOptions = { dataset: dataset.trim() || undefined, defaultObserver: defaultObserver.trim() || undefined }
-      const r = await window.api.import.commit(
+      const filename = file.path.split('/').pop() ?? file.path
+      const format = file.path.split('.').pop() ?? ''
+      const r = await window.api.import.validate(
         file.path, mapping as FieldMapping, selectedSheet || undefined, skipRows || undefined, batchOptions
       )
       if (r.status === 'validation-failed') {
-        onValidationFailed({
-          headers: r.headers,
-          failures: r.failures,
-          rows: r.allRows,
-          mapping,
-          filename: file.path.split('/').pop() ?? file.path,
-          batchOptions,
-        })
+        onValidationFailed({ headers: r.headers, failures: r.failures, rows: r.allRows, mapping, filename, batchOptions })
       } else {
-        setResult({ imported: r.imported, warnings: r.warnings })
+        onValidated({ rows: r.rows, warnings: r.warnings, filename, format, mapping, batchOptions })
       }
     } catch (err) {
       setImportError(err instanceof Error ? err.message : String(err))
@@ -315,19 +307,6 @@ export default function ImportPage({ onValidationFailed }: {
         </div>
       )}
 
-      {result && (
-        <div style={{ marginTop: 16, padding: 12, background: '#d3f9d8', borderRadius: 6 }}>
-          <strong>{result.imported} sightings imported.</strong>
-          {result.warnings.length > 0 && (
-            <details style={{ marginTop: 8 }}>
-              <summary>{result.warnings.length} warnings</summary>
-              <ul style={{ marginTop: 4, paddingLeft: 16 }}>
-                {result.warnings.map((w, i) => <li key={i} style={{ fontSize: 12 }}>{w}</li>)}
-              </ul>
-            </details>
-          )}
-        </div>
-      )}
     </div>
   )
 }

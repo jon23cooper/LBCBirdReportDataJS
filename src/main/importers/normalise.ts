@@ -91,7 +91,7 @@ export function normaliseRows(
   batchOptions: BatchOptions = {},
 ): ImportResult {
   const result: ImportResult = { rows: [], unmapped: [], warnings: [], failures: [] }
-  const { dataset: batchDataset, defaultObserver, lbcSeqStart = 1 } = batchOptions
+  const { dataset: batchDataset, defaultObserver } = batchOptions
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]
@@ -150,10 +150,6 @@ export function normaliseRows(
     // Dataset: mapped column first, then batch default
     const dataset = str(row, mapping.dataset) ?? batchDataset
 
-    // LBC ID: LBC#YYYY#globalSequence
-    const year = date.substring(0, 4)
-    const lbcId = `LBC#${year}#${lbcSeqStart + i}`
-
     const sighting: ParsedSighting = {
       species: String(rawSpecies).trim(),
       date,
@@ -194,7 +190,6 @@ export function normaliseRows(
 
       occurrenceKey: str(row, mapping.occurrenceKey),
       dataset,
-      lbcId,
     }
 
     result.rows.push(sighting)
