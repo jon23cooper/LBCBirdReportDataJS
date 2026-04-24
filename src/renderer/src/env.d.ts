@@ -1,4 +1,4 @@
-import type { FieldMapping, Location, Sighting } from '../../shared/types'
+import type { FieldMapping, Location, Sighting, CommitResult } from '../../shared/types'
 
 declare global {
   interface Window {
@@ -6,7 +6,8 @@ declare global {
       import: {
         openFile(): Promise<{ path: string; sheets: string[]; headers: string[]; preview: Record<string, unknown>[] } | null>
         readSheet(filePath: string, sheetName: string, skipRows: number): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
-        commit(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number): Promise<{ imported: number; warnings: string[] }>
+        commit(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number): Promise<CommitResult>
+        commitRows(rows: Record<string, unknown>[], mapping: FieldMapping, filename: string): Promise<CommitResult>
       }
       sightings: {
         list(): Promise<Sighting[]>

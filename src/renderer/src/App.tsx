@@ -4,19 +4,26 @@ import SightingsPage from './pages/SightingsPage'
 import MapPage from './pages/MapPage'
 import LocationsPage from './pages/LocationsPage'
 import ExportPage from './pages/ExportPage'
+import EditPage, { type EditData } from './pages/EditPage'
 
-type Page = 'import' | 'sightings' | 'map' | 'locations' | 'export'
+type Page = 'import' | 'sightings' | 'map' | 'locations' | 'export' | 'edit'
 
 const NAV: { id: Page; label: string }[] = [
-  { id: 'import', label: 'Import' },
+  { id: 'import',    label: 'Import' },
   { id: 'sightings', label: 'Sightings' },
-  { id: 'map', label: 'Map' },
+  { id: 'map',       label: 'Map' },
   { id: 'locations', label: 'Locations' },
-  { id: 'export', label: 'Export' }
+  { id: 'export',    label: 'Export' },
 ]
 
 export default function App(): JSX.Element {
   const [page, setPage] = useState<Page>('import')
+  const [editData, setEditData] = useState<EditData | null>(null)
+
+  function handleValidationFailed(data: EditData) {
+    setEditData(data)
+    setPage('edit')
+  }
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -33,14 +40,26 @@ export default function App(): JSX.Element {
             {label}
           </button>
         ))}
+        {page === 'edit' && (
+          <button style={{ ...navBtn, background: '#e7f5ff', fontWeight: 600, color: '#c0392b' }}>
+            Edit data
+          </button>
+        )}
       </nav>
 
-      <main style={{ flex: 1, overflow: 'auto', padding: 24 }}>
-        {page === 'import' && <ImportPage />}
+      <main style={{ flex: 1, overflow: 'hidden', padding: 24, display: 'flex', flexDirection: 'column' }}>
+        {page === 'import'    && <ImportPage onValidationFailed={handleValidationFailed} />}
         {page === 'sightings' && <SightingsPage />}
-        {page === 'map' && <MapPage />}
+        {page === 'map'       && <MapPage />}
         {page === 'locations' && <LocationsPage />}
-        {page === 'export' && <ExportPage />}
+        {page === 'export'    && <ExportPage />}
+        {page === 'edit' && editData && (
+          <EditPage
+            editData={editData}
+            onSuccess={() => { setEditData(null); setPage('sightings') }}
+            onCancel={() => setPage('import')}
+          />
+        )}
       </main>
     </div>
   )
@@ -51,7 +70,8 @@ const navStyle: React.CSSProperties = {
   borderRight: '1px solid #dee2e6',
   display: 'flex',
   flexDirection: 'column',
-  background: '#fff'
+  background: '#fff',
+  flexShrink: 0,
 }
 
 const navBtn: React.CSSProperties = {
@@ -60,5 +80,5 @@ const navBtn: React.CSSProperties = {
   cursor: 'pointer',
   textAlign: 'left',
   fontSize: 14,
-  borderRadius: 0
+  borderRadius: 0,
 }

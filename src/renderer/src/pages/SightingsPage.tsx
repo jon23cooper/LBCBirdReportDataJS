@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Sighting } from '../../../shared/types'
 
 type Col = keyof Sighting
-const COLS: Col[] = ['id', 'date', 'species', 'count', 'observer', 'locationId', 'notes']
+const COLS: Col[] = ['id', 'date', 'originalCommonName', 'originalScientificName', 'species', 'count', 'observer', 'locationId', 'notes']
 
 export default function SightingsPage(): JSX.Element {
   const [rows, setRows] = useState<Sighting[]>([])

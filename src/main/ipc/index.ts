@@ -4,12 +4,81 @@ import { normaliseRows } from '../importers/normalise'
 import { resolveLocationId } from '../locations/match'
 import { getDb } from '../db'
 import { sightings, importBatches, locations } from '../db/schema'
-import { FieldMapping } from '../importers/types'
-import { basename } from 'path'
-import { extname } from 'path'
+import { FieldMapping, RawRow } from '../importers/types'
+import { basename, extname } from 'path'
+
+async function validateAndInsert(
+  rows: RawRow[],
+  mapping: FieldMapping,
+  headers: string[],
+  filename: string,
+  format: string
+) {
+  const { rows: parsed, warnings, failures } = normaliseRows(rows, mapping)
+
+  if (failures.length > 0) {
+    return { status: 'validation-failed' as const, headers, allRows: rows, failures }
+  }
+
+  const locationIds = await Promise.all(
+    parsed.map(s => resolveLocationId(s.locationName, s.lat, s.lon))
+  )
+
+  const db = getDb()
+  await db.transaction(async (tx) => {
+    const [batch] = await tx.insert(importBatches).values({
+      filename,
+      format,
+      importedAt: new Date().toISOString(),
+      rowCount: parsed.length,
+      fieldMapping: JSON.stringify(mapping)
+    }).returning()
+
+    for (let i = 0; i < parsed.length; i++) {
+      const s = parsed[i]
+      await tx.insert(sightings).values({
+        importBatchId:          batch.id,
+        locationId:             locationIds[i],
+        originalLocation:       s.originalLocation,
+        occurrenceKey:          s.occurrenceKey,
+        dataset:                s.dataset,
+        lbcId:                  s.lbcId,
+        species:                s.species,
+        originalCommonName:     s.originalCommonName,
+        commonName:             s.commonName,
+        originalScientificName: s.originalScientificName,
+        scientificName:         s.scientificName,
+        family:                 s.family,
+        subspeciesCommon:       s.subspeciesCommon,
+        subspeciesScientific:   s.subspeciesScientific,
+        date:                   s.date,
+        lastDate:               s.lastDate,
+        time:                   s.time,
+        endTime:                s.endTime,
+        count:                  s.count,
+        originalCount:          s.originalCount,
+        circa:                  s.circa,
+        age:                    s.age,
+        status:                 s.status,
+        breedingCode:           s.breedingCode,
+        breedingCategory:       s.breedingCategory,
+        behaviorCode:           s.behaviorCode,
+        observer:               s.observer,
+        notes:                  s.notes,
+        lat:                    s.lat,
+        lon:                    s.lon,
+        uncertaintyRadius:      s.uncertaintyRadius,
+        geometryType:           s.geometryType,
+        tripMapRef:             s.tripMapRef,
+        rawData:                s.rawData
+      })
+    }
+  })
+
+  return { status: 'success' as const, imported: parsed.length, warnings }
+}
 
 export function registerIpcHandlers(): void {
-  // Open file picker and return parsed headers + preview rows
   ipcMain.handle('import:open-file', async () => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       filters: [{ name: 'Spreadsheets', extensions: ['csv', 'xlsx', 'xls', 'ods'] }],
@@ -22,68 +91,37 @@ export function registerIpcHandlers(): void {
     return { path: filePath, sheets, headers, preview: rows.slice(0, 5) }
   })
 
-  // Return headers + preview for a specific sheet/skipRows without opening a dialog
   ipcMain.handle('import:read-sheet', async (_e: Electron.IpcMainInvokeEvent, filePath: string, sheetName: string, skipRows: number) => {
     const { headers, rows } = readSpreadsheet(filePath, sheetName, skipRows)
     return { headers, preview: rows.slice(0, 5) }
   })
 
-  // Confirm field mapping and import rows into DB
   ipcMain.handle(
     'import:commit',
     async (_e: Electron.IpcMainInvokeEvent, filePath: string, mapping: FieldMapping, sheetName?: string, skipRows = 0) => {
-      const { rows } = readSpreadsheet(filePath, sheetName, skipRows)
-      const { rows: parsed, warnings } = normaliseRows(rows, mapping)
-
-      const db = getDb()
-      const now = new Date().toISOString()
-      const ext = extname(filePath).replace('.', '')
-
-      const [batch] = await db
-        .insert(importBatches)
-        .values({
-          filename: basename(filePath),
-          format: ext,
-          importedAt: now,
-          rowCount: parsed.length,
-          fieldMapping: JSON.stringify(mapping)
-        })
-        .returning()
-
-      for (const s of parsed) {
-        const locationId = await resolveLocationId(s.locationName, s.lat, s.lon)
-        await db.insert(sightings).values({
-          importBatchId: batch.id,
-          locationId,
-          species: s.species,
-          date: s.date,
-          time: s.time,
-          count: s.count,
-          observer: s.observer,
-          notes: s.notes,
-          lat: s.lat,
-          lon: s.lon,
-          rawData: s.rawData
-        })
-      }
-
-      return { imported: parsed.length, warnings }
+      const { headers, rows } = readSpreadsheet(filePath, sheetName, skipRows)
+      return validateAndInsert(rows, mapping, headers, basename(filePath), extname(filePath).replace('.', ''))
     }
   )
 
-  // Return all sightings with joined location name
+  ipcMain.handle(
+    'import:commit-rows',
+    async (_e: Electron.IpcMainInvokeEvent, rows: RawRow[], mapping: FieldMapping, filename: string) => {
+      const headers = rows.length > 0 ? Object.keys(rows[0]) : []
+      return validateAndInsert(rows, mapping, headers, filename, 'edited')
+    }
+  )
+
   ipcMain.handle('sightings:list', async () => {
     const db = getDb()
     return db.select().from(sightings)
   })
 
-  // Return all locations
   ipcMain.handle('locations:list', async () => {
     const db = getDb()
     return db.select().from(locations)
   })
 
-  // Add / update a location
   ipcMain.handle('locations:upsert', async (_e: Electron.IpcMainInvokeEvent, data: typeof locations.$inferInsert) => {
     const db = getDb()
     if (data.id) {
@@ -93,7 +131,6 @@ export function registerIpcHandlers(): void {
     }
   })
 
-  // Export to SQL (Postgres-compatible)
   ipcMain.handle('export:sql', async () => {
     const { canceled, filePath } = await dialog.showSaveDialog({
       defaultPath: 'birdreport.sql',
@@ -146,21 +183,37 @@ function buildCreateSightings(): string {
   id SERIAL PRIMARY KEY,
   import_batch_id INTEGER,
   location_id INTEGER REFERENCES locations(id),
+  original_location TEXT,
+  occurrence_key TEXT,
+  dataset TEXT,
+  lbc_id TEXT,
   species TEXT NOT NULL,
+  original_common_name TEXT,
   common_name TEXT,
+  original_scientific_name TEXT,
   scientific_name TEXT,
+  family TEXT,
+  subspecies_common TEXT,
+  subspecies_scientific TEXT,
   date DATE NOT NULL,
+  last_date DATE,
   time TIME,
+  end_time TIME,
   count INTEGER,
-  count_approx INTEGER,
-  sex TEXT,
+  original_count TEXT,
+  circa TEXT,
   age TEXT,
-  breeding TEXT,
-  ring TEXT,
+  status TEXT,
+  breeding_code TEXT,
+  breeding_category TEXT,
+  behavior_code TEXT,
   observer TEXT,
   notes TEXT,
   lat DOUBLE PRECISION,
   lon DOUBLE PRECISION,
+  uncertainty_radius DOUBLE PRECISION,
+  geometry_type TEXT,
+  trip_map_ref TEXT,
   source_ref TEXT,
   raw_data TEXT
 );`
@@ -171,5 +224,19 @@ function locationToInsert(l: typeof locations.$inferSelect): string {
 }
 
 function sightingToInsert(s: typeof sightings.$inferSelect): string {
-  return `INSERT INTO sightings (id, import_batch_id, location_id, species, common_name, scientific_name, date, time, count, count_approx, sex, age, breeding, ring, observer, notes, lat, lon, source_ref, raw_data) VALUES (${q(s.id)}, ${q(s.importBatchId)}, ${q(s.locationId)}, ${q(s.species)}, ${q(s.commonName)}, ${q(s.scientificName)}, ${q(s.date)}, ${q(s.time)}, ${q(s.count)}, ${q(s.countApprox)}, ${q(s.sex)}, ${q(s.age)}, ${q(s.breeding)}, ${q(s.ring)}, ${q(s.observer)}, ${q(s.notes)}, ${q(s.lat)}, ${q(s.lon)}, ${q(s.sourceRef)}, ${q(s.rawData)});`
+  const cols = 'id, import_batch_id, location_id, original_location, occurrence_key, dataset, lbc_id, species, original_common_name, common_name, original_scientific_name, scientific_name, family, subspecies_common, subspecies_scientific, date, last_date, time, end_time, count, original_count, circa, age, status, breeding_code, breeding_category, behavior_code, observer, notes, lat, lon, uncertainty_radius, geometry_type, trip_map_ref, source_ref, raw_data'
+  const vals = [
+    q(s.id), q(s.importBatchId), q(s.locationId),
+    q(s.originalLocation), q(s.occurrenceKey), q(s.dataset), q(s.lbcId),
+    q(s.species), q(s.originalCommonName), q(s.commonName), q(s.originalScientificName), q(s.scientificName),
+    q(s.family), q(s.subspeciesCommon), q(s.subspeciesScientific),
+    q(s.date), q(s.lastDate), q(s.time), q(s.endTime),
+    q(s.count), q(s.originalCount), q(s.circa),
+    q(s.age), q(s.status),
+    q(s.breedingCode), q(s.breedingCategory), q(s.behaviorCode),
+    q(s.observer), q(s.notes),
+    q(s.lat), q(s.lon), q(s.uncertaintyRadius), q(s.geometryType), q(s.tripMapRef),
+    q(s.sourceRef), q(s.rawData)
+  ].join(', ')
+  return `INSERT INTO sightings (${cols}) VALUES (${vals});`
 }

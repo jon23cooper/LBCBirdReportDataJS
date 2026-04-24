@@ -16,41 +16,62 @@ export const sightings = sqliteTable('sightings', {
   importBatchId: integer('import_batch_id').references(() => importBatches.id),
   locationId: integer('location_id').references(() => locations.id),
 
-  // Taxonomic fields
-  species: text('species').notNull(),
-  commonName: text('common_name'),
-  scientificName: text('scientific_name'),
-  order: text('order'),
-  family: text('family'),
+  // Reference / provenance
+  occurrenceKey: text('occurrence_key'),
+  dataset: text('dataset'),
+  lbcId: text('lbc_id'),
 
-  // Observation fields
-  date: text('date').notNull(),           // ISO 8601 YYYY-MM-DD
-  time: text('time'),                      // HH:MM
+  // Taxonomic
+  species: text('species').notNull(),
+  originalCommonName: text('original_common_name'),
+  commonName: text('common_name'),
+  originalScientificName: text('original_scientific_name'),
+  scientificName: text('scientific_name'),
+  family: text('family'),
+  subspeciesCommon: text('subspecies_common'),
+  subspeciesScientific: text('subspecies_scientific'),
+
+  originalLocation: text('original_location'),
+
+  // Dates and times
+  date: text('date').notNull(),            // ISO 8601 YYYY-MM-DD (first/only date)
+  lastDate: text('last_date'),             // ISO 8601 YYYY-MM-DD
+  time: text('time'),                       // HH:MM start time
+  endTime: text('end_time'),               // HH:MM end time
+
+  // Count
   count: integer('count'),
-  countApprox: integer('count_approx'),   // upper bound when count is a range
-  sex: text('sex'),                        // M / F / U
-  age: text('age'),                        // ad / imm / juv / U
-  breeding: text('breeding'),              // BTO breeding code
-  ring: text('ring'),
-  notes: text('notes'),
+  originalCount: text('original_count'),   // raw count string (may be a range)
+  circa: text('circa'),                    // approximate flag
+
+  // Observation detail
+  age: text('age'),
+  status: text('status'),
+  breedingCode: text('breeding_code'),
+  breedingCategory: text('breeding_category'),
+  behaviorCode: text('behavior_code'),
 
   // Observer
   observer: text('observer'),
-  sourceRef: text('source_ref'),          // original row ref for traceability
+  notes: text('notes'),
 
-  // Coordinates (may differ from location centroid)
+  // Spatial
   lat: real('lat'),
   lon: real('lon'),
+  uncertaintyRadius: real('uncertainty_radius'),
+  geometryType: text('geometry_type'),
+  tripMapRef: text('trip_map_ref'),
 
-  // Raw import data preserved for audit
-  rawData: text('raw_data')               // JSON string of original row
+  // Audit
+  sourceRef: text('source_ref'),
+  rawData: text('raw_data')
 })
 
 export const importBatches = sqliteTable('import_batches', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   filename: text('filename').notNull(),
-  format: text('format').notNull(),       // csv | xlsx | ods
+  format: text('format').notNull(),
   importedAt: text('imported_at').notNull(),
   rowCount: integer('row_count'),
-  fieldMapping: text('field_mapping')     // JSON — maps source columns → standard fields
+  fieldMapping: text('field_mapping')
 })
