@@ -44,34 +44,49 @@ const STANDARD_FIELDS: { key: keyof FieldMapping; label: string; required?: bool
 
 function autoMap(headers: string[]): Record<string, string> {
   const matchers: { pattern: RegExp; field: string }[] = [
-    { pattern: /^common.?name$/i,                 field: 'species' },
-    { pattern: /^first.?date$/i,                  field: 'date' },
+    // Species
+    { pattern: /^species.?common.?name$/i,        field: 'originalCommonName' },
     { pattern: /^original.?common.?name$/i,       field: 'originalCommonName' },
+    { pattern: /^common.?name$/i,                 field: 'species' },
     { pattern: /^original.?scientific.?name$/i,   field: 'originalScientificName' },
     { pattern: /^scientific.?name$/i,             field: 'scientificName' },
     { pattern: /^family$/i,                       field: 'family' },
     { pattern: /^subspecies.?common$/i,           field: 'subspeciesCommon' },
     { pattern: /^subspecies.?scientific$/i,       field: 'subspeciesScientific' },
-    { pattern: /^location$/i,                     field: 'locationName' },
-    { pattern: /^original.?location$/i,           field: 'originalLocation' },
-    { pattern: /^last.?date$/i,                   field: 'lastDate' },
+    // Dates / times
+    { pattern: /^first.?date/i,                   field: 'date' },
+    { pattern: /^last.?date/i,                    field: 'lastDate' },
     { pattern: /^start.?time$/i,                  field: 'time' },
     { pattern: /^end.?time$/i,                    field: 'endTime' },
-    { pattern: /^total.?count$/i,                 field: 'count' },
+    // Location — "Location" alone is treated as a raw string needing matching;
+    // "Location Name" / "Site Name" is a pre-resolved exact name
+    { pattern: /^location.?name$/i,               field: 'locationName' },
+    { pattern: /^site.?name$/i,                   field: 'locationName' },
+    { pattern: /^original.?location$/i,           field: 'originalLocation' },
+    { pattern: /^location$/i,                     field: 'originalLocation' },
+    // Count
     { pattern: /^original.?total.?count$/i,       field: 'originalCount' },
+    { pattern: /^total.?count$/i,                 field: 'count' },
+    { pattern: /^number$/i,                       field: 'originalCount' },
     { pattern: /^circa$/i,                        field: 'circa' },
-    { pattern: /^notes$/i,                        field: 'notes' },
-    { pattern: /^observers?$/i,                   field: 'observer' },
-    { pattern: /^status$/i,                       field: 'status' },
+    // Observation detail
+    { pattern: /^age.*(sex|code)/i,               field: 'age' },
     { pattern: /^age$/i,                          field: 'age' },
+    { pattern: /^status$/i,                       field: 'status' },
     { pattern: /^breeding.?code$/i,               field: 'breedingCode' },
     { pattern: /^breeding.?categor/i,             field: 'breedingCategory' },
     { pattern: /^behav.*(code)?$/i,               field: 'behaviorCode' },
-    { pattern: /^trip.?map.?ref$/i,               field: 'tripMapRef' },
+    // Observer / notes
+    { pattern: /^observers?.?initials?$/i,        field: 'observer' },
+    { pattern: /^observers?$/i,                   field: 'observer' },
+    { pattern: /^notes/i,                         field: 'notes' },
+    // Spatial
     { pattern: /^lat(itude)?$/i,                  field: 'lat' },
     { pattern: /^lon(gitude)?$/i,                 field: 'lon' },
     { pattern: /^uncertainty/i,                   field: 'uncertaintyRadius' },
     { pattern: /^geometry.?type$/i,               field: 'geometryType' },
+    { pattern: /^trip.?map.?ref$/i,               field: 'tripMapRef' },
+    // Reference
     { pattern: /^occurrence.?key$/i,              field: 'occurrenceKey' },
     { pattern: /^dataset$/i,                      field: 'dataset' },
     { pattern: /^lbc.?id$/i,                      field: 'lbcId' },
