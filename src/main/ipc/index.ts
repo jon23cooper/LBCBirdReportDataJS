@@ -179,8 +179,8 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('locations:list-geometries', () => {
     return getSqlite()
-      .prepare('SELECT id, geometry FROM locations WHERE geometry IS NOT NULL')
-      .all() as { id: number; geometry: string }[]
+      .prepare('SELECT id, name, geometry FROM locations WHERE geometry IS NOT NULL')
+      .all() as { id: number; name: string; geometry: string }[]
   })
 
   ipcMain.handle('locations:upsert', async (_e: Electron.IpcMainInvokeEvent, data: typeof locations.$inferInsert) => {

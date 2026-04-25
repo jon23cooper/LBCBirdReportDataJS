@@ -52,16 +52,20 @@ function LocationMap({ initialGeometry, editMode, onGeometryChange, currentLocat
       const features = rows
         .filter(r => r.id !== currentLocationId)
         .map(r => {
-          try { return { type: 'Feature' as const, properties: {}, geometry: JSON.parse(r.geometry) } }
+          try { return { type: 'Feature' as const, properties: { name: r.name }, geometry: JSON.parse(r.geometry) } }
           catch { return null }
         })
         .filter((f): f is GeoJSON.Feature => f !== null)
       if (features.length > 0) {
         try {
           L.geoJSON({ type: 'FeatureCollection', features }, {
-            style: { color: '#868e96', fillColor: '#dee2e6', fillOpacity: 0.15, weight: 1, interactive: false }
+            style: { color: '#868e96', fillColor: '#dee2e6', fillOpacity: 0.15, weight: 1 },
+            onEachFeature: (feature, layer) => {
+              if (feature.properties?.name) {
+                layer.bindTooltip(feature.properties.name as string, { sticky: true, opacity: 0.9 })
+              }
+            }
           }).addTo(map)
-          // Bring the main polygon back to the front after neighbours are added
           polygonRef.current?.bringToFront()
         } catch { /* ignore neighbour render errors */ }
       }
