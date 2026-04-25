@@ -203,7 +203,7 @@ export default function EditPage({ editData, onValidated, onCancel }: {
           allowInsertRow: false,
           allowDeleteColumn: false,
           allowInsertColumn: false,
-          columnSorting: false,
+          columnSorting: true,
         }],
       })
       setInitError(null)
