@@ -49,7 +49,10 @@ export default function HistoryPage(): JSX.Element {
               <td style={{ ...td, textAlign: 'right' }}>{b.rowCount ?? '—'}</td>
               <td style={td}>
                 {b.storedFile
-                  ? <button onClick={() => window.api.batches.revealFile(b.storedFile!)} style={btnSmall}>Reveal in Finder</button>
+                  ? <span style={{ display: 'flex', gap: 6 }}>
+                      <button onClick={() => window.api.batches.openFile(b.storedFile!)} style={btnSmall}>Open</button>
+                      <button onClick={() => window.api.batches.revealFile(b.storedFile!)} style={btnSmall}>Reveal in Finder</button>
+                    </span>
                   : <button onClick={async () => {
                       const path = await window.api.batches.locateFile(b.id)
                       if (path) await load()

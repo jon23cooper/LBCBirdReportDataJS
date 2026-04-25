@@ -408,6 +408,10 @@ export function registerIpcHandlers(): void {
     shell.showItemInFolder(storedFile)
   })
 
+  ipcMain.handle('batches:open-file', (_e: Electron.IpcMainInvokeEvent, storedFile: string) => {
+    shell.openPath(storedFile)
+  })
+
   ipcMain.handle('export:sql', async () => {
     const { canceled, filePath } = await dialog.showSaveDialog({
       defaultPath: 'birdreport.sql',
