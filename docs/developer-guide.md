@@ -7,11 +7,13 @@
 3. [Technology stack](#technology-stack)
 4. [Development setup](#development-setup)
 5. [macOS build notes](#macos-build-notes)
-6. [Database schema](#database-schema)
-7. [IPC API](#ipc-api)
-8. [Adding a new importer format](#adding-a-new-importer-format)
-9. [Adding fields to the schema](#adding-fields-to-the-schema)
-10. [Building for distribution](#building-for-distribution)
+6. [Environment variables](#environment-variables)
+7. [Database schema](#database-schema)
+8. [IPC API](#ipc-api)
+9. [Location matching](#location-matching)
+10. [Adding a new importer format](#adding-a-new-importer-format)
+11. [Adding fields to the schema](#adding-fields-to-the-schema)
+12. [Building for distribution](#building-for-distribution)
 
 ---
 
@@ -35,10 +37,10 @@ The app follows the standard Electron three-process model:
                  │ window.api.*
 ┌────────────────▼────────────────────────────┐
 │  Renderer  (React / src/renderer/)           │
-│  • Import wizard                            │
+│  • Import wizard + staging review           │
 │  • Sightings table                          │
-│  • MapLibre GL map                          │
-│  • Location editor                          │
+│  • Location editor + Leaflet map            │
+│  • Species manager                          │
 │  • Export page                              │
 └─────────────────────────────────────────────┘
 ```
@@ -54,44 +56,43 @@ src/
 ├── main/                   Main process
 │   ├── index.ts            Entry point — creates window, initialises DB
 │   ├── db/
-│   │   ├── index.ts        Database initialisation (SQLite + Drizzle)
+│   │   ├── index.ts        Database initialisation and migrations
 │   │   └── schema.ts       Drizzle table definitions
 │   ├── ipc/
 │   │   └── index.ts        All ipcMain.handle() registrations
 │   ├── importers/
 │   │   ├── index.ts        readSpreadsheet() — CSV/XLSX/ODS reader
 │   │   ├── normalise.ts    Row normalisation against a FieldMapping
-│   │   ├── parseDate.ts    Multi-format date parser
-│   │   └── types.ts        Re-exports from shared/types.ts
-│   ├── locations/
-│   │   └── match.ts        Name + coordinate location matching
-│   └── electron-submodules.d.ts   Type shims for electron/main etc.
+│   │   └── parseDate.ts    Multi-format date parser
+│   └── locations/
+│       └── match.ts        Spatial + regex location matching
 │
 ├── preload/
 │   └── index.ts            Exposes window.api via contextBridge
 │
 ├── renderer/
-│   ├── index.html          Vite entry HTML
+│   ├── index.html
 │   └── src/
 │       ├── main.tsx        React entry point
-│       ├── App.tsx         Navigation shell
+│       ├── App.tsx         Navigation shell + staging state
 │       ├── env.d.ts        window.api type declarations
 │       └── pages/
 │           ├── ImportPage.tsx
+│           ├── StagingPage.tsx
 │           ├── SightingsPage.tsx
-│           ├── MapPage.tsx
 │           ├── LocationsPage.tsx
+│           ├── SpeciesPage.tsx
 │           └── ExportPage.tsx
 │
 └── shared/
     └── types.ts            Types shared between main and renderer
 
+data/                       Reference data files (committed)
+  locations.geojson         Location polygon dataset
+  locations_regex.csv       Location name regex patterns
 docs/                       This documentation
 release/                    electron-builder output (gitignored)
 out/                        electron-vite build output (gitignored)
-src/db/migrations/          Drizzle-generated SQL migrations
-drizzle.config.ts           Drizzle Kit configuration
-electron.vite.config.ts     electron-vite build configuration
 ```
 
 ---
@@ -102,14 +103,15 @@ electron.vite.config.ts     electron-vite build configuration
 | --- | --- | --- |
 | Desktop shell | [Electron](https://electronjs.org) v32 | |
 | Build tool | [electron-vite](https://electron-vite.org) v3 | Vite-based, handles main + preload + renderer |
-| Packaging | [electron-builder](https://www.electron.build) v25 | Creates signed .app and DMG |
+| Packaging | [electron-builder](https://www.electron.build) v25 | Creates signed .app |
 | UI framework | [React](https://react.dev) v18 | No component library — plain inline styles |
 | Database | [SQLite](https://sqlite.org) via [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) | Single file in `~/Library/Application Support` |
-| ORM | [Drizzle ORM](https://orm.drizzle.team) | Type-safe queries, schema-as-code |
+| ORM | [Drizzle ORM](https://orm.drizzle.team) | Type-safe queries; raw SQLite used for performance-critical reads |
 | Spreadsheet parsing | [xlsx](https://github.com/SheetJS/sheetjs) | Handles CSV, XLSX, XLS and ODS |
-| CSV parsing | [csv-parse](https://csv.js.org/parse/) | Used for CSV specifically |
-| Mapping | [MapLibre GL JS](https://maplibre.org) v5 | Open source, no API key needed |
-| Spatial operations | [Turf.js](https://turfjs.org) v7 | Point-distance for location matching |
+| Mapping | [Leaflet](https://leafletjs.com) v1.9 | Interactive polygon display and editing |
+| Polygon editing | [@geoman-io/leaflet-geoman-free](https://geoman.io) v2.19 | Vertex dragging for polygon editing |
+| Spatial operations | [@turf/turf](https://turfjs.org) v7 | Point-in-polygon, centroid, distance |
+| Tile provider | OpenStreetMap.DE | No API key required; Stadia Maps supported via `.env` |
 | Language | TypeScript 5.7 | Strict mode throughout |
 
 ---
@@ -125,7 +127,7 @@ electron.vite.config.ts     electron-vite build configuration
 ### Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/LBCBirdReportDataJS.git
+git clone https://github.com/jon23cooper/LBCBirdReportDataJS.git
 cd LBCBirdReportDataJS
 npm install
 ```
@@ -136,13 +138,13 @@ npm install
 npm run dev
 ```
 
-This compiles main + preload + renderer, packages a signed `.app` via `electron-builder --dir`, copies it into `/Applications`, and re-signs it. When the build finishes you'll see:
+This compiles main + preload + renderer, packages a signed `.app` via `electron-builder --dir`, copies it into `/Applications`, and re-signs it. When the build finishes:
 
 ```text
 Build complete — open LBC Bird Report from Spotlight or Applications
 ```
 
-Open the app from Spotlight (`⌘ Space`, type `LBC Bird Report`) or from the Applications folder in Finder.
+Open from Spotlight (`⌘ Space → LBC Bird Report`) or the Applications folder.
 
 **Hot-reload is not available** — see macOS build notes below.
 
@@ -158,9 +160,7 @@ npm run typecheck
 
 ### Why `npm run dev` builds a full app instead of using electron-vite's dev server
 
-On macOS 15 (Sequoia) with Apple Silicon, the ad-hoc-signed Electron binary that ships in the `electron` npm package cannot register its internal module system when launched directly from the terminal. As a result, `require('electron')` does not return the Electron API, and the app crashes silently.
-
-This is a macOS 15 security model restriction. The workaround is to package the app with electron-builder, which signs it with the developer's Apple Development certificate. The signed `.app` bundle, when launched through macOS LaunchServices, initialises correctly.
+On macOS 15 (Sequoia) with Apple Silicon, the ad-hoc-signed Electron binary that ships in the `electron` npm package cannot register its internal module system when launched directly from the terminal. The workaround is to package the app with electron-builder, which signs it with the developer's Apple Development certificate.
 
 **Practical consequence:** Each code change requires a rebuild cycle (~15–20 seconds). Edit your code, run `npm run dev`, then open the app from Spotlight or Applications.
 
@@ -172,134 +172,201 @@ electron-builder automatically uses the first available Apple Development certif
 CSC_NAME="Apple Development: Your Name (TEAMID)" npm run dist
 ```
 
-For distribution outside the App Store you need a **Developer ID Application** certificate and notarisation — see the [electron-builder docs](https://www.electron.build/code-signing).
+---
+
+## Environment variables
+
+Create a `.env` file at the project root (gitignored). Variables prefixed `VITE_` are injected into the renderer bundle at build time.
+
+| Variable | Purpose |
+| --- | --- |
+| `VITE_STADIA_API_KEY` | Optional Stadia Maps API key — appended to the tile URL in `LocationsPage.tsx` if present |
 
 ---
 
 ## Database schema
 
-Defined in [src/main/db/schema.ts](../src/main/db/schema.ts) using Drizzle ORM.
+Defined in [src/main/db/schema.ts](../src/main/db/schema.ts). Migrations are applied inline in [src/main/db/index.ts](../src/main/db/index.ts) on startup.
 
 ### `locations`
 
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | INTEGER PK | Auto-increment |
-| `name` | TEXT | Required |
-| `grid_ref` | TEXT | OS or Irish grid reference |
-| `lat` | REAL | WGS84 decimal degrees |
-| `lon` | REAL | WGS84 decimal degrees |
+| `name` | TEXT NOT NULL | Unique — used as the match key |
+| `grid_ref` | TEXT | OS grid reference |
+| `lat` | REAL | Manual point lat (WGS84) |
+| `lon` | REAL | Manual point lon (WGS84) |
+| `centroid_lat` | REAL | Computed centroid of polygon |
+| `centroid_lon` | REAL | Computed centroid of polygon |
+| `geometry` | TEXT | GeoJSON Polygon geometry as JSON string |
 | `country` | TEXT | |
 | `region` | TEXT | |
 | `notes` | TEXT | |
 
-### `import_batches`
+### `location_regex`
 
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | INTEGER PK | |
-| `filename` | TEXT | Original filename |
-| `format` | TEXT | `csv` / `xlsx` / `ods` |
-| `imported_at` | TEXT | ISO 8601 timestamp |
-| `row_count` | INTEGER | |
-| `field_mapping` | TEXT | JSON — source→standard column map |
+| `site_name` | TEXT NOT NULL | FK (by name) to `locations.name` |
+| `regex` | TEXT NOT NULL | JavaScript-compatible regex pattern |
+| `match_name` | TEXT | The place name this pattern matches |
+
+### `location_match_cache`
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| `raw_string` | TEXT PK | The original location string from a sighting |
+| `location_id` | INTEGER | FK to `locations.id` |
+| `confirmed_at` | TEXT | ISO 8601 timestamp |
 
 ### `sightings`
+
+Full column list in [src/main/db/schema.ts](../src/main/db/schema.ts). Key fields:
 
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | INTEGER PK | |
 | `import_batch_id` | INTEGER FK | → `import_batches.id` |
 | `location_id` | INTEGER FK | → `locations.id` (nullable) |
-| `species` | TEXT | Required |
+| `species` | TEXT NOT NULL | Resolved species name |
 | `common_name` | TEXT | |
 | `scientific_name` | TEXT | |
-| `order` | TEXT | Taxonomic order |
 | `family` | TEXT | |
-| `date` | TEXT | ISO 8601 `YYYY-MM-DD` |
-| `time` | TEXT | `HH:MM` |
+| `date` | TEXT NOT NULL | ISO 8601 `YYYY-MM-DD` |
 | `count` | INTEGER | |
-| `count_approx` | INTEGER | Upper bound when count is a range |
-| `sex` | TEXT | M / F / U |
-| `age` | TEXT | ad / imm / juv / U |
-| `breeding` | TEXT | BTO breeding code |
-| `ring` | TEXT | Ring number |
 | `observer` | TEXT | |
-| `source_ref` | TEXT | Original row reference for audit |
-| `lat` | REAL | May differ from location centroid |
-| `lon` | REAL | |
-| `notes` | TEXT | |
+| `dataset` | TEXT | Batch-level dataset label |
+| `lbc_id` | TEXT | Sequential LBC identifier |
 | `raw_data` | TEXT | Original import row as JSON |
+
+### `species`
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| `id` | INTEGER PK | |
+| `common_name` | TEXT NOT NULL | |
+| `common_name_regex` | TEXT | Regex for matching common name variants |
+| `scientific_name` | TEXT NOT NULL | |
+| `scientific_name_regex` | TEXT | Regex for matching scientific name variants |
+| `family` | TEXT | |
+
+### `import_batches`
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| `id` | INTEGER PK | |
+| `filename` | TEXT NOT NULL | |
+| `format` | TEXT NOT NULL | `csv` / `xlsx` / `ods` |
+| `imported_at` | TEXT NOT NULL | ISO 8601 timestamp |
+| `row_count` | INTEGER | |
+| `field_mapping` | TEXT | JSON field mapping used at import |
+
+### `settings`
+
+Key-value store. Currently holds `lbc_sequence` (integer counter for LBC ID generation).
 
 ---
 
 ## IPC API
 
-All communication between renderer and main process goes through `window.api`, defined in [src/preload/index.ts](../src/preload/index.ts) and typed in [src/renderer/src/env.d.ts](../src/renderer/src/env.d.ts).
+All communication goes through `window.api`, defined in [src/preload/index.ts](../src/preload/index.ts) and typed in [src/renderer/src/env.d.ts](../src/renderer/src/env.d.ts).
 
-### `window.api.import.openFile()`
+### `window.api.import`
 
-Opens a system file picker filtered to `.csv`, `.xlsx`, `.xls`, `.ods`.
+| Method | Description |
+| --- | --- |
+| `openFile()` | File picker → `{ path, sheets, headers, preview }` or `null` |
+| `readSheet(filePath, sheetName, skipRows)` | Re-read headers + 5-row preview for a different sheet or skip value |
+| `validate(filePath, mapping, sheetName?, skipRows?, batchOptions?)` | Parse and species-match all rows → `{ status, rows, warnings }` or `{ status: 'validation-failed', ... }` |
+| `validateRows(rows, mapping, batchOptions?)` | Same but from already-loaded rows (used for re-validation after edits) |
+| `commitStaged(rows, filename, format, mapping)` | Write validated rows to the database → `{ imported }` |
 
-Returns `{ path, sheets, headers, preview }` or `null` if cancelled. `sheets` is an empty array for CSV files.
+### `window.api.sightings`
 
-### `window.api.import.readSheet(filePath, sheetName, skipRows)`
+| Method | Description |
+| --- | --- |
+| `list()` | All rows as `Sighting[]` |
 
-Reads headers and a 5-row preview from the given sheet, skipping the specified number of rows before the header. Used when the user changes worksheet or adjusts the skip-rows setting.
+### `window.api.locations`
 
-### `window.api.import.commit(filePath, mapping, sheetName?, skipRows?)`
+| Method | Description |
+| --- | --- |
+| `list()` | All locations (excludes geometry for performance) as `Location[]` |
+| `listGeometries()` | All locations with geometry — `{ id, name, geometry }[]` — used for map rendering |
+| `get(id)` | Single location including geometry |
+| `upsert(data)` | Insert or update |
+| `openGeojsonFile()` | File picker → path or `null` |
+| `importGeojson(filePath)` | Import polygons, compute centroids → `{ imported, errors }` |
+| `openRegexCsvFile()` | File picker → path or `null` |
+| `importRegexCsv(filePath)` | Replace all regex patterns from CSV → `{ imported, errors }` |
+| `confirmMatch(rawString, locationId)` | Write to match cache |
+| `listRegex(siteName)` | Regex patterns for one site |
+| `saveRegex(siteName, rows)` | Replace regex patterns for one site |
 
-Parses and imports the file using the provided `FieldMapping`. Returns `{ imported: number, warnings: string[] }`.
+### `window.api.species`
 
-### `window.api.sightings.list()`
+| Method | Description |
+| --- | --- |
+| `list()` | All species as `SpeciesRecord[]` |
+| `upsert(record)` | Insert or update |
+| `openCsvFile()` | File picker → path or `null` |
+| `importCsv(filePath)` | Import species list from CSV → `{ imported, errors }` |
 
-Returns all rows from the `sightings` table as `Sighting[]`.
+### `window.api.export`
 
-### `window.api.locations.list()`
+| Method | Description |
+| --- | --- |
+| `sql()` | Save dialog → write SQL file → path or `null` |
 
-Returns all rows from the `locations` table as `Location[]`.
+---
 
-### `window.api.locations.upsert(data)`
+## Location matching
 
-Inserts or updates a location. If `data.id` is set, updates the existing row.
+Matching runs at validate time in the main process ([src/main/locations/match.ts](../src/main/locations/match.ts)). For each sighting row:
 
-### `window.api.export.sql()`
+1. **Match cache** — if this exact `originalLocation` string has been confirmed by the user before, return that `locationId` immediately with quality `confirmed`.
 
-Opens a save dialog, writes a Postgres-compatible `.sql` file, and returns the path or `null` if cancelled.
+2. **Spatial matching** (if `lat`/`lon` are present):
+   - **Point-in-polygon** — test against every location's GeoJSON polygon using `@turf/turf booleanPointInPolygon`.
+   - **Centroid proximity** — if no polygon contains the point, find locations whose centroid is within 2 km.
+
+3. **Regex name matching** (if `originalLocation` is present) — test against all patterns in `location_regex`.
+
+4. **Quality tier** assigned:
+   - `confirmed` — found in match cache
+   - `spatial-only` — spatial match with no name match
+   - `name-only` — name regex match with no spatial match
+   - `conflict` — spatial and name matches disagree on which site
+   - `none` — no match found
+
+5. **Candidates list** built — up to 5 candidate locations sent to the renderer for the user to choose from in the staging review.
+
+Calling `locations.confirmMatch(rawString, locationId)` writes to the cache so future imports resolve the string instantly.
+
+The location cache is held in memory and invalidated when locations or regex patterns are modified.
 
 ---
 
 ## Adding a new importer format
 
-All format-specific reading is in [src/main/importers/index.ts](../src/main/importers/index.ts). The `readSpreadsheet()` function dispatches on file extension:
+All format-specific reading is in [src/main/importers/index.ts](../src/main/importers/index.ts). To add a new format:
 
-```typescript
-export function readSpreadsheet(filePath: string, sheetName?: string, skipRows = 0) {
-  const ext = extname(filePath).toLowerCase()
-  if (ext === '.csv') return readCsv(filePath, skipRows)
-  if (ext === '.xlsx' || ext === '.xls') return readXlsx(filePath, sheetName, skipRows)
-  if (ext === '.ods') return readOds(filePath, sheetName, skipRows)
-  throw new Error(`Unsupported file format: ${ext}`)
-}
-```
-
-To add a new format:
-
-1. Add a `readXxx(filePath, skipRows)` function in the same file that returns `{ headers: string[]; rows: RawRow[] }`.
-2. Add the extension to the dispatch block above.
-3. Add the extension to the `filters` array in the `import:open-file` IPC handler in [src/main/ipc/index.ts](../src/main/ipc/index.ts).
+1. Add a `readXxx(filePath, skipRows)` function returning `{ headers: string[]; rows: RawRow[] }`.
+2. Add the extension to the dispatch block in `readSpreadsheet()`.
+3. Add the extension to the `filters` array in the `import:open-file` IPC handler.
 
 ---
 
 ## Adding fields to the schema
 
-1. Add the column to `sightings` in [src/main/db/schema.ts](../src/main/db/schema.ts).
-2. Run `npm run db:generate` to create a migration SQL file.
-3. Add the field to `ParsedSighting` and `Sighting` in [src/shared/types.ts](../src/shared/types.ts).
+1. Add the column to the relevant table in [src/main/db/schema.ts](../src/main/db/schema.ts).
+2. Add an `ALTER TABLE ... ADD COLUMN` migration in [src/main/db/index.ts](../src/main/db/index.ts).
+3. Add the field to the shared types in [src/shared/types.ts](../src/shared/types.ts).
 4. Update `normaliseRows()` in [src/main/importers/normalise.ts](../src/main/importers/normalise.ts) to map the new field.
-5. Update the `import:commit` IPC handler in [src/main/ipc/index.ts](../src/main/ipc/index.ts) to write the new field.
+5. Update `commitParsed()` in [src/main/ipc/index.ts](../src/main/ipc/index.ts) to write the new field.
 6. Update `STANDARD_FIELDS` in [src/renderer/src/pages/ImportPage.tsx](../src/renderer/src/pages/ImportPage.tsx) to expose the field in the mapping UI.
-7. Update the Postgres export helpers at the bottom of [src/main/ipc/index.ts](../src/main/ipc/index.ts).
 
 ---
 
