@@ -39,6 +39,11 @@ declare global {
       export: {
         sql(): Promise<string | null>
       }
+      batches: {
+        list(): Promise<{ id: number; filename: string; format: string; importedAt: string; rowCount: number | null; storedFile: string | null }[]>
+        delete(id: number): Promise<void>
+        revealFile(storedFile: string): Promise<void>
+      }
     }
   }
 }

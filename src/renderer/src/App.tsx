@@ -25,11 +25,12 @@ import MapPage from './pages/MapPage'
 import LocationsPage from './pages/LocationsPage'
 import SpeciesPage from './pages/SpeciesPage'
 import ExportPage from './pages/ExportPage'
+import HistoryPage from './pages/HistoryPage'
 import EditPage, { type EditData } from './pages/EditPage'
 import StagingPage from './pages/StagingPage'
 import type { StagingData, ParsedSighting } from '../../shared/types'
 
-type Page = 'import' | 'sightings' | 'map' | 'locations' | 'species' | 'export' | 'edit' | 'staging'
+type Page = 'import' | 'sightings' | 'map' | 'locations' | 'species' | 'export' | 'history' | 'edit' | 'staging'
 
 const STAGING_SORT_ORDER: Record<string, number> = {
   'none': 0, 'regex-scientific': 1, 'regex-common': 1, 'manual': 2, 'exact-scientific': 3, 'exact-common': 3,
@@ -37,6 +38,7 @@ const STAGING_SORT_ORDER: Record<string, number> = {
 
 const NAV: { id: Page; label: string }[] = [
   { id: 'import',    label: 'Import' },
+  { id: 'history',   label: 'History' },
   { id: 'sightings', label: 'Sightings' },
   { id: 'map',       label: 'Map' },
   { id: 'locations', label: 'Locations' },
@@ -99,6 +101,7 @@ export default function App(): JSX.Element {
       <main style={{ flex: 1, overflow: (page === 'edit' || page === 'staging') ? 'hidden' : 'auto', padding: 24, display: 'flex', flexDirection: 'column' }}>
         <ErrorBoundary>
         {page === 'import'    && <ImportPage onValidationFailed={handleValidationFailed} onValidated={d => handleValidated(d, 'import')} />}
+        {page === 'history'   && <HistoryPage />}
         {page === 'sightings' && <SightingsPage />}
         {page === 'map'       && <MapPage />}
         {page === 'locations' && <LocationsPage />}

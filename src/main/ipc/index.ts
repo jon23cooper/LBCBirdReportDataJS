@@ -1,4 +1,4 @@
-import { ipcMain, dialog, app } from 'electron'
+import { ipcMain, dialog, app, shell } from 'electron'
 import { parse as parseCsv } from 'csv-parse/sync'
 import { readFileSync, copyFileSync, unlinkSync, mkdirSync } from 'fs'
 import { join, basename } from 'path'
@@ -379,6 +379,22 @@ export function registerIpcHandlers(): void {
       errors.push(err instanceof Error ? err.message : String(err))
     }
     return { imported, errors }
+  })
+
+  ipcMain.handle('batches:list', () => {
+    return getSqlite()
+      .prepare('SELECT id, filename, format, imported_at as importedAt, row_count as rowCount, stored_file as storedFile FROM import_batches ORDER BY imported_at DESC')
+      .all()
+  })
+
+  ipcMain.handle('batches:delete', (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    const db = getSqlite()
+    db.prepare('DELETE FROM sightings WHERE import_batch_id = ?').run(id)
+    db.prepare('DELETE FROM import_batches WHERE id = ?').run(id)
+  })
+
+  ipcMain.handle('batches:reveal-file', (_e: Electron.IpcMainInvokeEvent, storedFile: string) => {
+    shell.showItemInFolder(storedFile)
   })
 
   ipcMain.handle('export:sql', async () => {

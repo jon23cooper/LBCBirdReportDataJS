@@ -36,5 +36,10 @@ contextBridge.exposeInMainWorld('api', {
   },
   export: {
     sql: () => ipcRenderer.invoke('export:sql')
+  },
+  batches: {
+    list: () => ipcRenderer.invoke('batches:list'),
+    delete: (id: number) => ipcRenderer.invoke('batches:delete', id),
+    revealFile: (storedFile: string) => ipcRenderer.invoke('batches:reveal-file', storedFile),
   }
 })
