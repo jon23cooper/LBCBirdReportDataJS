@@ -60,7 +60,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   onBack: () => void
   onSuccess: () => void
 }): JSX.Element {
-  const { warnings, filename, format, mapping } = stagingData
+  const { warnings, filename, filePath, format, mapping } = stagingData
   const [speciesList, setSpeciesList] = useState<SpeciesRecord[]>([])
   const [locationsList, setLocationsList] = useState<Location[]>([])
   const [busy, setBusy] = useState(false)
@@ -111,7 +111,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
         : r
     )
     try {
-      await window.api.import.commitStaged(finalRows, filename, format, mapping)
+      await window.api.import.commitStaged(finalRows, filename, format, mapping, filePath)
       onSuccess()
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))

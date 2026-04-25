@@ -59,7 +59,8 @@ export const importBatches = sqliteTable('import_batches', {
   format: text('format').notNull(),
   importedAt: text('imported_at').notNull(),
   rowCount: integer('row_count'),
-  fieldMapping: text('field_mapping')
+  fieldMapping: text('field_mapping'),
+  storedFile: text('stored_file'),
 })
 
 export const species = sqliteTable('species', {

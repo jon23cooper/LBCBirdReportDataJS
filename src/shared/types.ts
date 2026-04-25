@@ -111,6 +111,7 @@ export interface StagingData {
   rows: ParsedSighting[]
   warnings: string[]
   filename: string
+  filePath?: string
   format: string
   mapping: Partial<FieldMapping>
   batchOptions: BatchOptions

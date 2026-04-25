@@ -12,7 +12,7 @@ declare global {
         readSheet(filePath: string, sheetName: string, skipRows: number): Promise<{ headers: string[]; preview: Record<string, unknown>[] }>
         validate(filePath: string, mapping: FieldMapping, sheetName?: string, skipRows?: number, batchOptions?: BatchOptions): Promise<ValidateResult>
         validateRows(rows: Record<string, unknown>[], mapping: FieldMapping, batchOptions?: BatchOptions): Promise<ValidateResult>
-        commitStaged(rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>): Promise<{ imported: number }>
+        commitStaged(rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>, sourceFilePath?: string): Promise<{ imported: number }>
       }
       sightings: {
         list(): Promise<Sighting[]>

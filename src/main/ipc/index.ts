@@ -1,6 +1,7 @@
-import { ipcMain, dialog } from 'electron'
+import { ipcMain, dialog, app } from 'electron'
 import { parse as parseCsv } from 'csv-parse/sync'
-import { readFileSync } from 'fs'
+import { readFileSync, copyFileSync, unlinkSync, mkdirSync } from 'fs'
+import { join, basename } from 'path'
 import * as turf from '@turf/turf'
 import { getSheetNames, readSpreadsheet } from '../importers'
 import { normaliseRows } from '../importers/normalise'
@@ -71,11 +72,28 @@ async function commitParsed(
   filename: string,
   format: string,
   mapping: Partial<FieldMapping>,
+  sourceFilePath?: string,
 ): Promise<{ imported: number }> {
   const lbcSeqStart = reserveLbcSequence(rows.length)
   rows.forEach((s, i) => {
     s.lbcId = `LBC#${s.date.substring(0, 4)}#${lbcSeqStart + i}`
   })
+
+  // Move the source file into the app's imports directory
+  let storedFile: string | undefined
+  if (sourceFilePath) {
+    try {
+      const importsDir = join(app.getPath('userData'), 'imports')
+      mkdirSync(importsDir, { recursive: true })
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      const dest = join(importsDir, `${timestamp}_${basename(sourceFilePath)}`)
+      copyFileSync(sourceFilePath, dest)
+      unlinkSync(sourceFilePath)
+      storedFile = dest
+    } catch (err) {
+      console.error('[commit] file move failed:', err)
+    }
+  }
 
   const db = getDb()
   db.transaction((tx) => {
@@ -85,6 +103,7 @@ async function commitParsed(
       importedAt: new Date().toISOString(),
       rowCount: rows.length,
       fieldMapping: JSON.stringify(mapping),
+      storedFile,
     }).returning().all()
 
     for (let i = 0; i < rows.length; i++) {
@@ -167,8 +186,8 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle(
     'import:commit-staged',
-    async (_e: Electron.IpcMainInvokeEvent, rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>) => {
-      return commitParsed(rows, filename, format, mapping)
+    async (_e: Electron.IpcMainInvokeEvent, rows: ParsedSighting[], filename: string, format: string, mapping: Partial<FieldMapping>, sourceFilePath?: string) => {
+      return commitParsed(rows, filename, format, mapping, sourceFilePath)
     }
   )
 

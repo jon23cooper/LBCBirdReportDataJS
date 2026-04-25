@@ -164,7 +164,7 @@ export default function ImportPage({ onValidationFailed, onValidated }: {
       if (r.status === 'validation-failed') {
         onValidationFailed({ headers: r.headers, failures: r.failures, rows: r.allRows, mapping, filename, batchOptions })
       } else {
-        onValidated({ rows: r.rows, warnings: r.warnings, filename, format, mapping, batchOptions })
+        onValidated({ rows: r.rows, warnings: r.warnings, filename, filePath: file.path, format, mapping, batchOptions })
       }
     } catch (err) {
       setImportError(err instanceof Error ? err.message : String(err))

@@ -9,8 +9,8 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.invoke('import:validate', filePath, mapping, sheetName, skipRows, batchOptions),
     validateRows: (rows: object[], mapping: object, batchOptions?: object) =>
       ipcRenderer.invoke('import:validate-rows', rows, mapping, batchOptions),
-    commitStaged: (rows: object[], filename: string, format: string, mapping: object) =>
-      ipcRenderer.invoke('import:commit-staged', rows, filename, format, mapping)
+    commitStaged: (rows: object[], filename: string, format: string, mapping: object, sourceFilePath?: string) =>
+      ipcRenderer.invoke('import:commit-staged', rows, filename, format, mapping, sourceFilePath)
   },
   sightings: {
     list: () => ipcRenderer.invoke('sightings:list')
