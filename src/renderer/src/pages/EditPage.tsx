@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import jspreadsheet from 'jspreadsheet-ce'
 import 'jspreadsheet-ce/dist/jspreadsheet.css'
 import 'jsuites/dist/jsuites.css'
@@ -10,6 +10,7 @@ export interface EditData {
   rows: Record<string, unknown>[]
   mapping: Partial<FieldMapping>
   filename: string
+  filePath?: string
   batchOptions: BatchOptions
 }
 
@@ -93,15 +94,58 @@ export default function EditPage({ editData, onValidated, onCancel }: {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [initError, setInitError] = useState<string | null>(null)
+  const [extraFieldKeys, setExtraFieldKeys] = useState<string[]>([])
+  const [addColFieldKey, setAddColFieldKey] = useState('')
 
-  // Derive display columns from mapping, in FIELD_ORDER sequence
-  const displayCols = FIELD_ORDER
-    .filter(fieldKey => editData.mapping[fieldKey as keyof FieldMapping])
-    .map(fieldKey => ({
+  // Fields already in mapping
+  const mappedFieldKeys = useMemo(
+    () => new Set(FIELD_ORDER.filter(k => editData.mapping[k as keyof FieldMapping])),
+    [] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+
+  // Fields available to add (not mapped, not already added as extra)
+  const availableToAdd = useMemo(
+    () => FIELD_ORDER.filter(k => !mappedFieldKeys.has(k) && !extraFieldKeys.includes(k)),
+    [mappedFieldKeys, extraFieldKeys]
+  )
+
+  // Derive display columns from mapping + extra fields, in FIELD_ORDER sequence
+  const displayCols = useMemo(() => [
+    ...FIELD_ORDER
+      .filter(fieldKey => editData.mapping[fieldKey as keyof FieldMapping])
+      .map(fieldKey => ({
+        fieldKey,
+        label: FIELD_LABELS[fieldKey] ?? fieldKey,
+        sourceCol: editData.mapping[fieldKey as keyof FieldMapping] as string,
+        isExtra: false,
+      })),
+    ...extraFieldKeys.map(fieldKey => ({
       fieldKey,
       label: FIELD_LABELS[fieldKey] ?? fieldKey,
-      sourceCol: editData.mapping[fieldKey as keyof FieldMapping] as string,
-    }))
+      sourceCol: fieldKey,
+      isExtra: true,
+    })),
+  ], [extraFieldKeys]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Save current sheet state back into editedRowsRef before re-initialising
+  function saveCurrentState() {
+    const instance = instanceRef.current
+    if (!instance) return
+    const ws = Array.isArray(instance) ? instance[0] : (instance.worksheets?.[0] ?? instance)
+    const rawData = ws.getData() as string[][]
+    editedRowsRef.current = rawData.map(row => {
+      const obj: Record<string, unknown> = {}
+      displayCols.forEach(({ sourceCol }, i) => { obj[sourceCol] = row[i + 1] })
+      return obj
+    })
+  }
+
+  function addExtraColumn() {
+    if (!addColFieldKey) return
+    saveCurrentState()
+    setExtraFieldKeys(prev => [...prev, addColFieldKey])
+    setAddColFieldKey('')
+  }
 
   useEffect(() => {
     let resizeTimer: ReturnType<typeof setTimeout>
@@ -174,7 +218,7 @@ export default function EditPage({ editData, onValidated, onCancel }: {
       }
       instanceRef.current = null
     }
-  }, [failures]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [failures, extraFieldKeys]) // eslint-disable-line react-hooks/exhaustive-deps
 
   async function reimport() {
     const instance = instanceRef.current
@@ -189,12 +233,18 @@ export default function EditPage({ editData, onValidated, onCancel }: {
     })
     editedRowsRef.current = editedRows
 
+    // Extend mapping with extra field keys mapped to themselves
+    const extendedMapping: Partial<FieldMapping> = { ...editData.mapping }
+    for (const fieldKey of extraFieldKeys) {
+      (extendedMapping as Record<string, string>)[fieldKey] = fieldKey
+    }
+
     setBusy(true)
     setError(null)
     try {
       const r = await window.api.import.validateRows(
         editedRows,
-        editData.mapping as FieldMapping,
+        extendedMapping as FieldMapping,
         editData.batchOptions,
       )
       if (r.status === 'validation-failed') {
@@ -205,7 +255,7 @@ export default function EditPage({ editData, onValidated, onCancel }: {
           warnings: r.warnings,
           filename: editData.filename,
           format: 'edited',
-          mapping: editData.mapping,
+          mapping: extendedMapping,
           batchOptions: editData.batchOptions,
         })
       }
@@ -220,6 +270,9 @@ export default function EditPage({ editData, onValidated, onCancel }: {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, flexWrap: 'wrap' }}>
         <button onClick={onCancel} style={btnSecondary}>← Back</button>
+        {editData.filePath && (
+          <button onClick={() => window.api.batches.openFile(editData.filePath!)} style={btnSecondary}>Open source file</button>
+        )}
         {failures.length > 0 && (
           <span style={{ color: '#c0392b', fontSize: 13 }}>
             <strong>{failures.length} row{failures.length !== 1 ? 's' : ''} need fixing.</strong>
@@ -229,9 +282,33 @@ export default function EditPage({ editData, onValidated, onCancel }: {
         {failures.length === 0 && (
           <span style={{ color: '#555', fontSize: 13 }}>All rows valid — click Re-import to save.</span>
         )}
-        <button onClick={reimport} disabled={busy} style={{ ...btnPrimary, marginLeft: 'auto' }}>
-          {busy ? 'Validating…' : 'Re-import'}
-        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto' }}>
+          {availableToAdd.length > 0 && (
+            <>
+              <select
+                value={addColFieldKey}
+                onChange={e => setAddColFieldKey(e.target.value)}
+                style={{ padding: '6px 8px', fontSize: 13, border: '1px solid #ced4da', borderRadius: 4, background: '#fff' }}
+              >
+                <option value="">Add column…</option>
+                {availableToAdd.map(k => (
+                  <option key={k} value={k}>{FIELD_LABELS[k] ?? k}</option>
+                ))}
+              </select>
+              <button
+                onClick={addExtraColumn}
+                disabled={!addColFieldKey}
+                style={btnSecondary}
+              >
+                + Add
+              </button>
+            </>
+          )}
+          <button onClick={reimport} disabled={busy} style={btnPrimary}>
+            {busy ? 'Validating…' : 'Re-import'}
+          </button>
+        </div>
       </div>
 
       {error && (

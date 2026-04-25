@@ -162,7 +162,7 @@ export default function ImportPage({ onValidationFailed, onValidated }: {
         file.path, mapping as FieldMapping, selectedSheet || undefined, skipRows || undefined, batchOptions
       )
       if (r.status === 'validation-failed') {
-        onValidationFailed({ headers: r.headers, failures: r.failures, rows: r.allRows, mapping, filename, batchOptions })
+        onValidationFailed({ headers: r.headers, failures: r.failures, rows: r.allRows, mapping, filename, filePath: file.path, batchOptions })
       } else {
         onValidated({ rows: r.rows, warnings: r.warnings, filename, filePath: file.path, format, mapping, batchOptions })
       }
