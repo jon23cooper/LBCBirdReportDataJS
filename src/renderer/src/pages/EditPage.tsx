@@ -254,6 +254,7 @@ export default function EditPage({ editData, onValidated, onCancel }: {
           rows: r.rows,
           warnings: r.warnings,
           filename: editData.filename,
+          filePath: editData.filePath,
           format: 'edited',
           mapping: extendedMapping,
           batchOptions: editData.batchOptions,
