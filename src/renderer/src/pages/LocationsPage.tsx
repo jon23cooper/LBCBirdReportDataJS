@@ -191,6 +191,8 @@ export default function LocationsPage(): JSX.Element {
   const [showRegex, setShowRegex] = useState(false)
   const [importResult, setImportResult] = useState<{ type: 'geojson' | 'regex'; imported: number; errors: string[] } | null>(null)
   const [importBusy, setImportBusy] = useState(false)
+  const [search, setSearch] = useState('')
+  const pageRef = useRef<HTMLDivElement>(null)
 
   async function load() { setLocations(await window.api.locations.list()) }
   useEffect(() => { load() }, [])
@@ -201,6 +203,7 @@ export default function LocationsPage(): JSX.Element {
     setEditingPolygon(false)
     setPolygonSnapshot(null)
     setShowRegex(false)
+    pageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   async function save() {
@@ -243,8 +246,12 @@ export default function LocationsPage(): JSX.Element {
     setImportBusy(false)
   }
 
+  const filteredLocations = search.trim()
+    ? locations.filter(l => l.name.toLowerCase().includes(search.toLowerCase()))
+    : locations
+
   return (
-    <div style={{ maxWidth: 1000 }}>
+    <div ref={pageRef} style={{ maxWidth: 1000 }}>
       <h1 style={{ fontSize: 22, marginBottom: 16 }}>Locations</h1>
 
       <div style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'center', flexWrap: 'wrap' }}>
@@ -339,6 +346,17 @@ export default function LocationsPage(): JSX.Element {
         </div>
       )}
 
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px 0 6px' }}>
+        <input
+          type="search"
+          placeholder="Search locations…"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ padding: '5px 9px', border: '1px solid #ced4da', borderRadius: 4, fontSize: 13, width: 240 }}
+        />
+        {search && <span style={{ fontSize: 12, color: '#868e96' }}>{filteredLocations.length} of {locations.length}</span>}
+      </div>
+
       <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: 4, fontSize: 13 }}>
         <thead>
           <tr>
@@ -348,8 +366,8 @@ export default function LocationsPage(): JSX.Element {
           </tr>
         </thead>
         <tbody>
-          {locations.map((loc, i) => (
-            <tr key={i} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
+          {filteredLocations.map((loc, i) => (
+            <tr key={loc.id ?? i} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
               <td style={td}>{loc.name}</td>
               <td style={td}>{loc.gridRef}</td>
               <td style={td}>{loc.centroidLat != null ? (loc.centroidLat as number).toFixed(5) : ''}</td>
@@ -359,8 +377,10 @@ export default function LocationsPage(): JSX.Element {
               <td style={td}><button onClick={() => openEdit(loc)} style={btnSmall}>Edit</button></td>
             </tr>
           ))}
-          {locations.length === 0 && (
-            <tr><td colSpan={7} style={{ ...td, color: '#aaa', fontStyle: 'italic' }}>No locations — import a GeoJSON file to get started</td></tr>
+          {filteredLocations.length === 0 && (
+            <tr><td colSpan={7} style={{ ...td, color: '#aaa', fontStyle: 'italic' }}>
+              {locations.length === 0 ? 'No locations — import a GeoJSON file to get started' : 'No locations match your search'}
+            </td></tr>
           )}
         </tbody>
       </table>
