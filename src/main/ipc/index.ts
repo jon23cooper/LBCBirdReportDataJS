@@ -39,8 +39,24 @@ function validateAndMatch(
     }
   }
 
+  const locationsByName = new Map(
+    (getSqlite().prepare('SELECT id, name FROM locations').all() as { id: number; name: string }[])
+      .map(r => [r.name.toLowerCase(), r])
+  )
+
   for (const s of parsed) {
-    const locMatch = matchLocation(s.locationName, s.lat, s.lon)
+    // If locationName is mapped it already contains the resolved site name — do a direct lookup
+    if (s.locationName) {
+      const exactMatch = locationsByName.get(s.locationName.trim().toLowerCase())
+      if (exactMatch) {
+        s.locationId = exactMatch.id
+        s.locationMatchName = exactMatch.name
+        s.locationMatchQuality = 'confirmed'
+        continue
+      }
+    }
+    // Otherwise use originalLocation string + coordinates for regex/spatial matching
+    const locMatch = matchLocation(s.originalLocation, s.lat, s.lon)
     s.locationMatchQuality = locMatch.quality
     if (locMatch.locationId != null) s.locationId = locMatch.locationId
     s.locationMatchName = locMatch.matchName

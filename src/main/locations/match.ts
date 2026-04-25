@@ -81,11 +81,13 @@ export function matchLocation(
 ): LocationMatchResult {
   const { sites, regexes } = getCache()
 
+  const locationNameTrimmed = locationName?.replace(/^\s+|\s+$/gu, '') || undefined
+
   // Check match cache first
-  if (locationName) {
+  if (locationNameTrimmed) {
     const cached = getSqlite().prepare(
       'SELECT location_id FROM location_match_cache WHERE raw_string = ?'
-    ).get(locationName) as { location_id: number } | undefined
+    ).get(locationNameTrimmed) as { location_id: number } | undefined
     if (cached) {
       const site = sites.find(s => s.id === cached.location_id)
       return { locationId: cached.location_id, quality: 'cache', matchName: site?.name, candidates: [] }
@@ -119,9 +121,9 @@ export function matchLocation(
   const nameMatchedSiteNames = new Set<string>()
   const nameMatchDetails = new Map<string, string>()
 
-  if (locationName) {
+  if (locationNameTrimmed) {
     for (const rx of regexes) {
-      if (!nameMatchedSiteNames.has(rx.siteName) && rx.pattern.test(locationName)) {
+      if (!nameMatchedSiteNames.has(rx.siteName) && rx.pattern.test(locationNameTrimmed)) {
         nameMatchedSiteNames.add(rx.siteName)
         nameMatchDetails.set(rx.siteName, rx.matchName)
       }
@@ -194,5 +196,5 @@ export function confirmLocationMatch(rawString: string, locationId: number): voi
     `INSERT INTO location_match_cache(raw_string, location_id, confirmed_at)
      VALUES(?, ?, ?)
      ON CONFLICT(raw_string) DO UPDATE SET location_id=excluded.location_id, confirmed_at=excluded.confirmed_at`
-  ).run(rawString, locationId, new Date().toISOString())
+  ).run(rawString.trim(), locationId, new Date().toISOString())
 }
