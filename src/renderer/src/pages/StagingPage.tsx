@@ -53,6 +53,38 @@ const LOCATION_QUALITY_LABEL: Record<string, { text: string; color: string; bg: 
   'manual':       { text: 'Manual',      color: '#1864ab', bg: '#d0ebff' },
 }
 
+function QualityBreakdown({ label, counts, labelMap, activeFilter, onFilter }: {
+  label: string
+  counts: [string, number][]
+  labelMap: Record<string, { text: string; color: string; bg: string }>
+  activeFilter: string
+  onFilter: (q: string) => void
+}) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
+      <span style={{ color: '#555', fontWeight: 600, minWidth: 60 }}>{label}:</span>
+      {counts.map(([q, n]) => {
+        const style = labelMap[q] ?? { text: q, color: '#555', bg: '#e9ecef' }
+        const active = activeFilter === q
+        return (
+          <button
+            key={q}
+            onClick={() => onFilter(active ? '' : q)}
+            title={active ? 'Click to clear filter' : `Filter to ${style.text}`}
+            style={{
+              padding: '1px 8px', borderRadius: 10, fontSize: 11, fontWeight: 600, cursor: 'pointer',
+              border: active ? '2px solid rgba(0,0,0,0.3)' : '2px solid transparent',
+              color: style.color, background: style.bg,
+            }}
+          >
+            {style.text}: {n}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function StagingPage({ stagingData, rows, onRowsChange, onBack, onSuccess }: {
   stagingData: StagingData
   rows: ParsedSighting[]
@@ -66,6 +98,8 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [confirmingUnmatched, setConfirmingUnmatched] = useState(false)
+  const [speciesFilter, setSpeciesFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
 
   useEffect(() => {
     window.api.species.list().then(setSpeciesList).catch(() => {})
@@ -94,8 +128,35 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
 
   const visibleCols = COLS.filter(({ key, alwaysShow }) => alwaysShow || rows.some(r => r[key] != null && r[key] !== ''))
 
-  const matched   = rows.filter(r => r.speciesMatchQuality && r.speciesMatchQuality !== 'none').length
-  const unmatched = rows.length - matched
+  // Per-quality counts for stats display, ordered by label map key order
+  function qualityCounts<K extends string>(
+    labelMap: Record<string, unknown>,
+    getter: (r: ParsedSighting) => string | undefined
+  ): [string, number][] {
+    const counts: Record<string, number> = {}
+    for (const r of rows) counts[getter(r) ?? 'none'] = (counts[getter(r) ?? 'none'] ?? 0) + 1
+    return Object.keys(labelMap)
+      .filter(q => counts[q] != null)
+      .map(q => [q, counts[q]] as [string, number])
+  }
+
+  const speciesBreakdown  = qualityCounts(QUALITY_LABEL,          r => r.speciesMatchQuality)
+  const locationBreakdown = qualityCounts(LOCATION_QUALITY_LABEL, r => r.locationMatchQuality)
+
+  // Unique quality values present in data, for filter dropdowns
+  const speciesQualities  = speciesBreakdown.map(([q]) => q)
+  const locationQualities = locationBreakdown.map(([q]) => q)
+
+  // Filtered rows — keep original index for updateRow
+  const displayRows = rows
+    .map((row, i) => ({ row, i }))
+    .filter(({ row }) => {
+      if (speciesFilter  && (row.speciesMatchQuality  ?? 'none') !== speciesFilter)  return false
+      if (locationFilter && (row.locationMatchQuality ?? 'none') !== locationFilter) return false
+      return true
+    })
+
+  const unmatched = rows.filter(r => !r.speciesMatchQuality || r.speciesMatchQuality === 'none').length
 
   async function commit(force = false) {
     if (!force && unmatched > 0) {
@@ -221,16 +282,41 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
     return String(val ?? '')
   }
 
+  const isFiltered = speciesFilter !== '' || locationFilter !== ''
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, gap: 8 }}>
       {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0, flexWrap: 'wrap' }}>
         <button onClick={onBack} style={btnSecondary} disabled={busy}>← Back</button>
-        <div style={{ fontSize: 13, color: '#333' }}>
-          <strong>{rows.length}</strong> records ready —{' '}
-          <span style={{ color: '#1a7f3c' }}>{matched} matched</span>
-          {unmatched > 0 && <span style={{ color: '#c0392b' }}>, {unmatched} unmatched</span>}
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <QualityBreakdown
+            label="Species"
+            counts={speciesBreakdown}
+            labelMap={QUALITY_LABEL}
+            activeFilter={speciesFilter}
+            onFilter={setSpeciesFilter}
+          />
+          <QualityBreakdown
+            label="Location"
+            counts={locationBreakdown}
+            labelMap={LOCATION_QUALITY_LABEL}
+            activeFilter={locationFilter}
+            onFilter={setLocationFilter}
+          />
         </div>
+
+        {isFiltered && (
+          <span style={{ fontSize: 12, color: '#1864ab' }}>
+            Showing {displayRows.length} of {rows.length} rows
+            {' '}
+            <button onClick={() => { setSpeciesFilter(''); setLocationFilter('') }} style={{ ...btnSecondary, padding: '2px 8px', fontSize: 11 }}>
+              Clear filters
+            </button>
+          </span>
+        )}
+
         {warnings.length > 0 && (
           <details style={{ fontSize: 12, color: '#7c5700' }}>
             <summary>{warnings.length} warnings</summary>
@@ -265,13 +351,41 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
         <table style={{ borderCollapse: 'collapse', fontSize: 13, whiteSpace: 'nowrap' }}>
           <thead>
             <tr>
-              <th style={th}>Match</th>
-              <th style={th}>Location</th>
+              <th style={th}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <span>Species match</span>
+                  <select
+                    value={speciesFilter}
+                    onChange={e => setSpeciesFilter(e.target.value)}
+                    style={filterSelect}
+                  >
+                    <option value="">All</option>
+                    {speciesQualities.map(q => (
+                      <option key={q} value={q}>{QUALITY_LABEL[q]?.text ?? q}</option>
+                    ))}
+                  </select>
+                </div>
+              </th>
+              <th style={th}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <span>Location match</span>
+                  <select
+                    value={locationFilter}
+                    onChange={e => setLocationFilter(e.target.value)}
+                    style={filterSelect}
+                  >
+                    <option value="">All</option>
+                    {locationQualities.map(q => (
+                      <option key={q} value={q}>{LOCATION_QUALITY_LABEL[q]?.text ?? q}</option>
+                    ))}
+                  </select>
+                </div>
+              </th>
               {visibleCols.map(({ key, label }) => <th key={key} style={th}>{label}</th>)}
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, i) => {
+            {displayRows.map(({ row, i }) => {
               const q = row.speciesMatchQuality ?? 'none'
               const badge = QUALITY_LABEL[q] ?? QUALITY_LABEL['none']
               const lq = row.locationMatchQuality ?? 'none'
@@ -303,9 +417,10 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   )
 }
 
-const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', position: 'sticky', top: 0 }
+const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', position: 'sticky', top: 0, verticalAlign: 'top' }
 const td: React.CSSProperties = { padding: '5px 10px', border: '1px solid #dee2e6' }
 const selectStyle: React.CSSProperties = { fontSize: 12, padding: '2px 4px', width: 200, maxWidth: 200 }
+const filterSelect: React.CSSProperties = { fontSize: 11, padding: '1px 3px', width: 120, border: '1px solid #ced4da', borderRadius: 3, background: '#fff', fontWeight: 400 }
 const inputStyle: React.CSSProperties = { fontSize: 12, padding: '2px 4px', width: 140, border: '1px solid #ced4da', borderRadius: 3 }
 const btnPrimary: React.CSSProperties = { padding: '7px 16px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }
 const btnSecondary: React.CSSProperties = { padding: '7px 12px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
