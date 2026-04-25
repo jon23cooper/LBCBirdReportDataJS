@@ -50,7 +50,10 @@ export default function HistoryPage(): JSX.Element {
               <td style={td}>
                 {b.storedFile
                   ? <button onClick={() => window.api.batches.revealFile(b.storedFile!)} style={btnSmall}>Reveal in Finder</button>
-                  : <span style={{ color: '#aaa', fontSize: 12 }}>Not available</span>
+                  : <button onClick={async () => {
+                      const path = await window.api.batches.locateFile(b.id)
+                      if (path) await load()
+                    }} style={btnSmall}>Locate file…</button>
                 }
               </td>
               <td style={{ ...td, whiteSpace: 'nowrap' }}>

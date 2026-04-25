@@ -387,6 +387,17 @@ export function registerIpcHandlers(): void {
       .all()
   })
 
+  ipcMain.handle('batches:locate-file', async (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: 'Spreadsheets', extensions: ['csv', 'xlsx', 'xls', 'ods'] }],
+      properties: ['openFile']
+    })
+    if (canceled || filePaths.length === 0) return null
+    const filePath = filePaths[0]
+    getSqlite().prepare('UPDATE import_batches SET stored_file = ? WHERE id = ?').run(filePath, id)
+    return filePath
+  })
+
   ipcMain.handle('batches:delete', (_e: Electron.IpcMainInvokeEvent, id: number) => {
     const db = getSqlite()
     db.prepare('DELETE FROM sightings WHERE import_batch_id = ?').run(id)
