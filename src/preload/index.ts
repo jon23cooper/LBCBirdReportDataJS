@@ -17,7 +17,16 @@ contextBridge.exposeInMainWorld('api', {
   },
   locations: {
     list: () => ipcRenderer.invoke('locations:list'),
-    upsert: (data: object) => ipcRenderer.invoke('locations:upsert', data)
+    upsert: (data: object) => ipcRenderer.invoke('locations:upsert', data),
+    openGeojsonFile: () => ipcRenderer.invoke('locations:open-geojson-file'),
+    importGeojson: (filePath: string) => ipcRenderer.invoke('locations:import-geojson', filePath),
+    openRegexCsvFile: () => ipcRenderer.invoke('locations:open-regex-csv-file'),
+    importRegexCsv: (filePath: string) => ipcRenderer.invoke('locations:import-regex-csv', filePath),
+    confirmMatch: (rawString: string, locationId: number) => ipcRenderer.invoke('locations:confirm-match', rawString, locationId),
+    get: (id: number) => ipcRenderer.invoke('locations:get', id),
+    listGeometries: () => ipcRenderer.invoke('locations:list-geometries'),
+    listRegex: (siteName: string) => ipcRenderer.invoke('locations:list-regex', siteName),
+    saveRegex: (siteName: string, rows: object[]) => ipcRenderer.invoke('locations:save-regex', siteName, rows),
   },
   species: {
     list: () => ipcRenderer.invoke('species:list'),

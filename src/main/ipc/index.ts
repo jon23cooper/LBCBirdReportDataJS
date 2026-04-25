@@ -1,14 +1,14 @@
 import { ipcMain, dialog } from 'electron'
 import { parse as parseCsv } from 'csv-parse/sync'
 import { readFileSync } from 'fs'
+import * as turf from '@turf/turf'
 import { getSheetNames, readSpreadsheet } from '../importers'
 import { normaliseRows } from '../importers/normalise'
-import { resolveLocationId } from '../locations/match'
-import { getDb, reserveLbcSequence } from '../db'
+import { matchLocation, invalidateLocationCache, confirmLocationMatch } from '../locations/match'
+import { getDb, getSqlite, reserveLbcSequence } from '../db'
 import { sightings, importBatches, locations, species as speciesTable } from '../db/schema'
 import { FieldMapping, RawRow } from '../importers/types'
 import { BatchOptions } from '../../shared/types'
-import { basename, extname } from 'path'
 import { eq } from 'drizzle-orm'
 import { matchSpecies, invalidateSpeciesCache } from '../species/match'
 import type { ParsedSighting } from '../../shared/types'
@@ -39,6 +39,14 @@ function validateAndMatch(
     }
   }
 
+  for (const s of parsed) {
+    const locMatch = matchLocation(s.locationName, s.lat, s.lon)
+    s.locationMatchQuality = locMatch.quality
+    if (locMatch.locationId != null) s.locationId = locMatch.locationId
+    s.locationMatchName = locMatch.matchName
+    if (locMatch.candidates.length > 0) s.locationCandidates = locMatch.candidates
+  }
+
   return { status: 'ok', rows: parsed, warnings }
 }
 
@@ -52,10 +60,6 @@ async function commitParsed(
   rows.forEach((s, i) => {
     s.lbcId = `LBC#${s.date.substring(0, 4)}#${lbcSeqStart + i}`
   })
-
-  const locationIds = await Promise.all(
-    rows.map(s => resolveLocationId(s.locationName, s.lat, s.lon))
-  )
 
   const db = getDb()
   db.transaction((tx) => {
@@ -71,7 +75,7 @@ async function commitParsed(
       const s = rows[i]
       tx.insert(sightings).values({
         importBatchId:          batch.id,
-        locationId:             locationIds[i],
+        locationId:             s.locationId ?? null,
         originalLocation:       s.originalLocation,
         occurrenceKey:          s.occurrenceKey,
         dataset:                s.dataset,
@@ -159,7 +163,24 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('locations:list', async () => {
     const db = getDb()
-    return db.select().from(locations)
+    return db.select({
+      id: locations.id,
+      name: locations.name,
+      gridRef: locations.gridRef,
+      lat: locations.lat,
+      lon: locations.lon,
+      centroidLat: locations.centroidLat,
+      centroidLon: locations.centroidLon,
+      country: locations.country,
+      region: locations.region,
+      notes: locations.notes,
+    }).from(locations)
+  })
+
+  ipcMain.handle('locations:list-geometries', () => {
+    return getSqlite()
+      .prepare('SELECT id, geometry FROM locations WHERE geometry IS NOT NULL')
+      .all() as { id: number; geometry: string }[]
   })
 
   ipcMain.handle('locations:upsert', async (_e: Electron.IpcMainInvokeEvent, data: typeof locations.$inferInsert) => {
@@ -169,6 +190,106 @@ export function registerIpcHandlers(): void {
     } else {
       await db.insert(locations).values(data)
     }
+    invalidateLocationCache()
+  })
+
+  ipcMain.handle('locations:open-geojson-file', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: 'GeoJSON', extensions: ['geojson', 'json'] }],
+      properties: ['openFile']
+    })
+    return canceled || filePaths.length === 0 ? null : filePaths[0]
+  })
+
+  ipcMain.handle('locations:import-geojson', async (_e: Electron.IpcMainInvokeEvent, filePath: string) => {
+    const errors: string[] = []
+    let imported = 0
+    try {
+      const content = readFileSync(filePath, 'utf-8')
+      const geojson = JSON.parse(content)
+      const db = getSqlite()
+      for (const feature of geojson.features ?? []) {
+        const name = feature.properties?.Name
+        if (!name) { errors.push('Feature missing Name property'); continue }
+        try {
+          const centroidPt = turf.centroid(feature)
+          const [cLon, cLat] = centroidPt.geometry.coordinates
+          db.prepare(
+            `INSERT INTO locations(name, centroid_lat, centroid_lon, geometry)
+             VALUES(?, ?, ?, ?)
+             ON CONFLICT(name) DO UPDATE SET
+               centroid_lat=excluded.centroid_lat,
+               centroid_lon=excluded.centroid_lon,
+               geometry=excluded.geometry`
+          ).run(name, cLat, cLon, JSON.stringify(feature.geometry))
+          imported++
+        } catch (err) {
+          errors.push(`${name}: ${err instanceof Error ? err.message : String(err)}`)
+        }
+      }
+      if (imported > 0) invalidateLocationCache()
+    } catch (err) {
+      errors.push(err instanceof Error ? err.message : String(err))
+    }
+    return { imported, errors }
+  })
+
+  ipcMain.handle('locations:open-regex-csv-file', async () => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      filters: [{ name: 'CSV', extensions: ['csv'] }],
+      properties: ['openFile']
+    })
+    return canceled || filePaths.length === 0 ? null : filePaths[0]
+  })
+
+  ipcMain.handle('locations:import-regex-csv', async (_e: Electron.IpcMainInvokeEvent, filePath: string) => {
+    const errors: string[] = []
+    let imported = 0
+    try {
+      const content = readFileSync(filePath, 'utf-8')
+      const records = parseCsv(content, { columns: true, skip_empty_lines: true, trim: true }) as Record<string, string>[]
+      const db = getSqlite()
+      db.prepare('DELETE FROM location_regex').run()
+      for (const [idx, rec] of records.entries()) {
+        const siteName = rec.siteName?.trim()
+        const regex = rec.regex?.trim()
+        const matchName = rec.matchName?.trim()
+        if (!siteName || !regex) { errors.push(`Row ${idx + 2}: missing siteName or regex`); continue }
+        try {
+          new RegExp(regex)
+          db.prepare('INSERT INTO location_regex(site_name, regex, match_name) VALUES(?, ?, ?)').run(siteName, regex, matchName || null)
+          imported++
+        } catch (err) {
+          errors.push(`Row ${idx + 2}: invalid regex — ${err instanceof Error ? err.message : String(err)}`)
+        }
+      }
+      if (imported > 0) invalidateLocationCache()
+    } catch (err) {
+      errors.push(err instanceof Error ? err.message : String(err))
+    }
+    return { imported, errors }
+  })
+
+  ipcMain.handle('locations:confirm-match', (_e: Electron.IpcMainInvokeEvent, rawString: string, locationId: number) => {
+    confirmLocationMatch(rawString, locationId)
+  })
+
+  ipcMain.handle('locations:get', (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    return getSqlite().prepare('SELECT * FROM locations WHERE id = ?').get(id)
+  })
+
+  ipcMain.handle('locations:list-regex', (_e: Electron.IpcMainInvokeEvent, siteName: string) => {
+    return getSqlite().prepare('SELECT id, site_name as siteName, regex, match_name as matchName FROM location_regex WHERE site_name = ? ORDER BY id').all(siteName)
+  })
+
+  ipcMain.handle('locations:save-regex', (_e: Electron.IpcMainInvokeEvent, siteName: string, rows: { regex: string; matchName: string }[]) => {
+    const db = getSqlite()
+    db.prepare('DELETE FROM location_regex WHERE site_name = ?').run(siteName)
+    const insert = db.prepare('INSERT INTO location_regex(site_name, regex, match_name) VALUES(?, ?, ?)')
+    for (const row of rows) {
+      if (row.regex.trim()) insert.run(siteName, row.regex.trim(), row.matchName.trim() || null)
+    }
+    invalidateLocationCache()
   })
 
   // Species handlers

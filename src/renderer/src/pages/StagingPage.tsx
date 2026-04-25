@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
-import type { ParsedSighting, StagingData, SpeciesRecord } from '../../../shared/types'
+import type { ParsedSighting, StagingData, SpeciesRecord, Location, LocationCandidate } from '../../../shared/types'
 
-type Col = { key: keyof ParsedSighting; label: string; editable?: 'species' | 'text' | 'textarea' | 'number'; alwaysShow?: boolean }
+type Col = {
+  key: keyof ParsedSighting
+  label: string
+  editable?: 'species' | 'text' | 'textarea' | 'number' | 'location'
+  alwaysShow?: boolean
+}
 
 const COLS: Col[] = [
   { key: 'date',                  label: 'First Date' },
@@ -23,6 +28,8 @@ const COLS: Col[] = [
   { key: 'observer',              label: 'Observers',             editable: 'text' },
   { key: 'originalLocation',      label: 'Original Location' },
   { key: 'locationName',          label: 'Location',              editable: 'text' },
+  { key: 'locationMatchName',     label: 'Matched Location' },
+  { key: 'locationId',            label: 'Location override',     editable: 'location' },
   { key: 'time',                  label: 'Start Time' },
   { key: 'notes',                 label: 'Notes',                 editable: 'textarea' },
 ]
@@ -36,6 +43,16 @@ const QUALITY_LABEL: Record<string, { text: string; color: string; bg: string }>
   'none':             { text: 'No match',    color: '#c0392b', bg: '#ffe3e3' },
 }
 
+const LOCATION_QUALITY_LABEL: Record<string, { text: string; color: string; bg: string }> = {
+  'confirmed':    { text: 'Confirmed',   color: '#1a7f3c', bg: '#d3f9d8' },
+  'cache':        { text: 'Cached',      color: '#1a7f3c', bg: '#d3f9d8' },
+  'spatial-only': { text: 'Spatial',     color: '#7c5700', bg: '#fff3bf' },
+  'name-only':    { text: 'Name match',  color: '#7c5700', bg: '#fff3bf' },
+  'conflict':     { text: 'Conflict',    color: '#c0392b', bg: '#ffe3e3' },
+  'none':         { text: 'No match',    color: '#c0392b', bg: '#ffe3e3' },
+  'manual':       { text: 'Manual',      color: '#1864ab', bg: '#d0ebff' },
+}
+
 export default function StagingPage({ stagingData, rows, onRowsChange, onBack, onSuccess }: {
   stagingData: StagingData
   rows: ParsedSighting[]
@@ -45,12 +62,14 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
 }): JSX.Element {
   const { warnings, filename, format, mapping } = stagingData
   const [speciesList, setSpeciesList] = useState<SpeciesRecord[]>([])
+  const [locationsList, setLocationsList] = useState<Location[]>([])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [confirmingUnmatched, setConfirmingUnmatched] = useState(false)
 
   useEffect(() => {
     window.api.species.list().then(setSpeciesList).catch(() => {})
+    window.api.locations.list().then(setLocationsList).catch(() => {})
   }, [])
 
   function updateRow(i: number, changes: Partial<ParsedSighting>) {
@@ -116,6 +135,50 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
             <option key={sp.id ?? sp.commonName} value={sp.commonName}>{sp.commonName}</option>
           ))}
         </select>
+      )
+    }
+
+    if (col.editable === 'location') {
+      const candidates: LocationCandidate[] = row.locationCandidates ?? []
+      const currentId = typeof val === 'number' ? val : undefined
+      const rawStr = row.originalLocation ?? row.locationName ?? ''
+      return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <select
+            value={currentId ?? ''}
+            onChange={e => {
+              const id = e.target.value ? parseInt(e.target.value, 10) : undefined
+              updateRow(i, { locationId: id, locationMatchQuality: id ? 'manual' : 'none' } as Partial<ParsedSighting>)
+            }}
+            style={selectStyle}
+          >
+            <option value="">(none)</option>
+            {candidates.length > 0 && (
+              <optgroup label="Suggested">
+                {candidates.map(c => (
+                  <option key={c.locationId} value={c.locationId}>
+                    {c.name}{c.matchName && c.matchName !== c.name ? ` — ${c.matchName}` : ''}{c.distanceKm ? ` (${c.distanceKm.toFixed(1)}km)` : ''}
+                  </option>
+                ))}
+              </optgroup>
+            )}
+            <optgroup label="All locations">
+              {locationsList
+                .filter(l => !candidates.some(c => c.locationId === l.id))
+                .map(l => <option key={l.id} value={l.id}>{l.name}</option>)
+              }
+            </optgroup>
+          </select>
+          {rawStr && currentId != null && (
+            <button
+              title="Remember this match"
+              onClick={() => window.api.locations.confirmMatch(rawStr, currentId)}
+              style={btnRemember}
+            >
+              Remember
+            </button>
+          )}
+        </div>
       )
     }
 
@@ -203,6 +266,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
           <thead>
             <tr>
               <th style={th}>Match</th>
+              <th style={th}>Location</th>
               {visibleCols.map(({ key, label }) => <th key={key} style={th}>{label}</th>)}
             </tr>
           </thead>
@@ -210,11 +274,18 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
             {rows.map((row, i) => {
               const q = row.speciesMatchQuality ?? 'none'
               const badge = QUALITY_LABEL[q] ?? QUALITY_LABEL['none']
+              const lq = row.locationMatchQuality ?? 'none'
+              const lbadge = LOCATION_QUALITY_LABEL[lq] ?? LOCATION_QUALITY_LABEL['none']
               return (
                 <tr key={i} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
                   <td style={td}>
                     <span style={{ padding: '2px 7px', borderRadius: 10, fontSize: 11, fontWeight: 600, color: badge.color, background: badge.bg }}>
                       {badge.text}
+                    </span>
+                  </td>
+                  <td style={td}>
+                    <span style={{ padding: '2px 7px', borderRadius: 10, fontSize: 11, fontWeight: 600, color: lbadge.color, background: lbadge.bg }}>
+                      {lbadge.text}
                     </span>
                   </td>
                   {visibleCols.map(col => (
@@ -239,3 +310,4 @@ const inputStyle: React.CSSProperties = { fontSize: 12, padding: '2px 4px', widt
 const btnPrimary: React.CSSProperties = { padding: '7px 16px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 14 }
 const btnSecondary: React.CSSProperties = { padding: '7px 12px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
 const btnWarning: React.CSSProperties = { padding: '5px 14px', background: '#f59f00', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, whiteSpace: 'nowrap' }
+const btnRemember: React.CSSProperties = { padding: '2px 8px', background: '#e7f5ff', color: '#1864ab', border: '1px solid #74c0fc', borderRadius: 3, cursor: 'pointer', fontSize: 11, whiteSpace: 'nowrap' }

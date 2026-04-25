@@ -39,6 +39,14 @@ export interface FieldMapping {
   [key: string]: string | undefined
 }
 
+export interface LocationCandidate {
+  locationId: number
+  name: string
+  matchName?: string
+  distanceKm?: number
+  quality: string
+}
+
 export interface ParsedSighting {
   // Required
   species: string
@@ -91,6 +99,12 @@ export interface ParsedSighting {
 
   // Match quality (staging only, not persisted)
   speciesMatchQuality?: string
+
+  // Location match (staging only, not persisted)
+  locationId?: number
+  locationMatchQuality?: string
+  locationMatchName?: string
+  locationCandidates?: LocationCandidate[]
 }
 
 export interface StagingData {
@@ -139,9 +153,19 @@ export interface Location {
   gridRef?: string | null
   lat?: number | null
   lon?: number | null
+  centroidLat?: number | null
+  centroidLon?: number | null
+  geometry?: string | null
   country?: string | null
   region?: string | null
   notes?: string | null
+}
+
+export interface LocationRegexRow {
+  id?: number
+  siteName: string
+  regex: string
+  matchName?: string | null
 }
 
 export interface Sighting {

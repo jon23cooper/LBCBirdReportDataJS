@@ -4,8 +4,11 @@ export const locations = sqliteTable('locations', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   gridRef: text('grid_ref'),
-  lat: real('lat'),
-  lon: real('lon'),
+  lat: real('lat'),          // kept for manual entries
+  lon: real('lon'),          // kept for manual entries
+  centroidLat: real('centroid_lat'),  // computed from polygon
+  centroidLon: real('centroid_lon'),
+  geometry: text('geometry'),          // GeoJSON Polygon geometry as JSON string
   country: text('country'),
   region: text('region'),
   notes: text('notes')
@@ -15,13 +18,9 @@ export const sightings = sqliteTable('sightings', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   importBatchId: integer('import_batch_id').references(() => importBatches.id),
   locationId: integer('location_id').references(() => locations.id),
-
-  // Reference / provenance
   occurrenceKey: text('occurrence_key'),
   dataset: text('dataset'),
   lbcId: text('lbc_id'),
-
-  // Taxonomic
   species: text('species').notNull(),
   originalCommonName: text('original_common_name'),
   commonName: text('common_name'),
@@ -30,39 +29,26 @@ export const sightings = sqliteTable('sightings', {
   family: text('family'),
   subspeciesCommon: text('subspecies_common'),
   subspeciesScientific: text('subspecies_scientific'),
-
   originalLocation: text('original_location'),
-
-  // Dates and times
-  date: text('date').notNull(),            // ISO 8601 YYYY-MM-DD (first/only date)
-  lastDate: text('last_date'),             // ISO 8601 YYYY-MM-DD
-  time: text('time'),                       // HH:MM start time
-  endTime: text('end_time'),               // HH:MM end time
-
-  // Count
+  date: text('date').notNull(),
+  lastDate: text('last_date'),
+  time: text('time'),
+  endTime: text('end_time'),
   count: integer('count'),
-  originalCount: text('original_count'),   // raw count string (may be a range)
-  circa: text('circa'),                    // approximate flag
-
-  // Observation detail
+  originalCount: text('original_count'),
+  circa: text('circa'),
   age: text('age'),
   status: text('status'),
   breedingCode: text('breeding_code'),
   breedingCategory: text('breeding_category'),
   behaviorCode: text('behavior_code'),
-
-  // Observer
   observer: text('observer'),
   notes: text('notes'),
-
-  // Spatial
   lat: real('lat'),
   lon: real('lon'),
   uncertaintyRadius: real('uncertainty_radius'),
   geometryType: text('geometry_type'),
   tripMapRef: text('trip_map_ref'),
-
-  // Audit
   sourceRef: text('source_ref'),
   rawData: text('raw_data')
 })
@@ -83,6 +69,19 @@ export const species = sqliteTable('species', {
   scientificName: text('scientific_name').notNull(),
   scientificNameRegex: text('scientific_name_regex'),
   family: text('family'),
+})
+
+export const locationRegex = sqliteTable('location_regex', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  siteName: text('site_name').notNull(),
+  regex: text('regex').notNull(),
+  matchName: text('match_name'),
+})
+
+export const locationMatchCache = sqliteTable('location_match_cache', {
+  rawString: text('raw_string').primaryKey(),
+  locationId: integer('location_id').references(() => locations.id),
+  confirmedAt: text('confirmed_at').notNull(),
 })
 
 // Key-value store for app-wide settings (e.g. LBC ID sequence counter)

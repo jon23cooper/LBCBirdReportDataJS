@@ -1,0 +1,1526 @@
+siteName,regex,matchName
+Aby,\bAby\b,Aby
+Aby,Mother Wood,Mother Wood
+Aby,Swinn Wood,Swinn Wood
+Addlethorpe,\bAddlethorpe\b,Addlethorpe
+Addlethorpe,Ashington End,Ashington End
+Ailby,\bAilby\b,Ailby
+Aisby (Grantham),^(?!.*(Corringham|Gainsborough)).*\bAisby\b,Aisby - Grantham
+Aisthorpe,\bAisthorpe\b,Aisthorpe
+Alford,^(?!.*(Beesby|Thurlby|Ulceby)).*\bAlford\b,Alford
+Algarkirk,\bAlgar?kirk\b,Algarkirk
+Algarkirk,Walnut Lakes?,Walnut Lakes
+Alkborough,^(?!.*Walcot).*\bAl+kb?orough\b,Alkborough
+Alkborough,Trent Falls,Trent Falls
+Allington,\bAllington\b,Allington
+Althorpe,\bAlthorpe\b,Althorpe
+Althorpe,\bDerrythorpe\b,Derrythorpe
+Althorpe,North Moor,North Moor - Isle of Axholme
+Alvingham,\bAlvingham\b,Alvingham
+Amber Hill,Amber Hill,Amber Hill
+Amcotts,\bAmcotts\b,Amcotts
+Ancaster,\bAncaster\b,Ancaster
+Ancaster,Copper Hill,Copper Hill  Ancaster
+Ancaster,Moor Closes,Moor Closes
+Ancaster,\bSudbrook\b,Sudbrook - Ancaster
+Ancaster,West Willoughby,West Willoughby
+Anderby,^(?!.*Marsh.*)\bAnderby\b,Anderby
+Chapel Pit and Six Marshes,Chapel Pits?,Chapel Pit
+Chapel Pit and Six Marshes,Chapel (Six|6) Marsh(es)?,Chapel Six Marshes
+Anderby Marsh with Wolla Bank and Pit,Wolla (Bank|Pit),Wolla Bank
+Antons Gowt,Anton[’']?s Gowt,Anton's Gowt
+Antons Gowt,Frith Bank,Frith Bank
+Anwick,^(?!.*Fen).*\bAnwick\b.*,Anwick
+Anwick,Cobblers Lock,Cobblers Lock
+Apley,Camshaw'?s Plantation,Camshaw's Plantation
+Apley,College Wood,College Wood
+Apley,\bKingthorpe\b,Kingthorpe
+Apley,\bApley\b,Low Apley
+Appleby,\bAppleby\b,Appleby
+Appleby,Keb Wood,Keb Wood
+Appleby,Rowland Plantation,Rowland Plantation
+Appleby,\bSanton\b,Santon
+Appleby,Yarborough (Quarry|Warren),Yarborough QuarryWarren
+Asgarby nr Sleaford,\bAsgarby\b,Asgarby
+Ashby by Partney,Ashby by Partney,Ashby by Partney
+Ashby cum Fenby,Ashby cum Fenby,Ashby cum Fenby
+Ashby de la Launde,Ashby de la Launde,Ashby de la Launde
+Ashby Puerorum,Ashby Puerorum,Ashby Puerorum
+Ashby Puerorum,\bHolbeck\b,Holbeck
+Aslackby,\bAslackby\b,Aslackby
+Asserby,\bAsserby\b,Asserby
+Asterby,\bAsterby\b,Asterby
+Asterby,Red Hill,Red Hill LWT NR
+Aswarby,\bAswarby\b,Aswarby
+Aswardby,\bAswardby\b,Aswardby
+Aubourn,\bAubourn\b,Aubourn
+Aubourn,Blackmoor Bridge,Blackmoor Bridge
+Aunby,\bAunby\b,Aunby
+Aunsby,\bAunsby\b,Aunsby
+Authorpe,\bAuthorpe\b,Authorpe
+Aylesby,\bAylesby\b,Aylesby
+Bag Enderby,Bag Enderby,Bag Enderby
+Bagmoor,\bBagmoor\b,Bagmoor
+Bagmoor,Winterton Floods,Bagmoor/Winterton Floods
+Bardney,Arnold'?s Pond,Arnold's Pond
+Bardney,Austacre Wood,Austacre Wood
+Bardney,^(?!.*Stainfield).*\bBardney\b,Bardney
+Bardney,Sugar Factory,Bardney Sugar Factory
+Bardney,Scotgrove Wood,Scotgrove Wood
+Bardney,Snakeholme Pit,"Snakeholme Pit NR , Lincolnshire"
+Barholm,\bBarholm\b,Barholm
+Barkston,\bBarkston\b,Barkston
+Barlings,\bBarlings\b,Barlings
+Barlings,Gatecliff Wood,Gatecliff Wood
+Barnetby le Wold,\bBarnetby\b,Barnetby
+Barnetby le Wold,Barnetby le Wold,Barnetby le Wold
+Barnetby le Wold,\bCoskills\b,Coskills
+Barnetby le Wold,New Barnetby,New Barnetby
+Barnoldby le Beck,Barnoldby le Beck,Barnoldby le Beck
+Barrow Haven,Barrow Haven,Barrow Haven
+Barrow Haven,West Pit,West Pit
+Barrow upon Humber,Barrow Blow Wells,Barrow Blow Wells
+Barrow upon Humber,Barrow(-|\s)+upon(-|\s)+Humber,Barrow upon Humber
+Barrowby,\bBarrowby\b,Barrowby
+Barton upon Humber,(?=.*(Barton))(?=.*(lake|pits?|GPs?)),Barton pits
+Barton upon Humber,Barton Reedbed,Barton Reedbed
+Barton upon Humber,Barrow to Barton Foreshore,WeBS Barrow to Barton Foreshore
+Barton upon Humber,Barton waterside,Barton waterside
+Far Ings,Chowder Ness,Chowder Ness
+Far Ings,Far Ings,Far Ings
+Barton upon Humber,Hoe Hill,Hoe Hill Pits
+Barton upon Humber,Humber Bridge,Humber Bridge
+Barton upon Humber,\bHumber\b(?=.*(Barton)),Humber@Barton
+Barton upon Humber,Island Carr,Island Carr
+Barton upon Humber,Pasture Wharf,Pasture Wharf LWT NR
+Barton upon Humber,Pit 25,Pit 25
+Barton upon Humber,Pursuits (Pit|Centre),Pursuits Pit/Centre
+Barton upon Humber,Water Ski,Water Ski Club
+Barton upon Humber,Water[`'’]?s'? Edge,Water's Edge CP
+Barton upon Humber,Westfield Lakes?,Westfield Lakes
+Barton upon Humber,Barton(-|\s)+upon(-|\s)+Humber,Barton upon Humber
+Barton upon Humber,Deepdale,Deepdale
+Barton upon Humber,\bKingsforth\b,Kingsforth
+Bassingham,\bBassingham\b,Bassingham
+Bassingham,^(?!.*Broughton).*Brant,Brant River@Bassingham
+Bassingham,Marlborough Fen,Marlborough Fen
+Bassingham,Wirelocks? farm,Witrelocks Farm
+Bassingthorpe,\bBassingthorpe\b,Bassingthorpe
+Baston and Langtoft,^(?!.*Fen.*).*\bBaston\b,Baston
+Baston and Langtoft,Grummit'?s Scrape,Grummit's Scrape
+Baston and Langtoft,Home Farm Caravan Park,Home Farm Caravan Park
+Baston Fen,John Ward'?s Corner,WeBS John Ward's Corner - Baston Fen
+Baston and Langtoft,Perkins Folly,Perkins Folly
+Baston and Langtoft,Thetford,Thetford
+Baumber,\bBaumber\b,Baumber Park
+Baumber,Hungram Gorse,Hungram Gorse
+Baumber,\bLakeside\b,Lakeside Fishery
+Baumber,\bStourton\b,Stourton
+Beckingham,^(?!.*Fenton).*\bBeckingham\b,Beckingham
+Beelsby,\bBeelsby\b,Beelsby
+Beesby (Alford),^(?!.*Hawerby).*\bBeesby\b,Beesby - Alford
+Belchford,\bBelchford\b,Belchford
+Belleau,\bBelleau\b,Belleau
+Beltoft,\bBeltoft\b,Beltoft
+Belton (Grantham),(Bell?mount |Belton) Tower,Bellmount Tower
+Belton (Grantham),^(?!.*(Westgate)).*\bBelton\b,Belton not Belton Park
+Belton and Westgate,\bWestgate\b,Belton and Westgate
+Benington,\bBenington\b,Benington
+Benniworth,\bBenniworth\b,Benniworth
+Bicker,\bBicker\b,Bicker
+Bigby,\bBigby\b,Bigby
+Billingborough,\bBillingborough\b,Billingborough
+Billinghay,\bBillinghay\b,Billinghay
+Bilsby,\bBilsby\b,Bilsby
+Binbrook,^(?!.*(RAF|Airfield)).*\bBinbrook\b,Binbrook (Not RAF)
+Binbrook,Scallows,Scallows Hall
+Birkholme,\bBirkholme\b,Birkholme
+Birkholme,Dodsey Wood,Dodsey Wood
+Biscathorpe,Biscathorpe,Biscathorpe
+Bishop Norton,\bAtterbyb,Atterby
+Bishop Norton,Bishop Norton,Bishop Norton
+Bitchfield,\bBitchfield\b,Bitchfield
+Bitchfield,Top Camp Wood,Top Camp Wood
+Blankney,\bBlan?ke?ney\b,Blankney
+Blankney,Green Man Lane,Green Man Lane
+Blankney,Green Man Wood,Green Man Wood
+Bleasby,Bleasby,Bleasby Moor
+Bloxholm,\bBloxholm\b,Bloxholm
+Blyborough,\bBlyborough\b,Blyborough
+Blyton,\bBlyton\b,Blyton
+Blyton,Owlet (Plantation|Wood(land)?),Owlet Plantation
+Bonby,\bBonby\b,Bonby
+Bonthorpe,\bBonthorpe\b,Bonthorpe
+Boothby Graffoe,Boothby Graffoe,Boothby Graffoe
+Boothby Graffoe,Boothby Great Wood,Boothby Great Wood
+Boothby Graffoe,Boothby Little Wood,Boothby Little Wood
+Boothby Pagnell,Boothby Pagnell,Boothby Pagnell
+Boothby Pagnell,Ingoldsby Wood,Ingoldsby Wood
+Boston,\bBoston\b(?!.*Golf),Boston not Golf Club
+Boston,Frith Bank,Frith Bank
+Boston,\bHavenside\b,Havenside Country Park
+Boston,Witham Way,Witham Way CP
+Boultham,Ballast Holes,Ballast Holes
+Boultham,\bBoultham\b,Boultham
+Boultham,Catchwater drain,Catchwater Drain
+Boultham,De\s?Wint Av.*,DeWint Avenue
+Boultham,Dixon,Dixon Street
+Boultham,Old Decoy,Lincoln - Old Decoy
+Boultham,Starmer'?s Pit,Starmer's Pit
+Boultham,Swallow Beck,Swallow Beck
+Boultham,Swanpool,Swanpool
+Bourne,^(?!.*(Little|Manthorpe|Morton|Stainfield|Thurlby)).*(\bBourne\b|\bCawthorpe\b),Bourne
+Bourne,^(?!.*Gedney).*\bDyke\b,Dyke
+Bourne,Elsea Park,Elsea Park
+Bourne,(?=.*(Math))(?=.*(Woods?)),Math Wood
+Bourne,Toft Tunnels?,Toft Tunnels
+Braceborough,\bBraceborough\b,Braceborough
+Bracebridge,\bBracebridge\b,Bracebridge
+Bracebridge,Lincoln 17,Lincoln 17
+Braceby,\bBraceby\b,Braceby
+Brackenborough,\bBrackenborough\b,Brackenborough
+Bradley,\bBradley\b,Bradley
+Brampton,\bBrampton\b,Brampton
+Brandon,\bBrandon\b,Brandon
+Bransby,\bBransby\b,Bransby
+Branston,Ashfield Farm,Ashfield Farm
+Branston,\bBranston\b,Branston
+Branston,(Folly|Hall) Lane,Folly/Hall Lane
+Branston,Hare Wood,Hare Wood
+Branston,Longhills,Longhills Hall
+Branston,Mere\s?Hall,"Mere Hall Farm , Branston"
+Brant Broughton,Brant Broughton,Brant Broughton
+Bratoft,\bBratoft\b,Bratoft
+Bratoft,Heath'?s Meadows?,Heath's Meadows
+Brattleby,\bBrattleby\b,Brattleby
+Brauncewell,\bBrauncewell\b,Brauncewell
+Brigg,^(?!.*Worlaby).*\bBrigg\b,Brigg
+Brigsley,\bBrigsley\b,Brigsley
+Brinkhill,\bBrinkhill\b,Brinkhill
+Broadholme,\bBroadholme\b,Broadholme
+Brocklesby,\bBrocklesby\b,Brocklesby
+Brocklesby,Roxton Woods?,Roxton Woods
+Brookenby,\bBrookenby\b,Brookenby
+Brookenby,RAF Binbrook,RAF Binbrook
+Brothertoft,\bBrothertoft\b,Brothertoft
+Brothertoft,Kirton Drove,Kirton Drove
+Broughton,^(?!.*Brant).*\bBroughton\b,Broughton
+Broughton,East Wood,East Wood
+Broughton,Far Wood,Far Wood
+Broughton,Forest Pines,Forest Pines
+Broughton,\bGokewell\b,Gokewell Priory Farm
+Broughton,Lundimore Wood,Lundimore Wood
+Broughton,Manby Wood,Manby Wood
+Broughton,\bWressle\b,Wressle
+Broxholme,\bBroxholme\b,Broxholme
+Bucknall,\bBucknall\b,Bucknall
+Bulby,\bBulby\b,Bulby
+Bullington,\bBullington\b,Bullington
+Bullington,Cocklode Wood,Cocklode Wood
+Burgh le Marsh,Burgh le Marsh,Burgh le Marsh
+Burgh le Marsh,Burgh Marsh,Burgh Marsh
+Burgh on Bain,Burgh(\s|-)on(\s|-)Bain,Burgh on Bain
+Burnham,\bBurnham\b,Burnham
+Burringham,\bBurringham\b,Burringham
+Burton by Lincoln,Burton (Gravel)? Pits,Webs Burton Gravel Pits Lincoln
+Burton by Lincoln,Burton Waters,Burton Waters
+Burton by Lincoln,Burton(-|\s)by(-|\s)Lincoln,Burton-by-Lincoln
+Burton by Lincoln,\bOdder\b,Odder
+Burton Coggles,Burton(-|\s)?(le)?(-|\s)?Coggles,Burton Le Coggles
+Burton Coggles,Sleight'?s Wood,Sleight's Wood
+Burton Pedwardine,Burton Gorse,Burton Gorse
+Burton Pedwardine,Burton Pedwardine,Burton Pedwardine
+Burton Stather,Burton Stather,Burton Stather
+Burton Stather,Brick Ponds,Burton Stather Brick Ponds
+Burton Stather,Burton(-|\s)+upon(-|\s)+Stather,Burton upon Stather
+Burwell,\bBurwell\b,Burwell
+Burwell,Ruckland Gate,Ruckland Gate Plantation
+Buslingthorpe,\bBuslingthorpe\b,Buslingthorpe
+Butterwick,^(?!.*(East|West))\bButterwick\b,Butterwick
+Cabourne,Badger Hills,Badger Hills
+Cabourne,\bCabourne\b,Cabourne
+Cabourne,Fonaby Top,Fonaby Top
+Cabourne,Garter Wood,Garter Wood
+Cabourne,Pelham'?s Pillar Wood,Pelham's Pillar Wood
+Cabourne,Pelham'?s Wood,Pelham's Wood
+Cadney,\bCadney\b,Cadney Village
+Cadwell Park,Cadwell,Cadwell Park
+Caenby,\bCaenby\b,Caenby
+Caistor,\bCaistor\b,Caistor
+Calceby,\bCalceby\b,Calceby
+Calcethorpe,\bCalcethorpe\b,Calcethorpe
+Cambridgeshire,T(y|i)dd St Giles,Tydd St Giles
+Cammeringham,^Cammeringham$,Cammeringham
+Candlesby,\bCandlesby\b,Candlesby
+Canwick,\bCanwick\b,Canwick
+Lincoln,Canwick S(ewage\s)?T(reatment|s)?W(orks)?,Canwick STW
+Careby,\bCareby\b,Careby Wood
+Careby,Stanton,Stanton's Pit
+Carlby,\bCarlby\b,Carlby
+Carlton le Moorland,Carlton(-|\s)+le(-|\s)+Moorland,Carlton-le-Moorland
+Carlton Scroop,Carlton Scroop,Carlton Scroop
+Carrington,\bCarrington\b,Carrington
+Carrington,\bMedlam\b,Medlam
+Casewick Park,Casewick,Casewick Park
+Casthorpe,\bCasthorpe\b,Casthorpe
+Castle Bytham,Bottleneck,Bottleneck Meadow
+Castle Bytham,Cabbage Hill,Cabbage Hill Wood
+Castle Bytham,Castle Bytham,Castle Bytham
+Castle Bytham,Jackson'?s Meadow,Jackson's Meadow
+Castle Bytham,Lawn Wood,Lawn Wood/Meadows
+Castle Bytham,Little Haw Wood,Little Haw Wood
+Castle Carlton,Castle Carlton,Castle Carlton
+Caythorpe,\bCaythorpe\b,Caythorpe
+Caythorpe,Frieston,Frieston Flashes
+Chambers Farm Wood,Chamber'?s? Farm Wood,Chamber's Farm Wood
+Chambers Farm Wood,Great Scrubbs Wood,Great Scrubbs Wood
+Chambers Farm Wood,(Hatton|Chamber'?s) (Plantation|Woods?),Hatton/Chambers Plantation/Wood
+Chambers Farm Wood,Ivy Wood,Ivy Wood
+Chambers Farm Wood,Little Scrubbs,Little Scrubbs Wood/Meadow
+Chambers Farm Wood,Minting Park,Minting Park
+Chambers Farm Wood,Minting Wood,Minting Wood
+Chapel Hill,Chapel Hill,Chapel Hill
+Chapel St Leonards,Chapel Point|North Sea Observatory,Chapel Point
+Chapel St Leonards,Chapel S(ain)?t\.? Leonards,Chapel St. Leonards
+Cherry Willingham,\bCherry\b,Cherry Willingham
+Cherry Willingham,Willingham Fen,Willingham Fen
+Claxby nr Market Rasen,^(?!.*St Andrew).*\bClaxby\b,Claxby
+Claxby St Andrew,^(?!.*Market Rasen).*\bClaxby\b,Claxby St Andrew
+Claxby St Andrew,Hoplands Wood,Hoplands Wood
+Claxby St Andrew,Mill Hill Quarry,Mill Hill Quarry
+Claypole,\bClaypole\b,Claypole
+Claythorpe,\bClaythorpe\b,Claythorpe
+Cleatham,\bCleatham\b,Cleatham
+Cleethorpes,Buck Beck,Buck Beck Outfall
+Cleethorpes,Chapman'?s Pond,Chapman's Pond
+Cleethorpes,\bCleethor?pr?e?s\b,Cleethorpes
+Cleethorpes,Boating Lake,Cleethorpes Boating Lake
+Cleethorpes,Marine Walk|Promenade,Maine Walk \ Promenade
+Cleethorpes,Meridian Showground,Meridian Showground
+Cleethorpes,North Walls,North Walls
+Coates,^(?!.*Great)\bCoates\b,Coates
+Cold Hanworth,Cold Hanworth,Cold Hanworth
+Coleby (Lincoln),^(?!.*Scunthorpe).*\bColeby\b,Coleby- .Lincoln.
+Coleby (Scunthorpe),^(?!.*Lincoln).*\bColeby\b,Coleby - Scunthorpe
+Colsterworth,^(?!.*(Gunby|Woolsthorpe)).*Colsterworth,Colsterworth
+Colsterworth,\blandfill\b,Colsterworth Landfill
+Colsterworth,Twyford Woods?,Twyford Woods
+Coningsby,\bConingsby\b,Coningsby
+Coningsby,Gibbet Nook,Gibbet Nook
+Conisholme,\bConisholme\b,Conisholme
+Corby Glen,Corby Glen,Corby Glen
+Corringham,^(?!.*Grantham).*\bAisby\b,Aisby Gainsborough
+Corringham,\bCorringham\b,Corringham
+Covenham,\bCovenham\b,Covenham Reservoir
+Cowbit,Brotherhouse Bar,Brotherhouse Bar
+Cowbit,^(?!.*Wash).*\bCowbit\b,Cowbit
+Cranwell,Byard'?s Leap,Byard's Leap
+Cranwell,\bCranwell\b,Cranwell
+Creeton,\bCounthorpe\b,Countthorpe
+Creeton,\bCreeton\b,Creeton
+Croft,Breedon Scrape,Breedon Scrape
+Croft,Cow\s?Bank,Cow Bank Drain
+Croft,\bCroft\b,Croft
+Gibraltar Point,Croft\s?Marsh,Croft Marsh
+Crowland,River Welland,River Welland (G Hardy)
+Crowland,^(?!.*Wash).*Crowland,Crowland
+Deeping High Bank and Crowland Washlands,Deeping High\s?Bank,Deeping High Bank
+Crowland,Renews Drove,Renews Drove
+Crowland,^(?!.*Pits?)Welland Bank,Welland Bank
+Crowle,\bCrowle\b,Crowle Village
+Crowle,Dirtness Levels,Dirtness Levels
+Crowle,\bEaland\b,Ealand
+Crowle,Medge Hall,Medge Hall
+Crowle,Seven Lakes Country Park,Seven Lakes Country park
+Croxby,\bCroxby\b,Croxby
+Croxton,\bCroxton\b,Croxton
+Culverthorpe,\bCulverthorpe\b,Culverthorpe
+Cumberworth,\bCumberworth\b,Cumberworth
+Cuxwold,\bCuxwold\b,Cuxwold
+Dalby,\bDalby\b,Dalby
+Dalderby,\bDalderby\b,Dalderby
+Dawsmere,\bDawsmere\b,Dawsmere
+Dawsmere,Holbeach (Bombing )Range,Holbeach Range
+Dawsmere,Oldershaws,Oldershaws
+Deeping Common,Deeping Common,Deeping Common
+Deeping Lakes,Deepings? Lakes?,Deeping Lakes
+Deeping St James,Deeping S(ain)?t\.? James,Deeping St James
+Deeping St James,\bFrognall\b,Frognall
+Deeping St James,The Mere,The Mere Heronry
+Deeping Lakes,Welland Bank (Pits?|NR),Welland bank
+Deeping St Nicholas,Cowbit Common,Cowbit Common
+Cradge Bank and Cowbit Washes,Cradge Bank,Cradge Bank
+Deeping St Nicholas,Deeping Fen,Deeping Fen
+Deeping St Nicholas,Deeping S(ain)?t\.? Nicholas,Deeping St. Nicholas
+Deeping St Nicholas,Four Mile Bar,Four Mile Bar
+Deeping St Nicholas,Hop Pole,Hop Pole
+Deeping St Nicholas,(North|South) Drove(/sDrain)?,North Drove Drain
+Deeping St Nicholas,\bStowgate\b,Stowgate
+Deeping St Nicholas,Vine House,Vine House Farm
+Dembleby,\bDembleby\b,Dembleby
+Denton,\bDenton\b,Denton
+Digby,^(?!.*(RAF|Airfield)).*\bDigby\b,Digby
+Doddington,^(?!.*Dry).*\bDoddington\b,Doddington
+Dogdyke,\bDogdyke\b,Dogdyke
+Doncaster,Badger Corner,Badger Corner (Doncs)
+Doncaster,Crowle Moor,Crowle Moor
+Doncaster,Hatfield Moors?,Hatfield Moors
+Doncaster,Packards,Packards Trail S. Yorks
+Doncaster,Thorne Moors?,Thorne Moor
+Donington,^(?!.*Bain).*\bDonington\b,Donington
+Donington,^(?!.*Gainsborough).*\bNorthorpe\b,Northorpe
+Donington on Bain,Donn?ington on Bain,Donington on Bain
+Donington on Bain,Stenigot Tower,Stenigot Tower
+Donington on Bain,Welsdale Bottom,Welsdale Bottom
+Donna Nook,Donna Nook,Donna Nook NNR
+Donna Nook,Howden'?s? Pull(-|\s)?over,Howden's Pullover
+Donna Nook,Humber Mouth,Humber Mouth
+Donna Nook,Ponderosa,Ponderosa
+Donna Nook,Pye'?s Hall,Pye's Hall
+Donna Nook,Somerco(a)?tes Haven,Somercotes Haven
+Donna Nook,Stonebridge,Stonebridge
+Dorrington,\bDorrington\b,Dorrington
+Dowsby,Aslackby Fen,Aslackby Fen
+Dowsby,\bDowsby\b,Dowsby
+Dowsdale,Daniel'?s Drove,Daniel's Drove
+Dowsdale,\bDowsdale\b,Dowsdale
+Driby,\bDriby\b,Driby
+Dry Doddington,Dry Doddington,Dry Doddington
+Dunholme,\bDunholme\b,Dunholme
+Dunholme,Monk'?s Wood,Monks Wood
+Dunholme,Pickering'?s? Meadow,Pickering's Meadow
+Dunsby,\bDunsby\b,Dunsby
+Dunsby,Ringstone Wood,Ringstone Wood
+Dunston,\bDunst(o|a)n\b,Dunston
+Eagle,Beehive Lane,Beehive Lane
+Eagle,\bEagle\b,Eagle
+Eagle,Hurn Wood,Hurn Wood
+Eagle,Job'?s La?n\.?e?,Job's Lane
+East Barkwith,East Barkwith,East Barkwith
+East Barkwith,\bPanton\b,Panton
+East Butterwick,East Butterwick,East Butterwick
+East Ferry,East Ferry,East Ferry
+East Halton,E\.?(ast)? Halton,East Halton
+East Halton,Halton Marsh(es)?,Halton Marshes
+East Halton,Red House Farm,Red House Farm
+East Halton,Winter'?s (Pond|Pool|Pit),Winter's Pond
+East Heckington,East Heckington,East Heckington
+East Keal,East Keal,East Keal
+East Keal,Keal Carr,Keal Carr LWT  N R
+East Kirkby,East Kirkby,East Kirkby
+East Lound,East Lound,East Lound
+East Lound,Thurnholmes Farm,Thurnholmes Farm
+East Ravendale,East Ravendale,East Ravendale
+East Riding of Yorkshire,Adlingfleet Ings,Adlingfleet Ings
+East Riding of Yorkshire,Blacktoft Sands?,Blacktoft Sands
+East Riding of Yorkshire,\bBrough\b,Brough Airfield - S. yorks
+East Riding of Yorkshire,\bFl?axfleet\b,Flaxfleet
+East Riding of Yorkshire,Spurn Head,Spurn Head
+East Riding of Yorkshire,Whitton Sand,Whitton Sands
+East Riding of Yorkshire,\bWhitgift\b,
+East Stockwith,East Stockwith,East Stockwith
+East Torrington,East Torrington,East Torrington
+Eastoft,\bEastoft\b,Eastoft
+Easton,\bEaston\b,Easton
+Eastville,\bEastville\b,Eastville
+Edenham,\bEdenham\b,Edenham
+Edenham,Gunboro Wood,Gunboro Wood
+Edlington,\bEdlington\b,Edlington
+Elsham,\bElsham\b,Elsham
+Elsthorpe,\bElsthorpe\b,Elsthorpe
+Elsthorpe,Spring Wood,Spring Wood
+Epworth,^(?!.*Turbary).*\bEpworth\b,Epworth
+Epworth,(Low|High) Melwood,Low/High Melwood
+Epworth Turbary,Epworth Turbary,Epworth Turbary
+Evedon,\bEvedon\b,Evedon
+Evedon,\bHaverholme\b,Haverholme
+Ewerby,Anwick Fen,Anwick Fen
+Ewerby,\bEwerby\b,Ewerby
+Faldingworth,\bFaldingworth\b,Faldingworth
+Farforth,\bFarforth\b,Farforth
+Farlesthorpe,\bFarlesthorpe\b,Farlesthorpe
+Fenton (Beckingham),Barnby,Barnby Hall Farm
+Fenton (Beckingham),^(?!.*Kettlethorpe)\bFenton\b,Fenton Beckingham
+Fenton (Kettlethorpe),^(?!.*Beckingham).*\bFenton\b,Fenton Kettlethorpe
+Fillingham,\bFillingham\b,Fillingham
+Firsby,^(?!.*West)\bFirsby\b,Firsby
+Fishtoft,\bFishtoft\b,Fishtoft
+Fishtoft,Pilgrim Fathers Memorial,Pilgrim Fathers Memorial
+Fishtoft,The Haven,Havenside Country Park
+Fiskerton,\bFiskerton\b,Fiskerton
+Fiskerton,Long Wood,Long Wood
+Fiskerton,Water Rail Way,Water Rail Way
+Fleet Fen,Fleet Fen,Fleet Fen
+Fleet Hargate,Fleet Hargate,Fleet Hargate
+Flixborough,Blue Lagoon|Normanby Enterprise Park,"Blue Lagoon, Normanby Enterprise Park"
+Flixborough,\bFlixborough\b,Flixborough Industrial Estate
+Flixborough,Neap House,Neap House
+Fockerby,\bFockerby\b,Fockerby
+Fockerby,\bGarthorpe\b,Garthorpe
+Fockerby,Island Farm,Island Farm
+Folkingham,^(?!.*(RAF|Airfield|Laughton|Walcot)).*\bFolkingham\b,Folkingham not RAF
+Fosdyke,\bFosdyke\b,Fosdyke
+Foston,Bell'?s Plantation,Bell's Plantation
+Foston,\bFoston\b,Foston
+Fotherby,\bFotherby\b,Fotherby
+Frampton,(?<!RSPB\s)\bF(ra|ar)mpton\b(?!( RSPB| Marsh| Fen| West End)),"Frampton not Marsh,Fen or West End"
+Frampton,Sandholme,Sandholme Lane
+Frampton Fen,Frampton Fen,Frampton Fen
+Frampton Marsh,^(?=(.*(F(ra|ar)mpton)))(?=.*(RSPB|Marsh)),Frampton Marsh
+Frampton Marsh,Frampton West End,Frampton West End
+Freiston,\bFr(ei|ie)ston\b,Freiston
+Freiston,Haltoft End,Haltoft End
+Freiston,Scrane End,Scrane End
+Freiston,Tamworth Green,Tamworth Green
+Friesthorpe,\bFriesthorpe\b,Friesthorpe
+Friskney,\bFriskney\b,Friskney
+Friskney,^(?!.*Point)\bHorseshoe\b,The Horseshoe
+Frithville,Frith Bank,Frith Bank
+Frithville,\bFrithville\b,Frithville
+Fulbeck,\bFulbeck\b,Fulbeck
+Fulletby,\bFulletby\b,Fulletby
+Fulnetby,\bFulnetby\b,Fulnetby
+Fulstow,\bFulstow\b,Fulstow
+Fulstow,The Moorings,The Moorings
+Gainsborough,^(?!.*(Morton|Northorpe)).*\bGainsborough\b,Gainsborough
+Gainsborough,Thurlby Wood,Thurlby Wood
+Gainsborough,Warren Wood,Warren Wood
+Gate Burton,Gate Burton,Gate Burton
+Gautby,\bGautby\b,Gautby
+Gayton le Marsh,Gayton le Marsh,Gayton le Marsh
+Gayton le Wold,Gayton le Wold,Gayton le Wold
+Gedney,^(?!.*(Drove End|Dyke|Hill|Marsh))\bGedney\b,Gedney
+Gedney,Gedney Broadgate,Gedney Broadgate
+Gedney Drove End,Boatmere (Scrape|Creek),Boatmere ScrapeCreek
+Gedney Drove End,Gedney Drove End,Gedney Drove End Village
+Gedney Dyke,Gedney Dyke,Gedney Dyke
+Gedney Hill,Gedney Hill,Gedney Hill
+Gedney Marsh,Cox'?s Creek,Cox's Creek
+Gedney Marsh,Crab'?s Hole,Crab's Hole
+Gedney Marsh,Gedney Marsh,Gedney Marsh
+Gelston,\bGelston\b,Gelston
+Gibraltar Point,Freshwater Mere,Freshwater Mere
+Gibraltar Point,Gil?bral+t[ae]r Point,Gibraltar Point
+Gibraltar Point,Jackson'?s Marsh,Jackson's Marsh
+Gibraltar Point,Lagoon,Lagoon
+Gibraltar Point,Tennyson'?s Sands,Tennyson's Sands
+Gipsey Bridge,Gipsey Bridge,Gipsey Bridge
+Glentham,Bishop\s?bridge,Bishopbridge
+Glentham,\bGlentham\b,Glentham
+Glentworth,\bGlentworth\b,Glentworth
+Goltho,\bGoltho\b,Goltho
+Goltho,Great West Wood,Great West Wood
+Goltho,New Plantation,New Plantation
+Gosberton,(Burton|Boston) Road(\sBrick)(\sPits?),Boston Road Brick Pits LWT  NR
+Gosberton,\bGosberton\b,Gosberton
+Gosberton,\bRisegate\b,Risegate
+Goulceby,\bGoulceby\b,Goulceby
+Goxhill,Chapel Farm,Chapel Farm
+Goxhill,Chapel Field R(oa)?d\.?,Chapel Field Road
+Goxhill,Dawson City,Dawson City Clay Pits
+Goxhill,\bGoxhill\b,Goxhill
+Goxhill,Skitter Ness,Skitter Ness
+Grainsby,\bGrainsby\b,Grainsby
+Grainthorpe,\bGrainthorpe\b,Grainthorpe village
+Grainthorpe,\bLudney\b,Ludney
+Grainthorpe,\bWragholme\b,Wragholme
+Graizelound,\bGrai(z|s)elound\b,Graizelound
+Grantham,Gonerby Hill Foot,Gonerby Hill Foot
+Grantham,^(?!.*(Aisby|Manthorpe|Belton)).*\bGrantham\b,Grantham
+Grantham,Hall'?s Hill,Hall's Hill
+Grasby,\bAudleby\b,Audleby
+Grasby,\bClixby\b,Clixby
+Grasby,\bGrasby\b,Grasby
+Grayingham,\bGrayingham\b,Grayingham
+Great Carlton,Great Carlton,Great Carlton
+Great Coates,Great Coa?tes,Great Coates
+Great Gonerby,Gonerby Moor,Gonerby Moor
+Great Gonerby,(Gonerby|Grantham) (Moor|Services),Gonerby Moor Services
+Great Gonerby,Gonerby Woods?,Gonerby Woods
+Great Gonerby,Great Gonerby,Great Gonerby
+Great Hale,Great Hale,Great Hale
+Great Limber,Great Limber,Great Limber
+Great Limber,Halliday Hills?,Halliday Hills Woods
+Great Limber,Hendale,Hendale Wood
+Great Limber,Mausoleum Woods,Mausoleum Woods
+Great Ponton,Great Ponton,Great Ponton
+Great Ponton,Ponton Heath,Ponton Heath
+Great Ponton,Ponton Park Wood,Ponton Park Wood
+Great Ponton,Stoke Park Wood,Stoke Park Wood
+Great Ponton,Stoke Pasture,Stoke Pasture
+Great Postland,Great Postland,Great Postland
+Great Steeping,Great Steeping,Great Steeping
+Great Sturton,Great Sturton,Great Sturton
+Great Tows,Great Tows,Great Tows
+Great Tows,Thorpe le Vale,Thorpe le Vale
+Greatford,\bGreatford\b,Greatford
+Greetham,\bGreetham\b,Greetham
+Greetwell Hollow Quarry,Greetwell (Hollow|Quarry),Greetwell Hollow Quarry
+Grimoldby,\bGrimoldby\b,Grimoldby
+Grimsby,Clee North Wall,Clee North Wall
+Grimsby,Europarc,Europarc
+Grimsby,Freshney,Freshney Bog
+Grimsby,Gooseman'?s Field,Goosemans Field
+Grimsby,Grant Thorold,Grant Thorold
+Grimsby,^(?!.*(Little Grimsby)).*\bGrimsby\b,Grimsby
+Grimsby,\bCemetery\b,Grimsby Cemetery
+Grimsby,Little Coates,Little Coates
+Pyewipe,Novartis Ings,Novartis Ings
+Grimsby,Peaks Parkway|Tunnel,Peaks Parkway/Tunnel
+Pyewipe,Pyewipe,Pyewipe Salt Marsh
+Grimsby,Titan Works?,Titan Works Grimsby
+Grimsby,Town'?s? Holt,Town Holt
+Grimsby,Weelsby,Weelsby Woods
+Grimsby,Wybers Wood,Wybers Wood
+Grimsthorpe,Breache'?s Wood,Breache's Wood
+Grimsthorpe,Dobbin'?s Wood,Dobbin's Wood
+Grimsthorpe,\bGrimsthorpe\b,Grimsthorpe
+Gunby (Colsterworth),^(?!.*Spilsby).*\bGunby\b,Gunby Colsterworth
+Gunby (Spilsby),^(?!.*Colsterworth).*\bGu(n|m)by\b,Gunby  Hall Spilsby
+Gunness,Brumby Common,Brumby Common
+Gunness,\bGunness\b,Gunness
+Gunness,Scunthorpe United,Scunthorpe United
+Gunthorpe,\bGunthorpe\b,Gunthorpe
+Guthram Gowt,Guthram Gowt,Guthram Gowt
+Guys Head,Guy'?s Head,Guy's Head
+Habrough,\bHabrough\b,Habrough
+Haceby,\bHaceby\b,Haceby
+Hackthorn,\bHackthorn\b,Hackthorn
+Haconby,\bHacc?onby\b,Haconby
+Haddington,\bHaddington\b,Haddington
+Hagnaby,\bHagnaby\b,Hagnaby
+Hagworthingham,\bHagworthingham\b,Hagworthingham
+Hagworthingham,Pepper'?s Holt,Pepper's Holt Wood
+Hagworthingham,Stockwith Mill,Stockwith Mill
+Hainton,Duckpond Plantation,Duckpond Plantation Hainton
+Hainton,\bHainton\b,Hainton
+Hallington,\bHallington\b,Hallington
+Haltham,\bHaltham\b,Haltham
+Halton Fenside,Halton Fenside,Halton Fenside
+Halton Holegate,Halton Holegate,Halton Holegate
+Hameringham,\bHameringham\b,Hameringham
+Hanby,\bHanby\b,Hanby
+Hannah,\bHannah\b,Hannah
+Hanthorpe,\bHanthorpe\b,Hanthorpe
+Hardwick,\bHardwick\b,Hardwick
+Hareby,\bHareby\b,Hareby
+Harlaxton,\bHarlaxton\b,Harlaxton
+Harmston,\bHarmston\b,Harmston
+Harpswell,\bHarpswell\b,Harpswell
+Harrington,\bHarrington\b,Harrington
+Hartsholme,\bBirchwood\b,Birchwood
+Hartsholme,\bHartsholme\b,Hartsholme  CP Country Park Hall
+Hartsholme,\bSwanholme\b,Swanholme Lakes SSSI
+Hatcliffe,\bHatcliffe\b,Hatcliffe
+Hatton,\bHatton\b,Hatton
+Haugh,\bHaugh\b,Haugh
+Haugham,\bHaugham\b,Haugham
+Hawerby cum Beesby,^(?!.*Alford).*\bBeesby\b,Beesby Top
+Hawerby cum Beesby,\bHawerby\b,Hawerby cum Beesby
+Hawthorpe,\bHawthorpe\b,Hawthorpe
+Haxey,\bHaxey\b,Haxey Village
+Haxey,Low Burnham,Low Burnham
+Healing,Energy Park Way,Energy Park Way
+Healing,\bHealing\b,Healing
+Heapham,\bHeapham\b,Heapham
+Heckington,^(?!.*\bEast\b).*\bHeckington\b,Heckington
+Heighington,Branston Road,"Branston Road, Heighington"
+Heighington,\bHeighington\b,Heighington
+Helpringham,\bHelpringham\b,Helpringham
+Hemingby,Manor Farm(yard)?,Manor Farm
+Hemingby,Hemingby,Hemingby
+Hemswell,^(?!.*Cliff).*Hemswell,Hemswell
+Hemswell Cliff,Hemswell Cliff,Hemswell Cliff
+Heydour,\bHeydour\b,Heydour
+Hibaldstow,\bHibaldstowe?\b,Hibaldstow
+Hibaldstow,Stonepit Wood,Stonepit Wood
+High Toynton,High Toynton,High Toynton
+Hobhole,\bHobhole\b,Hobhole BankDrain
+Hobhole,Nunn'?s Bridge,Nunn's Bridge
+Hogsthorpe,\bHogsthorpe\b,Hogsthorpe
+Hogsthorpe,Sloothby High Lane,Sloothby High Lane Hogsthorpe
+Holbeach,^(?!.*(Bank|Clough|Drove|Fen|Hurn|Marsh|Johns|Marks|Matthew)).*\bHolbeach\b,"Holbeach NOT Bank,Clough, Drove, Fen, Hurn or Marsh"
+Holbeach Bank,Holbeach Bank,Holbeach Bank
+Holbeach Bank,Holbeach Clough,Holbeach Clough
+Holbeach Drove,Holbeach Drove,Holbeach Drove
+Holbeach Fen,Holbeach Fen,Holbeach Fen
+Holbeach Hurn,Holbeach Hurn,Holbeach Hurn
+Holbeach Marsh (inland),^(?!.*shore).*Holbeach Marsh,Holbeach Marsh inland
+Holbeach Marsh (shore),^(?!.*inland).*Holbeach Marsh,Holbeach Marsh shore
+Holbeach Marsh (shore),Shep Whites,Shep Whites
+Holbeach St Johns,Holbeach St Johns,Holbeach St Johns
+Holbeach St Marks,Holbeach St Marks,Holbeach St Marks
+Holbeach St Marks,Hospital Cottage Spinney Heronry,Hospital Cottage Spinney Heronry
+Holbeach St Marks,Wash School Ponds Spinney Heronry,Wash School Ponds Spinney Heronry
+Holbeach St Matthew,Holbeach St Matthew,Holbeach St Matthew
+Holbeach St Matthew,Sot'?s Hole,Sot's Hole
+Holland Fen,Holland Fen,Holland Fen
+Holme,Bottesford Beck,Bottesford Beck
+Holme,^(?!.*(Paull|Kirton)).*\bHolme\b,Holme
+Holme,Pink Pig Farm,Pink Pig Farm
+Holton cum Beckering,Holton cum Beckering,Holton cum Beckering
+Holton le Clay,Holton le Clay,Holton le Clay
+Holton le Moor,Holton le Moor,Holton le Moor
+Holywell,\bHolywell\b,Holywell
+Holywell,Newell Wood,Newell Wood
+Holywell,Pickford Great Woods?,Pickford Great Woods
+Holywell,Robert'?\s?s Field,Robert' s Field LWT
+Honington,\bHonington\b,Honington
+Horbling,\bHorbling\b,Horbling
+Horkstow,\bHorkstow\b,Horkstow
+Horncastle,^(?!.*(Langton|Thornton)).*\bHorncastle\b,Horncastle
+Horse Shoe Point,Horse\s?shoe Point,Horse Shoe Point
+Horsington,\bHorsington\b,Horsington
+Hough on the Hill,Hough(-|\s)on(-|\s)the(-|\s)Hill,Hough on the Hill
+Hougham,\bHougham\b,Hougham
+Howell,\bHowell\b,Howell
+Howsham,\bHowsham\b,Howsham
+Hubberts Bridge,Hubbert'?s Bridge,Hubbert's Bridge
+Humberston,Anthony'?s Bank,Anthony's Bank Road
+Humberston,\bHumberston\b,Humberston
+Humberston,\bThorpe\b Park,Thorpe Park Golf Course
+Humberston,Terry Burgess,Trry Burgess Reserve
+Humby,\bHumby\b,Humby
+Hundleby,\bHundleby\b,Hundleby
+Huttoft,Boy\s?grift Drain,Boygrift Drain
+Huttoft,Car Terrace,Huttoft Car Terrace
+Huttoft,\bHuttoft\b,Huttoft village
+Huttoft,Marsh Yard,Marsh Yard
+Huttoft,Moggs Eye,Moggs Eye
+Immingham,\bImmingham\b(?!\sHIT),Immingham not HIT
+Ingham,\bIngham\b,Ingham
+Ingleby,\bIngleby\b,Ingleby
+Ingoldmells,\bButlins\b,Butlins
+Ingoldmells,\bIngoldmells\b,Ingoldmells
+Ingoldsby,\bIngoldsby\b,Ingoldsby
+Irby in the Marsh,^(?!.*Humber)\bIrby\b,Irby in the Marsh
+Irby upon Humber,^(?!.*(in the Marsh))\bIrby\b,Irby upon Humber
+Irnham,Far Old Park Woods?,Far Old Park Wood
+Irnham,\bIrnham\b,Irnham
+Irnham,Old Park Woods?,Old Park Wood
+Kates Bridge,Kate'?s\s?Bridge,Kate's Bridge
+Keadby,\bKeadby\b,Keadby
+Keal Cotes,Keal Coa?tes,Keal Cotes
+Keddington,\bKeddington\b,Keddington
+Keddington,Ticklepenny'?s? Lock,Ticklepenny Lock
+Keelby,\bKeelby\b,Keelb
+Keisby,\bKeisby\b,Keisby
+Kelby,\bKelby\b,Kelby
+Kelstern,\bKelstern\b,Kelstern
+Kettleby,\bKettleby\b,Kettleby
+Kettlethorpe,^(?!.*Fenton).*\bKettlethorpe\b,Kettlethorpe
+Kexby,\bKexby\b,Kexby
+Killingholme,Immingham HIT,Immingham HIT
+Killingholme,^(?!.*Ulceby).*\bKillingholme\b,Killingholme
+Killingholme,Rosper Road(/sPools)?,Rosper Road /sPools
+Kingerby,\bKingerby\b(?!( Beck Meadows)),Kingerby
+Kirkby Green,Kirkby Green,Kirkby Green
+Kirkby la Thorpe,Kirkby la Thorpe,Kirkby la Thorpe
+Kirkby la Thorpe,Ballast Pit,New Ballast Pit
+Kirkby Moor,Kirkby Moor\s?,Kirkby Moor LWT  NR
+Kirkby Moor,Moor Farm,Moor Farm NR
+Kirkby Moor,Ostler'?s Plantation$,Ostler's Plantation
+Kirkby on Bain,^(?=.*(Kirkby|Tattershall Thorpe))(?=.*(Pits?|G(ravel\s)?P(its?)?)),Kirkby/Tattershall Thorpe Pits
+Kirkby on Bain,Kirk?by on Bain,Kirkby on Bain
+Kirkby Underwood,Callan'?s?( Lane)? Wood,Callan's Lane Wood
+Kirkby Underwood,Kirkby Underwood,Kirkby Underwood
+Kirkby Underwood,Pasture Wood,Pasture Wood
+Kirkby Underwood,Scullar Wood,Scullar Wood
+Kirkby Underwood,Thorny Wood,Thorny Wood
+Kirkstead Bridge,Kirkstead Bridge,Kirkstead Bridge
+Kirmington,Humberside Airport,Humberside Airport
+Kirmington,\bKirmington\b,Kirmington
+Kirmond le Mire,Kirmond le Mire,Kirmond le Mire
+Kirton,^(?!.*(Lindsey|End|Holme|Marsh))\bKirton\b(?!\s!End|\sHolme),"Kirton NOT End, Holme or Marsh"
+Kirton End,Kirton End,Kirton End
+Kirton Holme,Kirton Holme,Kirton Holme
+Kirton in Lindsey,Kirton(\sin)?\sLindsey,Kirton in Lindsey
+Kirton in Lindsey,Nebraska,Nebraska Wetlands
+Kirton Marsh,Kirton Marsh,Kirton Marsh
+Kirton Marsh,Slade House,Slade House CL Caravan Site
+Knaith,\bKnaith\b,Knaith Park
+Laceby,\bLaceby\b,Laceby
+Langrick,\bLangrick\b,Langrick
+Baston and Langtoft,\bLangtoft\b,Langtoft
+Baston and Langtoft,Penfield,Penfield LNR
+Baston and Langtoft,Stowe\sG(ravel)?\s?P(it)?,Stowe Gravel Pit
+Langton (Horncastle),^(?!.*(Spilsby|Wragby)).*Langton,Langton - Horncastle
+Langton by Spilsby,^(?!.*(Horncastle|Wragby)).*\bLangton\b,Langton by Spilsby
+Langton by Wragby,Gosling'?s Corner,Gosling's Corner Wood
+Langton by Wragby,^(?!.*(Horncastle|Spilsby)).*\bLangton\b,Langton by Wragby
+Langton by Wragby,Low Langton,Low Langton
+Langton by Wragby,^(?!.*Maltby).*\bStrubby\b,Strubby Wragby
+Langworth,^(?!.*Stainton).*\bLangworth\b,Langworth
+Stainton by Langworth,Stainton Woods?,Stainton Wood
+Laughterton,\bLaughterton\b,Laughterton
+Laughton (Folkingham),^(?!.*Forest)\bLaughton\b,Laughton Folkingham
+Laughton Forest,^(?!.*Folkingham).*\bLaughton\b,Laughton Forest
+Laughton Forest,Peacock Wood,Peacock Wood Heronry
+Laughton Forest,Tue?toes,Tuetoes Hills/Wood
+Lea,\bLea\b,Lea
+Leadenham,\bLeadenham\b,Leadenham
+Leasingham,\bLeasingham\b,Leasingham
+Legbourne,\bLegbourne\b,Legbourne village
+Legbourne,\bKenwick\b (Hall|Park),
+Legsby,^(?!.*Wood)\bLegsby\b,Legsby
+Leicestershire,Belvoir Lakes,Belvoir Lakes
+Leicestershire,\bHarston\b,Harston
+Lenton,\bLenton\b,Lenton
+Lenton,(?=.*(Folkingham))(?=.*(RAF|Airfield)),RAF Folkingham
+Leverton,\bLeverton\b,Leverton
+Lincoln,Bishop Bridge,Bishop Bridge
+Lincoln,Brayford,Brayford Pool
+Lincoln,Bunkers Hill,Bunkers Hill
+Lincoln,Cathedral,Cathedral
+Lincoln,Cross O'?\s?Cliff,Cross O'Cliff
+Lincoln,Ermine,Ermine West
+Lincoln,Hobbler'?s Hole,Hobbler's Hole
+Lincoln,^(?!.*(Burton by|Coleby|Martin|Saxby|welton)).*\bLincoln\b,Lincoln
+Lincoln,Arboretum,Lincoln Arboretum
+Lincoln,Cow Paddle,Lincoln Cow Paddle
+Lincoln,Monks Road,Monks Road Lincoln
+Lincoln,Newport Cemetery,Newport Cemetery
+Lincoln,South Common,South Common
+Lincoln,The Lawn,The Lawn
+Lincoln,The Pavilions,The Pavilions
+Lincoln,University,The University
+Lincoln,West Common,West Common
+Lincoln,Witham Marshes,Witham Marshes
+Linwood,Eleanor Woods?,Eleanor Wood
+Linwood,^(?!.*Warren)\bLinwood\b,Linwood
+Linwood,Lynwode Woods?,Lynwode Wood
+Lissington,\bLissington\b,Lissington
+Little Bytham,Little Bytham,Little Bytham
+Little Carlton,Little Carlton,Little Carlton
+Little Cawthorpe,Fir Hill,Fir Hill Quarry NR
+Little Cawthorpe,Little Cawthorpe,Little Cawthorpe
+Little Cawthorpe,Maltby Wood,Maltby Wood
+Little Grimsby,Little Grimsby,Little Grimsby
+Little Hale,Little Hale,Little Hale
+Little Ponton,Little Ponton,Little Ponton
+Little Steeping,Little Steeping,Little Steeping
+Little Sutton,Little Sutton,Little Sutton
+Lobthorpe,Beaumont Woods?,Beaumont Wood
+Lobthorpe,\bLobthorpe\b,Lobthorpe
+Lobthorpe,Tortoiseshell Wood,Tortoiseshell Wood
+Londonthorpe,Alma\s(Park\s)?Wood,Alma Park Wood
+Londonthorpe,Belton\sPark,Belton Park
+Londonthorpe,\bLondonthorpe\b,Londonthorpe
+Long Bennington,Long Bennington,Long Bennington
+Long Sutton,Long Sutton,Long Sutton
+Lound,^(?!.*\beast\b).*\bLound\b,Lound
+Louth,Hubbard'?s Hills?,Hubbard's Hills
+Louth,\bLouth\b,Louth
+Louth,^(?!.*Deeping.*)St James,St James Church
+Low Toynton,Low Toynton,Low Toynton
+Ludborough,\bLudborough\b,Ludborough
+Luddington,\bLuddington\b,Luddington
+Luddington,Mere\s?Dyke R(oa)?d\.?,Mere Dyke Road
+Ludford,\bLudford\b,Ludford
+Lutton,\bLutton\b,Lutton
+Mablethorpe,\bMab(le|el)thorpe\b,Mablethorpe
+Maidenwell,\bMaidenwell\b,Maidenwell
+Maltby le Marsh,Maltby le Marsh,Maltby le Marsh
+Manby,\bManby\b(?!.*(Washland|Wetland|flash)),Manby
+Manby Wetland,Levee Doors,Levee Doors
+Manby Wetland,((?=(.*Carlton))|(?=(.*Manby)))+.*(Wetlands?|Flashes|Washlands?)+,Manby/Carlton  Flashes/Wetlands
+Manthorpe (Bourne),^(?!.*Grantham).*\bManthorpe\b,Manthorpe
+Manthorpe (Grantham),^(?!.*Bourne).*\bManthorpe\b,Manthorpe
+Manton,^(?!.*Quarry)\bGreetwell\b,Greetwel
+Manton,\bManton\b,Manton
+Manton,\bTwigmo(or|re)\b,Twigmoor
+Mareham le Fen,Fulsby Wood,Fulsby Wood
+Mareham le Fen,Mareham le Fen,Mareham le Fen
+Mareham le Fen,Shire Wood,Shire Wood
+Mareham le Fen,St Helen'?s Wood,St Helen's Wood
+Mareham le Fen,Troy Wood,Troy Wood
+Mareham le Fen,Tumby Woodside,Tumby Woodside
+Mareham on the Hill,Mareham on the Hill,Mareham on the Hill
+Mareham on the Hill,\bScrafield\b,Scrafield
+Markby,\bMarkby\b,Markby
+Market Deeping,Market Deeping,Market Deeping
+Market Rasen,^(?!.*(Race|Golf|Claxby)).*Market Rasen,Market Rasen NOT Golf or Race
+Market Stainton,^Market Stainton,Market Stainton
+Marshchapel,\bEskham\b,Eskham
+Marshchapel,Louth Canal,Louth canal
+Marshchapel,Marsh\s?chapel,Marshchapel
+Marston,Jericho Wood,Jericho Wood
+Marston,\bMarston\b,Marsto
+Martin (Lincoln),^(?!.*Horncastle).*\bMartin\b,Martin
+Martin (Lincoln),Metheringham Airfield,Metheringham Airfield
+Marton,\bMarton\b,Marton
+Marton,Trent Port,Trent Port Marton
+Mavis Enderby,Mavis Enderby,Mavis Enderby
+Mavis Enderby,Wheel\s?about Wood,Wheelabout Wood
+Mawthorpe,\bMawthorpe\b,Mawthorpe
+Melton Ross,Melton Gallows,Melton Gallows
+Melton Ross,Melton Ross,Melton Ross
+Messingham,Black Bank,Black Bank
+Messingham,Black Walk Nook,Black Walk Nook
+Messingham,Johnson'?s Ponds,Johnson's Ponds
+Messingham,Broom Plantation,Broom Plantation
+Messingham,\bMessingham\b,Messingham
+Metheringham,^(?!.*(RAF|Airfield)).*\bMetheringham\b,Metheringham not RAF/Airfield
+Metheringham,Sot'?s Hole,Sots Hole
+Metheringham,\bTanvats\b,Tanvats
+Middle Rasen,Middle Rasen,Middle Rasen
+Middlemarsh Farm,Middlemarsh Farm,Middlemarsh Farm
+Midville,\bMidville\b,Midville
+Miningsby,\bMiningsby\b,Miningsby
+Minting,\bMinting\b(?!\s(Park|Wood)),Minting (NOT Park or Wood)
+Moorby,\bMoorby\b,Moorby
+Moortown,\bMoortown\b,Moortown
+Morkery Wood,Morkery Woods?,Morkery Wood
+Morton (Bourne),^(?!.*(Gainsboroug|Swinderby)).*\bMorton\b,Morton
+Morton (Gainsborough),^(?!.*(Bourne|Swinderby)).*\bMorton\b,Morton
+Morton (Swinderby),^(?!.*(Gainsborough|Bourne)).*\bMorton\b,Morton
+Moulton,^(?!.*(Chapel|Marsh|Seas End)).*\bMoulton\b,"Moulton NOT Chapel, Marsh or Seas End"
+Moulton Chapel,Moulton Chapel,Moulton Chapel
+Moulton Marsh,Moulton Marsh,Moulton Marsh
+Moulton Seas End,Moulton Seas End,Moulton Seas End
+Muckton,\bMuckton\b,Muckton
+Mumby,\bHelsey\b,Helsey
+Mumby,\bMumby\b,Mumby
+Mumby,Spendluffe Meadows\s?,Spendluffe Meadows
+Navenby,\bNavenby\b,Navenby
+Nettleham,\bNettleham\b,Nettleham
+Nettleton,\bNettleton\b,Nettleton
+New Bolingbroke,New Bolingbroke,New Bolingbroke
+New Holland,Fairfield Pit,Fairfield Pit
+New Holland,New Holland,New Holland
+New Leake,New Leake,New Leake
+New Waltham,New Waltham,New Waltham
+New York,Bunkers Hill,Bunkers Hill
+New York,New York,New York
+Newball,Hardy Gang Wood,Hardy Gang Wood
+Newball,\bNewball\b,Newball
+Newton (Sleaford),^(?!.*(Reservoir|Toft|Trent|Wold)).*\bNewton\b,Newton Sleaford
+Newton on Trent,Newton on Trent,Newton on Trent
+Potterhanworth,Neville Wood,Neville Wood Nocton
+Nocton,\bNocton\b,Nocton
+Nocton,Wasps Nest,Wasps Nest
+Normanby (Scunthorpe),^(?!.*(Spital|Wold)).*\bNormanby\b,Normanby
+Normanby by Spital,^(?!.*(Wold|Scunthorpe)).*\bNormanby\b,Normanby - by - Spital
+Normanby le Wold,Normanby(-|\s)le(-|\s)Wold,Normanby le Wold
+Normanton on Cliffe,Normanton(-|\s)+on(-|\s)?Cliffe,Normanton-on-Cliffe
+North Carlton,Lincolnshire Show\s?ground,Lincolnshire Showground
+North Carlton,North Carlton,North Carlton
+North Cockerington,N(orth)? Cockerington,North Cockerington
+North Cotes,MOD Pools,MOD Pools
+North Cotes,North\s?Co(a)?tes,North Coates
+North Elkington,North Elkington,North Elkington
+North Greetwell,North Greetwell,North Greetwell
+North Hykeham,Apex (Pit|Lake),Apex Pit
+North Hykeham,Millenium Green,Millenium Green
+North Hykeham,N(orth)? Hykeham,North Hykeham
+North Hykeham,Compartment 04,Millenium Green?
+North Hykeham,Richmond Lakes,Richmond Lakes
+North Hykeham,Station Road Tip,Station Road Tip
+North Hykeham,Teal Park,Teal Park
+North Kelsey,North Kelsey,North Kelsey Moor
+North Kyme,North Kyme,North Kyme
+North Ormsby,North Ormsby,North Ormsby
+North Rauceby,North Rauceby,North Rauceby
+North Rauceby,Rauceby High Wood,Rauceby High Wood
+North Reston,North Reston,North Reston
+North Scarle,Eagle R(oad)?d\.?,Eagle Road North Scarle
+North Scarle,Lapwing Field,Lapwing Field
+North Scarle,\bLowfields\b,Lowfields
+North Scarle,Eagle Fishing Pit,Lowfields
+North Scarle,Mill Dam,Mill Dam Dyke
+North Scarle,North Scarle,North Scarle
+North Somercotes,N(orth)?[.\s]+Somercotes,North Somercotes Village
+North Somercotes,Elmhouse Farm,Elm House Farm
+North Thoresby,N\.?(orth)?\s?Thore?se?by,North Thoresby
+North Thoresby,Thoresby Bridge,Thoresby Bridge
+North Willingham,North Willingham,North Willingham
+North Witham,North Witham,North Witham
+Northgate,\bNorthgate\b,Northgate
+Northlands,\bNorthlands\b,Northlands
+Northorpe (Gainsborough),\bNorthorpe\b,Northorpe
+Norton Disney,Hill Holt Wood,Hill Holt Wood
+Norton Disney,Norton Disney,Norton Disney
+Norton Disney,Norton Gravel Pits?,Norton Gravel Pits
+Norton Disney,^(?!.*(Fen|Alford|Bourne))\bThurlby\b,Thurlby
+Norwood,\bNorwood\b,Norwood
+Nottinghamshire,\bBawtry\b,Bawtry (Notts)
+Nottinghamshire,\bBole\b,Bole (Notts)
+Nottinghamshire,Collingham,Collingham
+Nottinghamshire,\bGirton\b,Girton Notts
+Nottinghamshire,Gringley Carr,Gringley Carr
+Nottinghamshire,Gringley,Gringley on the Hill (Notts)
+Nottinghamshire,Idle Valley,Idle Valley (Notts)
+Nottinghamshire,Langford Lowfields,Langford Lowfields
+Nottinghamshire,\bThorney\b,Thorney Notts
+Oasby,\bOasby\b,Oasby
+Obthorpe,\bObthorpe\b,Obthorpe
+Old Bolingbroke,Old Bolingbroke,Old Bolingbroke
+Old Bolingbroke,Sow\s?Dales?,Sow Dales
+Old Leake,Leake Commonside,Leake Commonside
+Old Leake,Old Leake,Old Leake
+Old Leake,Sailor'?s Home,Sailor's Home
+Old Somerby,Cold Harbour,Cold Harbour
+Old Somerby,Old Somerby,Old Somerby
+Old Woodhall,Highh?all Wood,Highall Wood
+Old Woodhall,Old Woodhall,Old Woodhall
+Orby,\bOrby\b,Orby
+Osbournby,\bOsbournby\b,Osbournby
+Osgodby,Cote Hill,Cote Hill Farm
+Osgodby,Kirkby Osgodby,Kirkby Osgodby
+Osgodby,\bOsgodby\b,Osgodby
+Owersby,Kingerby Beck Meadows,Kingerby Beck Meadows
+Owersby,\bOwersby\b,Owersby
+Owmby by Spital,^(?!.*Searby).*\bOwmby\b,Owmby-by-Spital
+Owston Ferry,Owston Ferry,Owston Ferry
+Oxcombe,\bOxcombe\b,Oxcombe
+Partney,^(?!.*Ashby).*\bPartney\b,Partney
+Peterborough,\bBurghley\b,Burghley House
+Peterborough,Deeping Gate,Deeping Gate
+Peterborough,Low Locks,Low Locks (P'bro)
+Peterborough,\bMaxey\b,Maxey - Peterbro
+Peterborough,Scout Island,Scout Island
+Peterborough,Stamford Sewage Works,Stamford Sewage Works
+Peterborough,\bTinwell\b,Tinwell P'boro
+Pickworth,\bPickworth\b,Pickworth
+Pilham,\bPilham\b,Pilham
+Pilham,Wharton Woods?,Wharton Wood
+Pinchbeck,\bCrossgate\b,Crossgate
+Pinchbeck,\bPinchbeck\b,Pinchbeck
+Pode Hole,Pode Hole,Pode Hole
+Pointon,\bPointon\b,Pointon
+Potterhanworth,Bottom Barff Wood,Bottom Barff Wood
+Potterhanworth,\bPotterhanworth\b,Potterhanworth
+Quadring,\bQuadring\b,Quadring
+Quadring,Quadring,Westhorpe
+RAF Digby,^(?=(.*Digby))(?=.*(RAF|Airfield)),RAF Digby
+Raithby by Spilsby,Raithby(-|\s)+by(-|\s)+Spilsby,Raithby by Spilsby
+Raithby cum Maltby,^(?!.*(le marsh|Strubby)).*\bMaltby\b,Maltby
+Ranby,\bRanby\b,Ranby
+Rand,\bRand\b,Rand
+Reads Island,read[''`']?s?\s*island,Read's Island
+Redbourne,\bRedbourne\b,Redbourne
+Reepham,\bReepham\b,Reepham
+Revesby,\bRevesby\b,Revesby
+Riby,\bRiby\b,Riby
+Rigsby,\bRigsby\b,Rigsby
+Rippingale,\bRippingale\b,Rippingale
+Riseholme,\bRiseholme\b,Riseholme
+Ropsley,Hurn Wood,Hurn Wood
+Ropsley,Kirton Wood,Kirton Wood
+Ropsley,\bRopsley\b,Ropsley
+Rothwell,\bRothwell\b,Rothwell
+Roughton,\bRoughton\b\b,Roughton
+Rowston,\bRowston\b,Rowston
+Roxby,\bDragonby\b,Dragonby
+Roxby,Risby Warren,Risby Warren
+Roxby,\bRoxby\b,Roxby
+Roxholm,\bRoxholme?\b,Roxholme
+Ruckland,\bRuckland\b,Ruckland
+Ruckland,^(?!.*(Carr|Brigg)).*Worlaby,Worlaby
+Ruskington,\bRuskington\b,Ruskington
+Rutland,Banthorpe Gravel Pits,Banthorpe Gravel Pits
+Rutland,Great Casterton,Great Casterton
+Rutland,\bRutland\b,Rutland
+S-T Dunes NNR,Brickyard Lane,Brickyard Lane End
+S-T Dunes NNR,Churchill Lane,Churchill Lane End
+S-T Dunes NNR,Coastguard Cottages,Coastguard Cottages
+S-T Dunes NNR,Crook Bank,Crook Bank
+S-T Dunes NNR,\bParadise\b,Paradise Pool
+S-T Dunes NNR,\bRimac\b,Rimac
+S-T Dunes NNR,^(?!.*(St Clement|St Helen|All Saints| St Peter)).*Saltfleetby,Saltfleetby
+S-T Dunes NNR,(?=.*(Saltfleetby))(?=.*(Theddlethorpe)),Saltfleetby -Theddlethorpe
+S-T Dunes NNR,Sea View,Sea View Washlands
+S-T Dunes NNR,^(?!.*(St Helen|All Saints)).*\bTheddlethorpe\b,Theddlethorpe
+Saleby,\bSaleby\b,Saleby
+Salmonby,\bSalmonby\b,Salmonby
+Saltfleet,Merriken'?s Pullover,Merriken's Pullover
+Saltfleet,\bSaltfleet\b,Saltfleet
+Saltfleet,Toby'?s Hill,Toby's Hill
+Saltfleetby All Saints,Saltfleetby All Saints,Saltfleetby All Saints
+Saltfleetby St Clement,Cloves Bridge,Cloves Bridge
+Saltfleetby St Clement,Saltfleetby St Clements?,Saltfleetby St Clement
+Saltfleetby St Peter,Saltfleetby St Peter,Saltfleetby St Peter
+Saltfleetby St Peter,Spendlows,Spendlows
+Saltfleetby St Peter,Three Bridge,Three Bridge (lane)
+Sandilands,\bSandiland'?s\b,Sandilands
+Sandilands,Golf Course,Sandilands Golf Course
+Sandtoft,\bSandtoft\b,Sandtoft
+Sapperton,\bSapperton\b,Sapperton
+Sausthorpe,\bSausthorpe\b,Sausthorpe
+Saxby (Lincoln),^(?!.*All Saints).*Saxby,Saxby Lincoln
+Saxby All Saints,Saxby All Saints,Saxby All Saints
+Saxby All Saints,Saxby Wolds?,Saxby Wolds
+Saxilby,\bSaxilby\b,Saxilby
+Scamblesby,\bCawkwell\b,Cawkwell
+Scamblesby,Rowgate Hill,Rowgate Hill
+Scamblesby,\bScamblesby\b,Scamblesby
+Scampton,\bScampton\b,Scampton Village
+Scartho,\bScartho\b,Scartho
+Scawby,\bScawby\b,Scawby
+Scopwick,Gren Man Lane,Green Man Lane
+Scopwick,\bScopwick\b,Scopwick
+Scothern,\bScothern\b,Scothern
+Scott Willoughby,Scott Willoughby,Scott Willoughby
+Scotter,\bScotter\b,Scotter
+Scotter,\bScott?erthorpe\b,Scotterthorpe
+Scottlethorpe,\bScottlethorpe\b,Scottlethorpe
+Scotton,\bScotton\b,Scotton
+Scredington,\bScredington\b,Scredington
+Scremby,\bScremby\b,Scremby
+Scrivelsby,\bScrivelsby\b,Scrivelsby
+Scunthorpe,Ashby\s?Ville,Ashby Ville
+Scunthorpe,Atkinson'?s Warren,Atkinson's Warre
+Scunthorpe,\bBottesford\b,Bottesford
+Scunthorpe,Brumby Woods?,Brumby Woods
+Scunthorpe,Charnwood Park,Charnwood Park
+Scunthorpe,Crosby Warren,Crosby Warren
+Scunthorpe,Kingsway,Kingsway Local N R
+Scunthorpe,Phoenix Way Wood,Phoenix Way Wood
+Scunthorpe,^(?!.*(Coleby|Normanby)).*\bScunthorpe\b|\bScunny\b,Scunthorpe
+Scunthorpe,Steelworks,Scunthorpe Steelworks
+Scunthorpe,Sweeting Thorns,Sweeting Thorns
+Scunthorpe,\bYaddlethorpe\b,Yaddlethorpe
+Seacroft,Golf (Course|Club),Golf Course
+Seacroft,\bSeacroft\b,Seacroft
+Searby cum Owmby,^(?!.*Spital).*\bOwmby\b,Owmby
+Searby cum Owmby,\bSearby\b,Searby cum Owmby
+Sedgebrook,\bSedgebrook\b,Sedgebrook
+Sempringham,Hundred Fen,Hundred Fen
+Sempringham,\bSempringham\b,Sempringham
+Short Ferry,Short Ferry,Short Ferry
+Sibsey,Boston Golf (Club|Course),Boston Golf Club
+Sibsey,\bCowbridge\b,Cowbridge
+Sibsey,High Ferry,High Ferry
+Sibsey,Hill Dyke,Hill Dyke
+Sibsey,\bSibsey\b,Sibsey
+Silk Willoughby,Silk Willoughby,Silk Willoughby
+Sixhills,\bSixhills\b,Sixhills
+Skegness,North Parade,North Parade
+Skegness,\bSeathorne\b,Seathorne
+Skegness,\bSkegness\b,Skegness
+Skeldyke,\bSkeldyke\b,Skeldyke
+Skellingthorpe,Old \bWood\b,Skellingthorpe Old Wood
+Skellingthorpe,Old Hag Wood,Old Hag Wood
+Skellingthorpe,\bSkell?ingthorpe\b,Skellingthorpe
+Skendleby,\bSkendleby\b,Skendleby
+Skidbrooke,\bSkidbrooke\b,Skidbrooke
+Skillington,\bSkillington\b,Skillington Lincs
+Sleaford,Boiling Wells,Boiling Wells R Slea
+Sleaford,Cogglesford Mill|River Slea,Cogglesford Mill R Slea
+Sleaford,\bGreylees\b,Greylees
+Sleaford,\bHoldingham\b,Holdingham
+Sleaford,Lollycock'?s,Lollycock's Field
+Sleaford,Mareham Pastures,Mareham Pastures
+Sleaford,Old Slea Sluice,Old Slea Sluice
+Sleaford,\bQuarrington\b,Quarrington
+Sleaford,^(?!.*(Asgarby|Newton)).*Sleaford,Sleaford
+Sleaford,Sumner'?s Plantation,Sumner's Plantation
+Sloothby,\bSloothby\b,Sloothby
+Snarford,\bSnarford\b,Snarford
+Snelland,\bReasby\b,Reasby
+Snelland,\bSnelland\b,Snelland
+Snitterby,\bSnitterby\b,Snitterby
+Somerby,Bass Wood,Bass Wood
+Somerby,^(?!.*\bOld\b).*Somerby,Somerby
+Somersby,\bSomersby\b,Somersby
+Sotby,\bSotby\b,Sotby
+South Carlton,South Carlton,South Carlton
+South Cockerington,\bHowdales\b,Howdales
+South Cockerington,Scupholme Pit,Scupholme Pit
+South Cockerington,South Cockerington,South Cockerington
+South Elkington,South Elkington,South Elkington
+South Ferriby,Ferriby Sluice,Ferriby Sluice
+South Ferriby,South Ferriby,South Ferriby
+South Hykeham,S(outh)? Hykeham,South Hykeham
+South Kelsey,South Kelsey,South Kelsey
+South Kyme,Halfpenny Toll,Halfpenny Toll R Slea
+South Kyme,South Kyme,South Kyme
+South Ormsby,Snake Holt,Snake Holt
+South Ormsby,South Orme?sby,South Ormesby
+South Rauceby,Beck Plantation,Beck Plantation R Slea
+South Rauceby,Rauceby Warren,
+South Rauceby,South Rauceby,South Rauceby
+South Reston,South Reston,South Reston
+South Somercotes,South Somercotes,South Somercotes
+South Thoresby,South Thoresby,South Thoresby
+South Willingham,Belmont,Belmont Transmitter
+South Willingham,South Willingham,South Willingham
+South Witham,South Witham,South Witham
+Southrey,\bSouthrey\b,Southrey
+Spalding,Arnold'?s Meadow,Arnold's Meadow LWT
+Spalding,Coronation Channel,Coronation Channel  Spalding
+Spalding,Low Fulney,Low Fulney
+Spalding,Patterson'?s Pit,Patterson's Pit
+Spalding,\bSpalding\b,Spalding
+Spalding,Four Mile Bar,Spalding - Four Mile Bar
+Spalding,Mill Green,Spalding - Mill Green
+Spalding,Vernatt'?s Drain,Vernatt's Drain NR
+Spilsby,Woodlands Pit,Woodlands Pit Spilsby
+Spilsby,^(?!.*(Gunby|Langton|Raithby)).*Spilsby,Spilsby
+Spridlington,\bSpridlington\b,Spridlington
+Springthorpe,\bSpringthorpe\b,Springthorpe
+Stainby,\bStainby\b,Stainby
+Stainfield (Bardney),Foxhall Wood,Foxhall Wood
+Stainfield (Bardney),^(?!.*Bourne).*Stainfield,Stainfield Bardney
+Stainfield (Bourne),^(?!.*Bardney).*Stainfield,Stainfield Bourne
+Stainton by Langworth,Stainton by Langworth,Stainton by Langworth
+Stainton le Vale,Stainton(\-|\s)l(e|a)(\-|\s)Vale,Stainton le Vale
+Cress Marsh,Cress\s?Marsh,Cress Marsh
+Stallingborough,Little London,Little London
+Stallingborough,\bStallingborough\b,Stallingborough
+Stamford,\bStamford\b,Stamford
+Stapleford,\bStapleford\b,Stapleford
+Stenigot,\bStenigot\b,Stenigot
+Stenwith,\bStenwith\b,Stenwith
+Stewton,\bStewton\b,Stewton
+Stickford,\bStickford\b,Stickford
+Stickney,\bStickney\b,Stickney
+Stixwould,Bracken Wood,Bracken Wood
+Stixwould,Halstead Wood,Halstead Wood
+Stixwould,River Witham,River Witham (KDR)
+Stixwould,\bStixwould\b,Stixwould
+Stoke Rochford,Stoke Rochford,Stoke Rochford
+Stow,^(?!.*(Sturton|Willingham)).*\bStow\b,Stow Saxilby
+Stragglethorpe,\bStragglethorpe\b,Stragglethorpe
+Stroxton,\bStroxton\b,Stroxton
+Strubby (Maltby),\bStrubby\b,Strubby
+Stubton,\bStubton\b,Stubton
+Sturton by Stow,Sturton by Stow,Sturton by Stow
+Sudbrooke,\bSudbrooke\b,Sudbrooke
+Surfleet,\bSurfleet\b,Surfleet
+Susworth,\bSusworth\b,Susworth
+Sutterby,\bSutterby\b,Sutterby
+Sutterton,\bSutterton\b,Sutterton
+Sutterton,Willow Farm,Willow Farm Sutterton
+Sutton Bridge,Sutton Bridge,Sutton Bridge
+Sutton on Sea,Sutton(-|\s)on(-|\s)Sea,Sutton - on - Sea beach
+Sutton on Sea,Sutton (Ings|Brick Pit),Sutton Ings/Brick Pit
+Sutton St Edmund,Sutton St\.? Edmund,Sutton St Edmund
+Sutton St Edmund,\bThrockenholt\b,Throckenholt
+Sutton St James,Sutton St\.? James,Sutton St James
+Swaby,\bSwaby\b,Swaby
+Swallow,\bSwallow\b,Swallow
+Swarby,\bSwarby\b,Swarby
+Swaton,\bSwaton\b,Swaton
+Swayfield,\bSwayfield\b,Swayfield
+Swinderby,^(?!.*Morton).*Swinderby,Swinderby
+Swineshead,\bDrayton\b,Drayton
+Swineshead,\bSwineshead\b,Swineshead
+Swinethorpe,\bSwinethorpe\b,Swinethorpe
+Swinhope,\bSwinhope\b,Swinhope
+Swinstead,\bSwinstead\b,Swinstead
+Syston,\bSyston\b,Syston
+Tallington,\bTallington\b,Tallington village
+Tathwell,\bDovendale\b,Dovendale
+Tathwell,Jenny Woods?,Jenny Wood
+Tathwell,\bTathwell\b,Tathwell
+Tattershall,\bTattershall\b(?!(\sThorpe)),Tattershall NOT Thorpe
+Tattershall Thorpe,(Carr|Thorpe|Tattershall) Woods?,Carr/Thorpe/Tattershall Woods
+Tattershall Thorpe,Tattershall Carr,Tattershall Carr/Wood
+Tattershall Thorpe,Tattershall Thorpe,Tattershall Thorpe
+Tattershall Thorpe,(?=.*(Woodhall( Spa)?))(?=.*(RAF|Airfield)),Woodhall Spa Airfield
+Tealby,Bully Hill,Bully Hill
+Tealby,\bTealby\b,Tealby
+Temple Bruer,Temple Bruer,Temple Bruer
+Temple Wood,Telecom mast,Telecom mast
+Temple Wood,Temple Woods?,Temple Wood
+Terrington Lincs,Nene Mouth,Nene Mouth
+Terrington Lincs,Terrington Lincs,Terrington Lincs WeBS
+Terrington Lincs,Wash Viewpoint,The Wash Viewpoint
+Tetford,\bTetford\b,Tetford
+Tetney,Louth Canal,"Louth Canal, Tetney"
+Tetney,^(?!.*Marsh(es)?).*\bTetney\b,Tetney
+Horse Shoe Point,Tetney Marsh(es)?,Tetney Marshes
+Thealby,\bThealby\b,Thealby
+Theddlethorpe All Saints,Theddlethorpe All Saints,Theddlethorpe All Saints
+Theddlethorpe St Helen,Theddlethorpe St\.? Helens?,Theddlethorpe St Helens
+Thimbleby,\bThimbleby\b,Thimbleby
+Thonock,\bThonock\b,Thonock
+Thoresway,\bThoresway\b,Thoresway
+Thorganby,\bThorganby\b,Thorganby
+Thornton (Horncastle),^(?!.*(Fen|Lincoln)).*Martin,Martin
+Thornton (Horncastle),^(?!.*(Abbey|Curtis|le Moor)).*Thornton,Thornton - Horncastle
+Thornton Abbey,Thornton Abbey,Thornton Abbey
+Thornton Curtis,Thornton Curtis,Thornton Curtis
+Thornton le Moor,Thornton Ca,Thornton Carrs
+Thornton le Moor,Thornton le Moor,Thornton le Moor
+Thorpe,^\bThorpe\b$,Thorpe
+Thorpe Culvert,Thorpe Culvert,Thorpe Culvert
+Thorpe Fendykes,The Deeps,The Deeps
+Thorpe Fendykes,Thorpe Fen,Thorpe Fendykes (Thorpe Fen)
+Thorpe le Fallows,Thorpe in the Fallows,Thorpe in the Fallows
+Thorpe le Fallows,Thorpe le Fallows,Thorpe le Fallows
+Thorpe on the Hill,Thorpe(-|\s)on(-|\s)the(-|\s)Hill,Thorpe - on - the - Hill
+Thorpe on the Hill,Thorpe Lane Pits,Thorpe Lane Pits
+Thorpe on the Hill,Thorpe Tip,Thorpe Tip
+Thorpe on the Hill,Tunman Woods?,Tunman Wood
+Thorpe St Peter,Thorpe St Peter,Thorpe St Peter
+Thorpe Tilney,Thorpe Tilney,Thorpe Tilney
+Threekingham,Highfields,Highfields Holiday Park
+Threekingham,\bSpanby\b,Spanby
+Threekingham,\bThreekingham\b,Threekingham
+Thurlby (Alford),^(?!.*(Fen|Bourne)).*\bThurlby\b,Thurlby Alford
+Thurlby (Bourne),Dole Woods?,Dole Wood
+Thurlby (Bourne),^(?!.*Gainsborough).*Northorpe,Northorpe Bourne
+Thurlby (Bourne),Swallow Hill,Swallow Hill (Road)
+Thurlby (Bourne),^(?!.*Alford).*\bThurlby\b,Thurlby Bourne
+Timberland,\bTimberland\b,Timberland
+Toft,^(?!.*(Newton|Reservoir)).*\bToft\b,Toft
+Toft Newton,Newton by Toft,Newton by Toft
+Toft Newton,Toft Newton,Toft Newton Reservoir
+Toft Newton,Toft(\s|-)+next(\s|-)+Newton,Toft next Newton
+Tongue End,Counter Drain,Counter Drain Drove
+Tongue End,Tongue End,Tongue End
+Torksey,\bTorksey\b,Torksey
+Tothill,\bTothill\b,Tothill
+Toynton All Saints,Toynton All Saints,Toynton All Saints
+Toynton All Saints,Toynton Fen Side,Toynton Fen Side
+Toynton St Peter,Toynton St Peter,Toynton St Peter
+Trusthorpe,^(?!.*Springs).*Trust+horpe,Trusthorpe
+Tumby,Toft Hill,Toft Hill
+Tumby,^(?!.*Woodside)\bTumby\b,Tumby
+Tupholme,Knowles Wood,Knowles Wood
+Tupholme,New Park Wood,New Park Wood
+Tupholme,North Spring Wood,North Spring Wood
+Tupholme,Tupholme,Tupholme Parish
+Twenty,\bTwenty\b,Twenty
+Tydd Gote,Foul Anchor,Foul Anchor
+Tydd Gote,Tydd Gote,Tydd Gote
+Tydd St Mary,Tydd St Mary,Tydd St Mary
+Uffington,\bUffington\b,Uffington
+Ulceby (Alford),^(?!.*Killingholme).*\bUlceby\b,Ulceby - Alford
+Ulceby (Killingholme),^(?!.*Alford).*\bUlceby\b,Ulceby Killingholme
+Upton,\bUpton\b,Upton
+Usselby,\bUsselby\b,Usselby
+Utterby,\bUtterby\b,Utterby
+Waddingham,Brandy Wharf,Brandy Wharf
+Waddingham,\bWaddingham\b,Waddingham
+Waddington,\bLakeside\b,Lakeside NR
+Waddington,\bWaddington\b,Waddington
+Waddingworth,\bWaddingworth\b,Waddingworth
+Wainfleet,Havenhouse Station,Havenhouse Station
+Wainfleet,New England,New England
+Wainfleet,Pool Decoy Woods?,Pool Decoy Wood
+Wainfleet,\bWainfleet\b,Wainfleet
+Waithe,\bWaithe\b,Waithe
+Walcot (Alkborough),^(?!.*Folkingham).*\bWalcot\b,Walcot
+Walcot near Folkingham,^(?!.*Alkborough).*\bWalcot\b,Walcot near Folkingham
+Walcott,^(?!.*(Alkborough|Folkingham)).*\bWalcott?\b,Walcott
+Walesby,Willingham Forest,Willingham Forest
+Walesby,\bWalesby\b,Walesby
+Walkerith,\bWalkerith\b,Walkerith
+Walmsgate,\bWalmsgate\b,Walmsgate
+Waltham,^(?!.*\bNew\b).*\bWaltham\b,Waltham
+Washingborough,\bAlabala\b,Alaba Lane/Wood
+Washingborough,Cliff (Lane|Farm),Cliff Farm
+Washingborough,Middle Fen Lane,Middle Fen Lane
+Washingborough,\bWashingborough\b,Washingborough
+Welbourn,Mill Farm,Mill Farm
+Welbourn,\bWelbourn\b,Welbourn
+Welby,\bWelby\b,Welby
+Well Vale,Fordington Woods?,Fordington Wood
+Well Vale,\bWell\b,Well Vale
+Welland Marsh,^(?=.*\bWash\b)(?=.*\bWelland\b),Wash@Welland
+Welland Marsh,\bWelland\b,Welland Marsh
+Wellingore,\bWellingore\b,Wellingore
+Welton (Lincoln),^(?!.*(le (marsh|Wold)))\bWelton\b,Welton by Lincoln
+Welton le Marsh,Welton High Wood,Welton High Wood
+Welton le Marsh,Welton Hill,Welton Hill
+Welton le Marsh,Welton le Marsh,Welton le Marsh
+Welton le Marsh,Low Wood,Welton Low Wood
+Welton le Wold,Welton Le Wold,Welton le Wold
+West Ashby,Shear?man'?s Wath,Shearman's Wath
+West Ashby,West Ashby,West Ashby
+West Barkwith,West Barkwith,West Barkwith
+West Butterwick,Butterwick(?=.*(Common|Hale)),Butterwick Common/Hale
+West Butterwick,West Butterwick,West Butterwick
+West Deeping,Greatford Cut,Greatford Cut
+West Deeping,Mole?s?c?ey,Molecey Estate
+West Deeping,West Deeping,West Deeping
+West Fen,West Fen,West Fen
+West Firsby,West Firsby,West Firsby
+West Halton,West Halton,West Halton
+West Keal,West Keal,West Keal
+West Rasen,West Rasen,West Rasen
+West Ravendale,West Ravendale,West Ravendale
+West Torrington,West Torrington,West Torrington
+Westborough,\bWestborough\b,Westborough
+Weston,Spalding Marsh,Spalding Marsh
+Weston,^(?!.*\bHills\b).*\bWeston\b,Weston
+Weston,Wragg Marsh,Wragg Marsh
+Weston Hills,Weston Fen,Weston Fen
+Weston Hills,Weston Hills,Weston Hills
+Weston Hills,Weston Marsh,Weston Marsh
+Westwoodside,Cove Farms?,Cove Farm
+Westwoodside,\bLangholme\b,Langholme
+Westwoodside,\bWestwoodside\b,Westwoodside
+Whaplode,Saracen'?s Head,Saracen's Head
+Whaplode,Shepeau Stow,Shepeau Stow
+Whaplode,\bWhaplode\b,Whaplode
+Whisby,Cinder Plot,Cinder Plot Doddington Woods
+Whisby,Scotland Farm,Scotland Farm
+Whisby,\bWhisby\b,Whisby
+Whisby,Willow Lake,Willow Lake
+Whitton,\bWhitton\b,Whitton
+Wickenby,\bWickenby\b,Wickenby
+Wigtoft,\bHoffleet Stow\b,Hoffleet Stow
+Wigtoft,\bWigtoft\b,Wigtoft
+Wildmore,Haven Bank,Haven Bank (Road)
+Wildmore,\bWildmore\b,Wildmore Fen
+Wildsworth,\bWildsworth\b,Wildsworth
+Willingham by Stow,Willingham by Stow,Willingham by Stow
+Willingham Woods,Dog Kennel Wood,Dog Kennel Wood
+Willingham Woods,Hamilton Hills?,Hamilton Hill
+Willingham Woods,Legsby Woods?,Legsby Wood
+Willingham Woods,Linwood Warren,Linwood Warren
+Willingham Woods,(Golf|Race) (Course|Club),Market Rasen Golf/Race
+Willingham Woods,Rasen Plantation,Rasen Plantation
+Willingham Woods,Warren Wood,Warren Wood
+Willingham Woods,Willingham Woods,Willingham Woods
+Willoughby,^(?!.*(Heath|Scott))\bWilloughby\b,Willoughby
+Willoughby Heath,Willoughby Heath,Willoughby Heath
+Willoughton,\bWilloughton\b,Willoughton
+Willow Tree Fen,Willow\s?Tree Fen,Willow Tree Fen
+Wilsford,Golf Club,Sleaford Golf Club
+Wilsford,\bWilsford\b,Wilsford
+Wilsthorpe,\bWilsthorpe\b,Wilsthorpe
+Winceby,^(?!.*Sleaford).*Asgarby,Asgarby - Spilsby
+Winceby,\bLusby\b,Lusby by Spilsby
+Winceby,Snipe Dales,Snipe Dales
+Winceby,\bWinceby\b,Winceby
+Wingland Marsh,Boston Deeps,Boston Deeps
+Wingland Marsh,Cuckoo Cottage,Cuckoo Cottage
+Wingland Marsh,Roaring Middle,Roaring Middle The Wash
+Wingland Marsh,Scot'?s Lighthouse,Scot's Lighthouse
+Wingland Marsh,Wingland Marsh,Wingland Marsh
+Winteringham,Pudding Pie Sand,Pudding Pie Sand
+Winteringham,\bWinteringham\b,Winteringham
+Winterton,\bWinterton\b,Winterton Village
+Winthorpe,\bWinthorpe\b,Winthorpe
+Wispington,\bWispington\b,Wispington
+Witham,Cut End,Cut End
+Witham,Tabs Head,Tabs Head
+Witham,^(?!.*Crowland)\bWash\b,Wash
+Witham,^(?!.*(St Hughs|River|North|South|on the hill)).*\bWitham\b,Witham
+Witham on the Hill,Witham on the Hill,Witham on the Hill
+Witham St Hughs,Witham St Hughs,Witham St Hughs
+Withcall,\bWithcall\b,Withcall
+Withern,\bWithern\b,Withern
+Wold Newton,Wold Newton,Wold Newton
+Wood Enderby,Wilksby,Wilksby
+Wood Enderby,Wood Enderby,Wood Enderby
+Woodhall Spa,(Tattershall|Woodhall)\sPits?,Tattershall/Woodhall Pits
+Woodhall Spa,Woodhall Country Park,Woodhall Country Park
+Woodhall Spa,(?<!RAF\s)(Woodhall Spa)(?!\sAirfield),Woodhall Spa NOT Airfield
+Woodnook,\bWoodnook\b,Woodnook
+Woolsthorpe by Belvoir,^(?!.*Colsterworth).*\bWoolsthorpe\b,Woolsthorpe by Belvoir
+Woolsthorpe by Colsterworth,^(?!.*Belvoir).*\bWoolsthorpe\b,Woolsthorpe by Colsterworth
+Wootton,\bWoot+on\b,Wootton
+Worlaby (Brigg),\bWorlaby\b,Worlaby Brigg
+Wragby,^(?!.*Langton)>*\bWragby\b,Wragby
+Wrangle,\bWrangle\b,Wrangle
+Wrawby,\bWrawby\b,Wrawby
+Wroot,Hatf(ie|ei)ld Moors,Hatfield Moors
+Wroot,\bAlderfen\b,Alderfen
+Wroot,Tunnel Pits,Tunnel Pits
+Wroot,\bWroot\b,Wroot
+Wyberton,Great Fen,Great Fen
+Wyberton,Slippery Gowt Pits,Slippery Gowt Pits
+Wyberton,Westgate Wood,Westgate Wood
+Wyberton,\bWyberton\b,Wyberton
+Wyham,\bWyham\b,Wyham
+Wyville,\bHungerton\b,Hungerton
+Wyville,\bWyville\b,Wyville
+Yarburgh,Austen Fen,Austen Fen
+Yarburgh,\bYarburgh\b,Yarburgh
+Baston Fen,Baston Fen,
+Anderby Marsh with Wolla Bank and Pit,Anderby Marsh,
+Pyewipe,Novartis,
+Grange de Lings,Grange(\s|-)De(\s|-)Lings,
+Kingston upon Hull,Hull,
+Norfolk,Norfolk,
+North Northamptonshire,North Northamptonshire,
+Middlemarsh Farm,Burgh Marsh - zone 1,
+Grainthorpe,Austen Fen,Austen Fen
+Billingborough,Birthorpe,Birthorpe
+Tetney,Blow Wells,Tetney Blow Wells
+Killingholme,Burk(u|i)nshaw'?s Covert,Burkunshaws Covet
+Chapel St Leonards,Chapel Nature Area,North Sea Observatory
+Saltfleetby St Clement,Elm\s?House Farm,Elm House Farm
+Frampton Marsh,Farmpton Marsh,Frampton Marsh
+Little Ponton,Saltersford (S(ewage)?|W(ater)?)\s?T(reatment)?\s?W(orks)?,Saltersford STW
+Ulceby (Alford),Fordington,Fordington with Ulceby
+Welland Marsh,Lawyers Creek,Lawyers Creek
+Grimsby,Nunsthorpe,Nunsthorpe
+Cowbit,Peak Hill,Peak Hill
+Rutland,Quarry Farm,Quarry Farm
+Raithby by Spilsby,^(?!.*Maltby).*Raithby,Raithby by Spilsby
+Raithby cum Maltby,^(?!.*Spilsby).*Raithby,Raithby cum Maltby
+Susworth,Scotter Wood,Scotter Wood
+Beckingham,^(?!.*(Little|Long|Bridge|St|Sea)).*Sutton,Sutton
+Killingholme,Sinks Covert,Sinks Covert
+Temple Bruer,Temple.*Farm,Temple High Grange Farm
+Tattershall Thorpe,Woodhall Spa.*(N(ature)?\s?R(eserve)?|LWT),Woodhall Spa LNR
+Walesby,Poplars?,The Poplars
+Little Ponton,Whalebone Lane,Whalebone Lane
+Little Ponton,Whalebone Lane,Whalebone Lane
+Freiston,Freiston Shore,Freiston Shore
+Boothby Pagnell,^(?!.*Graffoe).*Boothby,Boothby Pagnell
+Chapel St Leonards,(Chapel|North Sea) Observatory,North Sea Observatory
+Welton le Marsh,Welton Quarry,Welton Quarry
+East Riding of Yorkshire,Redcliff middle sands?,Redcliff middle sand
+Holton le Clay,Holton Grange,Holton Grange
+Belton and Westgate,^(?!.*(Grantham|Park|Tower|Golf)).*Belton,Belton
+Anderby Marsh with Wolla Bank and Pit,Bank Farm,Bank Farm
+Deeping Lakes,Deeping N(ature)?\s?R(eserve),Deeping NR
+West Rasen,Toft Lane,Toft Lane
+Rutland,Northfields Farm,Northfields Farm
+Horncastle,Banovallum House,Banovallum House
+Tathwell,Maltby Wood,Maltby Wood
+Haltham,Red Roofs,Red Roofs (House)
+Horsington,Poolham,Poolham Ings/Farm
+Washingborough,Branston Fields,Branston Fields
+Old Woodhall,Poolham Lane,Poolham Lane
+Old Woodhall,Poolham Lane,Poolham Lane
+Sibsey,Trader,Trader Bank
+Barton upon Humber,sailing pits?,sailing pit
+Willow Tree Fen,Willow,Willow Tree Fen
+Ingleby,Sykes,Sykes (Lane/Farm/Junction)
+Wyham,Cadeby,Cadeby
+Dawsmere,RAF Holbeach,RAF Holbeach Range
+Thorpe St Peter,Lymn Bank,Lymn Bank
+North Somercotes,Lakeside (Park|Lido),Lakeside Park/Lido
+Martin (Lincoln),Westmoor Farm,Westmoor Farm
+Scampton,Till\s?Bridge Farm,Till Bridge Farm
+West Ashby,Far\s?Thorpe,Far Thorpe
+Frampton Marsh,Frampton Roads?,Frampton Roads
+Deeping St James,Chestnut Farm,Chestnut Farm
+Thorpe,Trusthorpe Springs,Trusthorpe Springs Caravan Park
+Walcot near Folkingham,Great Gorse,Great Gorse Wood
+Gosberton,Westhorpe,Westhorpe Road/farm
+Normanby (Scunthorpe),Bagmoor (Lane|Farm),Bagmoor Lane/Farm
+Langworth,Barlings( wood) Park,Barlings Park
+Kates Bridge,Cressland,Cressland Campsite
+Spalding,Springfield,Springfields Shopping Centre
+Belton and Westgate,Woodhouse,Woodhouse
+Newball,Woodside Wildlife Park,Woodside Wildlife Park
+Temple Bruer,Gorse Hill Lane,Gorse Hill Lane
+South Elkington,Acthorpe Top,Acthorpe Top
+Hubberts Bridge,Orchard.*Park,Orchard Holiday Park
+West Ashby,Midthorpe,Midthorpe
+Long Sutton,The Shrubberies,The Shrubberies LWT NR
+Strubby (Maltby),Woodthorpe,Woodthorpe House Farm
+Waltham,RAF Grimsby,RAF Grimsby
+Martin (Lincoln),RAF Metheringham,RAF Metheringham
+Stickford,Hagnaby Fen,Hagnaby Fen NR
+Hagworthingham,Furze Hill,Furze Hill LWT NR
+Cambridgeshire,Cambridgeshire,Cambridgeshire
+Doncaster,Doncaster,Doncaster
+East Riding of Yorkshire,East Riding of Yorkshire,East Riding of Yorkshire
+Leicestershire,Leicestershire,Leicestershire
+Nottinghamshire,Nottinghamshire,Nottinghamshire
+Peterborough,Peterborough,Peterborough
+S-T Dunes NNR,S-T Dunes,Saltfleetby-Threddlethorpe Dunes NNR
+North Sea,North Sea,North Sea outside  UK limit opp Lincs
+Cradge Bank and Cowbit Washes,Cowbit Wash,Cowbit Washes
+Deeping High Bank and Crowland Washlands,Crowland Wash,Crowland Washlands

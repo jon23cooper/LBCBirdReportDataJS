@@ -110,6 +110,21 @@ const MIGRATIONS: string[] = [
   'ALTER TABLE sightings ADD COLUMN uncertainty_radius REAL',
   'ALTER TABLE sightings ADD COLUMN geometry_type TEXT',
   'ALTER TABLE sightings ADD COLUMN trip_map_ref TEXT',
+  'ALTER TABLE locations ADD COLUMN centroid_lat REAL',
+  'ALTER TABLE locations ADD COLUMN centroid_lon REAL',
+  'ALTER TABLE locations ADD COLUMN geometry TEXT',
+  `CREATE TABLE IF NOT EXISTS location_regex (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    site_name TEXT NOT NULL,
+    regex TEXT NOT NULL,
+    match_name TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS location_match_cache (
+    raw_string TEXT PRIMARY KEY,
+    location_id INTEGER REFERENCES locations(id),
+    confirmed_at TEXT NOT NULL
+  )`,
+  'CREATE UNIQUE INDEX IF NOT EXISTS locations_name_unique ON locations(name)',
 ]
 
 export function initDb(): void {
