@@ -56,8 +56,8 @@ function autoMap(headers: string[]): Record<string, string> {
     // Dates / times
     { pattern: /^first.?date/i,                   field: 'date' },
     { pattern: /^last.?date/i,                    field: 'lastDate' },
-    { pattern: /^start.?time$/i,                  field: 'time' },
-    { pattern: /^end.?time$/i,                    field: 'endTime' },
+    { pattern: /^(start|first).?time$/i,           field: 'time' },
+    { pattern: /^(end|last).?time$/i,             field: 'endTime' },
     // Location — "Location" alone is treated as a raw string needing matching;
     // "Location Name" / "Site Name" is a pre-resolved exact name
     { pattern: /^location.?name$/i,               field: 'locationName' },
@@ -81,8 +81,8 @@ function autoMap(headers: string[]): Record<string, string> {
     { pattern: /^observers?$/i,                   field: 'observer' },
     { pattern: /^notes/i,                         field: 'notes' },
     // Spatial
-    { pattern: /^lat(itude)?$/i,                  field: 'lat' },
-    { pattern: /^lon(gitude)?$/i,                 field: 'lon' },
+    { pattern: /^(trip.?)?lat(itude)?$/i,          field: 'lat' },
+    { pattern: /^(trip.?)?lon(gitude)?$/i,        field: 'lon' },
     { pattern: /^uncertainty/i,                   field: 'uncertaintyRadius' },
     { pattern: /^geometry.?type$/i,               field: 'geometryType' },
     { pattern: /^trip.?map.?ref$/i,               field: 'tripMapRef' },
