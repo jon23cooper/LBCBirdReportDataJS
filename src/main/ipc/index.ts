@@ -191,9 +191,13 @@ export function registerIpcHandlers(): void {
     }
   )
 
-  ipcMain.handle('sightings:list', async () => {
-    const db = getDb()
-    return db.select().from(sightings)
+  ipcMain.handle('sightings:list', () => {
+    return getSqlite()
+      .prepare(`SELECT s.*, l.name as locationMatchName
+                FROM sightings s
+                LEFT JOIN locations l ON l.id = s.location_id
+                ORDER BY s.id`)
+      .all()
   })
 
   ipcMain.handle('locations:list', async () => {
