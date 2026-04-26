@@ -24,6 +24,7 @@ const COLS: { key: Col; label: string }[] = [
   { key: 'breedingCategory',      label: 'Breeding Category' },
   { key: 'observer',              label: 'Observers' },
   { key: 'originalLocation',      label: 'Original Location' },
+  { key: 'locationMatchName',     label: 'Resolved Location' },
   { key: 'time',                  label: 'Start Time' },
   { key: 'endTime',               label: 'End Time' },
   { key: 'notes',                 label: 'Notes' },
