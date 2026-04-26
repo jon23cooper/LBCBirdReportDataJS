@@ -119,6 +119,14 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   async function handleRemember(rawStr: string, locationId: number) {
     await window.api.locations.confirmMatch(rawStr, locationId)
     setRememberedThisSession(prev => new Set(prev).add(rawStr))
+    // Apply to all rows in this session with the same original location string
+    const locationName = locationsList.find(l => l.id === locationId)?.name
+    onRowsChange(rows.map(r => {
+      if ((r.originalLocation ?? r.locationName ?? '') === rawStr) {
+        return { ...r, locationId, locationMatchQuality: 'cache', locationMatchName: locationName }
+      }
+      return r
+    }))
     window.api.locations.listCache().then(setCacheEntries).catch(() => {})
   }
 
@@ -151,7 +159,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   const visibleCols = COLS.filter(({ key, alwaysShow }) => alwaysShow || rows.some(r => r[key] != null && r[key] !== ''))
 
   // Per-quality counts for stats display, ordered by label map key order
-  function qualityCounts<K extends string>(
+  function qualityCounts(
     labelMap: Record<string, unknown>,
     getter: (r: ParsedSighting) => string | undefined
   ): [string, number][] {
