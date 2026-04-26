@@ -29,7 +29,7 @@ const COLS: Col[] = [
   { key: 'originalLocation',      label: 'Original Location' },
   { key: 'locationName',          label: 'Location',              editable: 'text' },
   { key: 'locationMatchName',     label: 'Matched Location' },
-  { key: 'locationId',            label: 'Location override',     editable: 'location' },
+  { key: 'locationId',            label: 'Location override',     editable: 'location', alwaysShow: true },
   { key: 'time',                  label: 'Start Time' },
   { key: 'notes',                 label: 'Notes',                 editable: 'textarea' },
 ]
