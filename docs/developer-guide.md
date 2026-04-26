@@ -10,10 +10,11 @@
 6. [Environment variables](#environment-variables)
 7. [Database schema](#database-schema)
 8. [IPC API](#ipc-api)
-9. [Location matching](#location-matching)
-10. [Adding a new importer format](#adding-a-new-importer-format)
-11. [Adding fields to the schema](#adding-fields-to-the-schema)
-12. [Building for distribution](#building-for-distribution)
+9. [Import flow](#import-flow)
+10. [Location matching](#location-matching)
+11. [Adding a new importer format](#adding-a-new-importer-format)
+12. [Adding fields to the schema](#adding-fields-to-the-schema)
+13. [Building for distribution](#building-for-distribution)
 
 ---
 
@@ -38,7 +39,9 @@ The app follows the standard Electron three-process model:
 ┌────────────────▼────────────────────────────┐
 │  Renderer  (React / src/renderer/)           │
 │  • Import wizard + staging review           │
+│  • Edit data screen                         │
 │  • Sightings table                          │
+│  • Import history                           │
 │  • Location editor + Leaflet map            │
 │  • Species manager                          │
 │  • Export page                              │
@@ -78,7 +81,9 @@ src/
 │       ├── env.d.ts        window.api type declarations
 │       └── pages/
 │           ├── ImportPage.tsx
+│           ├── EditPage.tsx    Spreadsheet editor for fixing validation failures
 │           ├── StagingPage.tsx
+│           ├── HistoryPage.tsx
 │           ├── SightingsPage.tsx
 │           ├── LocationsPage.tsx
 │           ├── SpeciesPage.tsx
@@ -108,10 +113,11 @@ out/                        electron-vite build output (gitignored)
 | Database | [SQLite](https://sqlite.org) via [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) | Single file in `~/Library/Application Support` |
 | ORM | [Drizzle ORM](https://orm.drizzle.team) | Type-safe queries; raw SQLite used for performance-critical reads |
 | Spreadsheet parsing | [xlsx](https://github.com/SheetJS/sheetjs) | Handles CSV, XLSX, XLS and ODS |
+| Spreadsheet editor | [jspreadsheet-ce](https://bossanova.uk/jspreadsheet/v4/) | Edit Data screen |
 | Mapping | [Leaflet](https://leafletjs.com) v1.9 | Interactive polygon display and editing |
 | Polygon editing | [@geoman-io/leaflet-geoman-free](https://geoman.io) v2.19 | Vertex dragging for polygon editing |
 | Spatial operations | [@turf/turf](https://turfjs.org) v7 | Point-in-polygon, centroid, distance |
-| Tile provider | OpenStreetMap.DE | No API key required; Stadia Maps supported via `.env` |
+| Tile provider | OpenStreetMap.DE | No API key required |
 | Language | TypeScript 5.7 | Strict mode throughout |
 
 ---
@@ -257,11 +263,12 @@ Full column list in [src/main/db/schema.ts](../src/main/db/schema.ts). Key field
 | Column | Type | Notes |
 | --- | --- | --- |
 | `id` | INTEGER PK | |
-| `filename` | TEXT NOT NULL | |
+| `filename` | TEXT NOT NULL | Original filename |
 | `format` | TEXT NOT NULL | `csv` / `xlsx` / `ods` |
 | `imported_at` | TEXT NOT NULL | ISO 8601 timestamp |
 | `row_count` | INTEGER | |
 | `field_mapping` | TEXT | JSON field mapping used at import |
+| `stored_file` | TEXT | Absolute path to the moved source file in the `imports/` directory |
 
 ### `settings`
 
@@ -279,9 +286,9 @@ All communication goes through `window.api`, defined in [src/preload/index.ts](.
 | --- | --- |
 | `openFile()` | File picker → `{ path, sheets, headers, preview }` or `null` |
 | `readSheet(filePath, sheetName, skipRows)` | Re-read headers + 5-row preview for a different sheet or skip value |
-| `validate(filePath, mapping, sheetName?, skipRows?, batchOptions?)` | Parse and species-match all rows → `{ status, rows, warnings }` or `{ status: 'validation-failed', ... }` |
-| `validateRows(rows, mapping, batchOptions?)` | Same but from already-loaded rows (used for re-validation after edits) |
-| `commitStaged(rows, filename, format, mapping)` | Write validated rows to the database → `{ imported }` |
+| `validate(filePath, mapping, sheetName?, skipRows?, batchOptions?)` | Parse and validate all rows → `{ status: 'ok', rows, warnings }` or `{ status: 'validation-failed', headers, allRows, failures }` |
+| `validateRows(rows, mapping, batchOptions?)` | Same but from already-loaded rows (used by EditPage for re-validation after edits) |
+| `commitStaged(rows, filename, format, mapping, sourceFilePath?)` | Write validated rows to the database, move source file to imports directory → `{ imported }` |
 
 ### `window.api.sightings`
 
@@ -320,28 +327,75 @@ All communication goes through `window.api`, defined in [src/preload/index.ts](.
 | --- | --- |
 | `sql()` | Save dialog → write SQL file → path or `null` |
 
+### `window.api.batches`
+
+| Method | Description |
+| --- | --- |
+| `list()` | All import batches as `{ id, filename, format, importedAt, rowCount, storedFile }[]` |
+| `delete(id)` | Delete the batch and all its sighting records |
+| `revealFile(storedFile)` | Open the stored file's parent folder in Finder (`shell.showItemInFolder`) |
+| `openFile(storedFile)` | Open the stored file in its default application (`shell.openPath`) |
+| `locateFile(id)` | File picker to manually associate a file with a batch → stores the chosen path and returns it, or `null` |
+
+---
+
+## Import flow
+
+The full import pipeline from file selection to database commit:
+
+```text
+ImportPage
+  ↓ openFile / readSheet         (IPC: import:open-file / import:read-sheet)
+  ↓ validate                     (IPC: import:validate)
+       ↓ validation-failed
+           → EditPage            (jspreadsheet-ce editor)
+               ↓ validateRows    (IPC: import:validate-rows)
+               ↓ ok
+       ↓ ok
+  → StagingPage                  (review, edit species/location overrides)
+       ↓ commitStaged            (IPC: import:commit-staged)
+           • assigns LBC IDs
+           • moves source file to imports/
+           • inserts import_batches + sightings rows
+  → SightingsPage
+```
+
+### EditPage details
+
+`EditPage` receives an `EditData` object containing the failed rows and original mapping. It renders a jspreadsheet-ce grid with:
+
+- A read-only **Status** column showing the failure reason or ✓
+- One editable column per mapped field
+- An **Add column…** dropdown to add unmapped fields as new editable columns
+- An **Open source file** button (if `filePath` is available)
+- Column sorting by clicking any header
+
+On **Re-import**, the current grid state is read via `ws.getData()`, mapped back to `Record<string, unknown>[]` using `displayCols`, and sent to `import:validate-rows`. Any extra columns added via the dropdown are merged into the extended mapping before validation. If validation succeeds, the `StagingData` (including `filePath`) is passed to `onValidated` and the user proceeds to `StagingPage`.
+
 ---
 
 ## Location matching
 
 Matching runs at validate time in the main process ([src/main/locations/match.ts](../src/main/locations/match.ts)). For each sighting row:
 
-1. **Match cache** — if this exact `originalLocation` string has been confirmed by the user before, return that `locationId` immediately with quality `confirmed`.
+1. **Exact name match** — if `locationName` is mapped and its (trimmed) value matches a location name exactly, resolve immediately with quality `confirmed`. This path skips the regex/spatial engine entirely.
 
-2. **Spatial matching** (if `lat`/`lon` are present):
+2. **Match cache** — if the `originalLocation` string (Unicode-whitespace-trimmed) has been confirmed by the user before, return that `locationId` immediately with quality `confirmed`.
+
+3. **Spatial matching** (if `lat`/`lon` are present):
    - **Point-in-polygon** — test against every location's GeoJSON polygon using `@turf/turf booleanPointInPolygon`.
    - **Centroid proximity** — if no polygon contains the point, find locations whose centroid is within 2 km.
 
-3. **Regex name matching** (if `originalLocation` is present) — test against all patterns in `location_regex`.
+4. **Regex name matching** (if `originalLocation` is present) — test against all patterns in `location_regex`.
 
-4. **Quality tier** assigned:
-   - `confirmed` — found in match cache
+5. **Quality tier** assigned:
+   - `confirmed` — found in match cache or exact name match
    - `spatial-only` — spatial match with no name match
    - `name-only` — name regex match with no spatial match
    - `conflict` — spatial and name matches disagree on which site
    - `none` — no match found
 
-5. **Candidates list** built — up to 5 candidate locations sent to the renderer for the user to choose from in the staging review.
+6. **Candidates list** built — up to 5 candidate locations sent to the renderer for the user to choose from in the staging review.
 
 Calling `locations.confirmMatch(rawString, locationId)` writes to the cache so future imports resolve the string instantly.
 
