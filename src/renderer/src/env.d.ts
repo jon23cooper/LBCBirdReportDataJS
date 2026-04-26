@@ -25,6 +25,9 @@ declare global {
         openRegexCsvFile(): Promise<string | null>
         importRegexCsv(filePath: string): Promise<{ imported: number; errors: string[] }>
         confirmMatch(rawString: string, locationId: number): Promise<void>
+        listCache(): Promise<{ rawString: string; locationName: string; confirmedAt: string }[]>
+        listCacheForLocation(locationId: number): Promise<{ rawString: string; confirmedAt: string }[]>
+        deleteCacheEntry(rawString: string): Promise<void>
         get(id: number): Promise<Location>
         listGeometries(): Promise<{ id: number; name: string; geometry: string }[]>
         listRegex(siteName: string): Promise<LocationRegexRow[]>

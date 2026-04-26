@@ -6,6 +6,12 @@ import '@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css'
 import type * as GeoJSON from 'geojson'
 import type { Location, LocationRegexRow } from '../../../shared/types'
 
+function formatCacheDate(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+    ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+}
+
 // ---------------------------------------------------------------------------
 // Leaflet map with optional polygon editing via geoman
 // Use key={location.id ?? 'new'} to re-mount when switching locations.
@@ -189,6 +195,8 @@ export default function LocationsPage(): JSX.Element {
   const [editingPolygon, setEditingPolygon] = useState(false)
   const [polygonSnapshot, setPolygonSnapshot] = useState<string | null>(null)
   const [showRegex, setShowRegex] = useState(false)
+  const [showCache, setShowCache] = useState(false)
+  const [cacheEntries, setCacheEntries] = useState<{ rawString: string; confirmedAt: string }[]>([])
   const [importResult, setImportResult] = useState<{ type: 'geojson' | 'regex'; imported: number; errors: string[] } | null>(null)
   const [importBusy, setImportBusy] = useState(false)
   const [search, setSearch] = useState('')
@@ -203,7 +211,25 @@ export default function LocationsPage(): JSX.Element {
     setEditingPolygon(false)
     setPolygonSnapshot(null)
     setShowRegex(false)
+    setShowCache(false)
+    setCacheEntries([])
     pageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  async function toggleCache() {
+    if (showCache) { setShowCache(false); return }
+    if (editing?.id) {
+      const entries = await window.api.locations.listCacheForLocation(editing.id)
+      setCacheEntries(entries)
+    }
+    setShowCache(true)
+  }
+
+  async function removeCacheEntry(rawString: string) {
+    await window.api.locations.deleteCacheEntry(rawString)
+    if (editing?.id) {
+      setCacheEntries(await window.api.locations.listCacheForLocation(editing.id))
+    }
   }
 
   async function save() {
@@ -311,6 +337,11 @@ export default function LocationsPage(): JSX.Element {
                     {showRegex ? 'Hide' : 'Edit'} regex patterns
                   </button>
                 )}
+                {editing.id && (
+                  <button onClick={toggleCache} style={btnSecondary}>
+                    {showCache ? 'Hide' : 'View'} remembered matches
+                  </button>
+                )}
                 <button onClick={() => { setEditing(null); setEditingPolygon(false) }} style={btnSecondary}>Cancel</button>
               </div>
             </div>
@@ -342,6 +373,43 @@ export default function LocationsPage(): JSX.Element {
 
           {showRegex && editing.name && (
             <RegexEditor siteName={editing.name} onClose={() => setShowRegex(false)} />
+          )}
+
+          {showCache && (
+            <div style={{ marginTop: 16 }}>
+              <h3 style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>
+                Remembered matches — location strings that resolve to this site
+              </h3>
+              {cacheEntries.length === 0 ? (
+                <p style={{ fontSize: 13, color: '#888', fontStyle: 'italic' }}>No remembered matches for this location.</p>
+              ) : (
+                <table style={{ borderCollapse: 'collapse', fontSize: 13, width: '100%' }}>
+                  <thead>
+                    <tr>
+                      <th style={th}>Original location string</th>
+                      <th style={th}>Remembered</th>
+                      <th style={th}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cacheEntries.map((entry, i) => (
+                      <tr key={entry.rawString} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
+                        <td style={td}>{entry.rawString}</td>
+                        <td style={{ ...td, whiteSpace: 'nowrap' }}>{formatCacheDate(entry.confirmedAt)}</td>
+                        <td style={td}>
+                          <button
+                            onClick={() => removeCacheEntry(entry.rawString)}
+                            style={{ padding: '2px 8px', background: '#ffe3e3', color: '#c0392b', border: '1px solid #ffa8a8', borderRadius: 3, cursor: 'pointer', fontSize: 12 }}
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
           )}
         </div>
       )}

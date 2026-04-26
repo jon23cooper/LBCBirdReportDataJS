@@ -309,6 +309,28 @@ export function registerIpcHandlers(): void {
     confirmLocationMatch(rawString, locationId)
   })
 
+  ipcMain.handle('locations:list-cache', () => {
+    return getSqlite()
+      .prepare(`SELECT c.raw_string as rawString, l.name as locationName, c.confirmed_at as confirmedAt
+                FROM location_match_cache c
+                LEFT JOIN locations l ON l.id = c.location_id
+                ORDER BY c.confirmed_at DESC`)
+      .all()
+  })
+
+  ipcMain.handle('locations:list-cache-for-location', (_e: Electron.IpcMainInvokeEvent, locationId: number) => {
+    return getSqlite()
+      .prepare(`SELECT raw_string as rawString, confirmed_at as confirmedAt
+                FROM location_match_cache
+                WHERE location_id = ?
+                ORDER BY confirmed_at DESC`)
+      .all(locationId)
+  })
+
+  ipcMain.handle('locations:delete-cache-entry', (_e: Electron.IpcMainInvokeEvent, rawString: string) => {
+    getSqlite().prepare('DELETE FROM location_match_cache WHERE raw_string = ?').run(rawString)
+  })
+
   ipcMain.handle('locations:get', (_e: Electron.IpcMainInvokeEvent, id: number) => {
     return getSqlite().prepare('SELECT * FROM locations WHERE id = ?').get(id)
   })

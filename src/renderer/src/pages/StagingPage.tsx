@@ -53,6 +53,12 @@ const LOCATION_QUALITY_LABEL: Record<string, { text: string; color: string; bg: 
   'manual':       { text: 'Manual',      color: '#1864ab', bg: '#d0ebff' },
 }
 
+function formatCacheDate(iso: string): string {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) +
+    ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+}
+
 function QualityBreakdown({ label, counts, labelMap, activeFilter, onFilter }: {
   label: string
   counts: [string, number][]
@@ -100,11 +106,27 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   const [confirmingUnmatched, setConfirmingUnmatched] = useState(false)
   const [speciesFilter, setSpeciesFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
+  const [rememberedThisSession, setRememberedThisSession] = useState<Set<string>>(new Set())
+  const [cacheEntries, setCacheEntries] = useState<{ rawString: string; locationName: string; confirmedAt: string }[]>([])
+  const [showCache, setShowCache] = useState(false)
 
   useEffect(() => {
     window.api.species.list().then(setSpeciesList).catch(() => {})
     window.api.locations.list().then(setLocationsList).catch(() => {})
+    window.api.locations.listCache().then(setCacheEntries).catch(() => {})
   }, [])
+
+  async function handleRemember(rawStr: string, locationId: number) {
+    await window.api.locations.confirmMatch(rawStr, locationId)
+    setRememberedThisSession(prev => new Set(prev).add(rawStr))
+    window.api.locations.listCache().then(setCacheEntries).catch(() => {})
+  }
+
+  async function handleDeleteCacheEntry(rawString: string) {
+    await window.api.locations.deleteCacheEntry(rawString)
+    setRememberedThisSession(prev => { const s = new Set(prev); s.delete(rawString); return s })
+    window.api.locations.listCache().then(setCacheEntries).catch(() => {})
+  }
 
   function updateRow(i: number, changes: Partial<ParsedSighting>) {
     onRowsChange(rows.map((r, idx) => idx === i ? { ...r, ...changes } : r))
@@ -231,13 +253,15 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
             </optgroup>
           </select>
           {rawStr && currentId != null && (
-            <button
-              title="Remember this match"
-              onClick={() => window.api.locations.confirmMatch(rawStr, currentId)}
-              style={btnRemember}
-            >
-              Remember
-            </button>
+            rememberedThisSession.has(rawStr)
+              ? <span style={{ fontSize: 11, color: '#1a7f3c', fontWeight: 600 }}>✓ Remembered</span>
+              : <button
+                  title="Remember this match for future imports"
+                  onClick={() => handleRemember(rawStr, currentId)}
+                  style={btnRemember}
+                >
+                  Remember
+                </button>
           )}
         </div>
       )
@@ -346,6 +370,52 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
         </div>
       )}
 
+      {/* Remembered matches panel */}
+      <div style={{ flexShrink: 0 }}>
+        <button
+          onClick={() => setShowCache(c => !c)}
+          style={{ ...btnSecondary, fontSize: 12, padding: '4px 10px' }}
+        >
+          {showCache ? '▾' : '▸'} Remembered location matches ({cacheEntries.length})
+        </button>
+        {showCache && (
+          <div style={{ marginTop: 6, border: '1px solid #dee2e6', borderRadius: 4, overflow: 'hidden' }}>
+            {cacheEntries.length === 0 ? (
+              <div style={{ padding: '8px 12px', fontSize: 12, color: '#888', fontStyle: 'italic' }}>No remembered matches yet.</div>
+            ) : (
+              <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 12 }}>
+                <thead>
+                  <tr>
+                    <th style={cacheTh}>Original location string</th>
+                    <th style={cacheTh}>Matched to</th>
+                    <th style={cacheTh}>When</th>
+                    <th style={cacheTh}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cacheEntries.map((entry, i) => (
+                    <tr key={entry.rawString} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
+                      <td style={cacheTd}>{entry.rawString}</td>
+                      <td style={cacheTd}>{entry.locationName ?? '—'}</td>
+                      <td style={{ ...cacheTd, whiteSpace: 'nowrap' }}>{formatCacheDate(entry.confirmedAt)}</td>
+                      <td style={cacheTd}>
+                        <button
+                          onClick={() => handleDeleteCacheEntry(entry.rawString)}
+                          title="Remove this remembered match"
+                          style={{ ...btnRemember, background: '#ffe3e3', color: '#c0392b', borderColor: '#ffa8a8' }}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Review table */}
       <div style={{ overflowX: 'auto', overflowY: 'auto', flex: 1 }}>
         <table style={{ borderCollapse: 'collapse', fontSize: 13, whiteSpace: 'nowrap' }}>
@@ -426,3 +496,5 @@ const btnPrimary: React.CSSProperties = { padding: '7px 16px', background: '#1c7
 const btnSecondary: React.CSSProperties = { padding: '7px 12px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
 const btnWarning: React.CSSProperties = { padding: '5px 14px', background: '#f59f00', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13, whiteSpace: 'nowrap' }
 const btnRemember: React.CSSProperties = { padding: '2px 8px', background: '#e7f5ff', color: '#1864ab', border: '1px solid #74c0fc', borderRadius: 3, cursor: 'pointer', fontSize: 11, whiteSpace: 'nowrap' }
+const cacheTh: React.CSSProperties = { padding: '5px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', fontWeight: 600 }
+const cacheTd: React.CSSProperties = { padding: '4px 10px', border: '1px solid #dee2e6' }
