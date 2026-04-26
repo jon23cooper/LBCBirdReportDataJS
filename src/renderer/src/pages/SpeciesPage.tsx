@@ -59,17 +59,17 @@ export default function SpeciesPage(): JSX.Element {
         <button onClick={importCsv} disabled={busy} style={btnSecondary}>
           Import CSV…
         </button>
-        <button onClick={() => setEditing({ commonName: '', scientificName: '', isNew: true })} style={btnSecondary}>
-          + Add species
-        </button>
         <input
           ref={filterRef}
           value={filter}
           onChange={e => setFilter(e.target.value)}
           placeholder="Filter…"
-          style={{ fontSize: 13, padding: '4px 8px', marginLeft: 'auto', width: 220 }}
+          style={{ fontSize: 13, padding: '4px 8px', width: 220, border: '1px solid #ced4da', borderRadius: 4 }}
         />
         <span style={{ fontSize: 12, color: '#888' }}>{filtered.length} of {records.length}</span>
+        <button onClick={() => setEditing({ commonName: '', scientificName: '', isNew: true })} style={{ ...btnSecondary, marginLeft: 'auto' }}>
+          + Add species
+        </button>
       </div>
 
       <p style={{ fontSize: 12, color: '#666', margin: 0 }}>
