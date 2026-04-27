@@ -213,9 +213,9 @@ export default function SightingsPage(): JSX.Element {
         <table style={{ borderCollapse: 'collapse', fontSize: 13, whiteSpace: 'nowrap' }}>
           <thead>
             <tr>
+              <th style={th}></th>
               <th style={th}>Source file</th>
               {visibleCols.map(({ key, label }) => <th key={key} style={th}>{label}</th>)}
-              <th style={th}></th>
             </tr>
           </thead>
           <tbody>
@@ -223,6 +223,20 @@ export default function SightingsPage(): JSX.Element {
               const batch = row.importBatchId != null ? batches.get(row.importBatchId) : undefined
               return (
                 <tr key={row.id ?? i} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
+                  <td style={{ ...td, whiteSpace: 'nowrap' }}>
+                    {confirmDelete === row.id ? (
+                      <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                        <span style={{ fontSize: 12, color: '#c0392b' }}>Delete?</span>
+                        <button onClick={() => deleteSighting(row.id!)} style={{ ...btnSmall, color: '#c0392b', fontWeight: 600 }}>Yes</button>
+                        <button onClick={() => setConfirmDelete(null)} style={btnSmall}>No</button>
+                      </span>
+                    ) : (
+                      <span style={{ display: 'flex', gap: 4 }}>
+                        <button onClick={() => { setConfirmDelete(null); setEditing({ ...row }) }} style={btnSmall}>Edit</button>
+                        <button onClick={() => { setEditing(null); setConfirmDelete(row.id ?? null) }} style={{ ...btnSmall, color: '#c0392b' }}>Delete</button>
+                      </span>
+                    )}
+                  </td>
                   <td style={td}>
                     {batch ? (
                       <button
@@ -235,20 +249,6 @@ export default function SightingsPage(): JSX.Element {
                     ) : '—'}
                   </td>
                   {visibleCols.map(({ key }) => <td key={key} style={td}>{String(row[key] ?? '')}</td>)}
-                  <td style={{ ...td, whiteSpace: 'nowrap' }}>
-                    {confirmDelete === row.id ? (
-                      <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                        <span style={{ fontSize: 12, color: '#c0392b' }}>Delete this record?</span>
-                        <button onClick={() => deleteSighting(row.id!)} style={{ ...btnSmall, color: '#c0392b', fontWeight: 600 }}>Yes</button>
-                        <button onClick={() => setConfirmDelete(null)} style={btnSmall}>No</button>
-                      </span>
-                    ) : (
-                      <span style={{ display: 'flex', gap: 4 }}>
-                        <button onClick={() => { setConfirmDelete(null); setEditing({ ...row }) }} style={btnSmall}>Edit</button>
-                        <button onClick={() => { setEditing(null); setConfirmDelete(row.id ?? null) }} style={{ ...btnSmall, color: '#c0392b' }}>Delete</button>
-                      </span>
-                    )}
-                  </td>
                 </tr>
               )
             })}
