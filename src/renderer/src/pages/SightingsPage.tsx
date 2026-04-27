@@ -285,9 +285,8 @@ export default function SightingsPage(): JSX.Element {
 const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', position: 'sticky', top: 0 }
 const thTop: React.CSSProperties = { ...th, verticalAlign: 'top' }
 const colFilterInput: React.CSSProperties = { width: '100%', fontSize: 11, padding: '2px 4px', border: '1px solid #ced4da', borderRadius: 3, fontWeight: 400, boxSizing: 'border-box' }
-const btnSecondary: React.CSSProperties = { padding: '5px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 12 }
 const td: React.CSSProperties = { padding: '5px 10px', border: '1px solid #dee2e6' }
 const btnSmall: React.CSSProperties = { padding: '3px 8px', background: '#e9ecef', border: 'none', borderRadius: 3, cursor: 'pointer', fontSize: 12 }
 const btnPrimary: React.CSSProperties = { padding: '6px 14px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
-const btnSecondary: React.CSSProperties = { padding: '6px 12px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
+const btnSecondary: React.CSSProperties = { padding: '5px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 12 }
 const inputStyle: React.CSSProperties = { padding: '4px 7px', fontSize: 13, border: '1px solid #ced4da', borderRadius: 4, width: '100%', boxSizing: 'border-box' }
