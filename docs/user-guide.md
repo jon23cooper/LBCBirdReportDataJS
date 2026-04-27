@@ -64,7 +64,8 @@ Use the dropdowns to match your source columns to standard fields:
 | Original count | No | Raw count string preserved for audit |
 | Original location | No | Raw location string — used for regex and spatial matching |
 | Location name | No | Matched directly against your Locations list by name |
-| Latitude / Longitude | No | Decimal degrees WGS84 — enables spatial matching |
+| Latitude / Longitude | No | Decimal degrees WGS84 — enables spatial matching. Also recognised as **Trip Latitude / Trip Longitude** |
+| Start Time / End Time | No | Recognised as **First Time / Last Time** too |
 | Observer | No | Free text |
 | Notes | No | Free text |
 | Dataset | No | Can be set per-batch in Step 2 instead |
@@ -93,6 +94,13 @@ The file is renamed with a timestamp prefix (e.g. `2026-04-25T13-23-35_LBC-2025-
 | DD-MM-YYYY | `15-04-2024` |
 | DD.MM.YYYY | `15.04.2024` |
 | Excel serial date | `45397` |
+
+### Time fields
+
+Columns mapped to **Start Time** or **End Time** that contain time-only values in Excel (e.g. `09:30`) are imported as `HH:MM`. Column names automatically recognised include:
+
+- Start Time, First Time
+- End Time, Last Time
 
 ---
 
@@ -150,7 +158,13 @@ The **Common name** column is a dropdown. If the app has not matched a species, 
 
 ### Location column
 
-The **Location override** dropdown shows suggested candidate sites (based on spatial and name matching) followed by all locations. Select the correct site and click **Remember** to cache the match — future imports with the same location string will resolve instantly.
+The **Location override** column is always visible, even when the import contained no location data, so you can assign locations manually. The dropdown shows suggested candidate sites (based on spatial and name matching) followed by all locations. Select the correct site and click **Remember** to cache the match.
+
+When you click **Remember**:
+
+- The button changes to **✓ Remembered** for the rest of the session.
+- Every other row in the current import with the same original location string is automatically updated to the same match — you don't need to set them one by one.
+- Future imports with the same location string will resolve instantly.
 
 Match quality is colour-coded:
 
@@ -160,6 +174,10 @@ Match quality is colour-coded:
 | Amber | Spatial only, name match only, or cached |
 | Red | No match or conflict |
 | Blue | Manually selected in this session |
+
+### Remembered matches panel
+
+A collapsible **Remembered location matches (N)** panel sits below the toolbar. Expand it to see every cached location match — the original string, the matched site, and when it was confirmed. Individual entries can be removed with the **Remove** button.
 
 ### Other editable fields
 
@@ -177,13 +195,26 @@ You can leave the Review page and visit other sections (e.g. to add a missing sp
 
 The **Sightings** page lists every imported record.
 
+### Columns
+
+The table shows all fields that have at least one non-empty value, including a **Resolved Location** column that shows the matched site name for each record.
+
+### Editing and deleting records
+
+Each row has **Edit** and **Delete** buttons in the first column.
+
+- **Edit** opens a panel above the table with fields for all editable data — species, dates, count, observer, notes, times, location, and more. Click **Save** to write the changes back to the database.
+- **Delete** shows an inline confirmation before removing the record.
+
+### Filtering
+
+Use the **Filter…** box at the top to search across all visible columns simultaneously.
+
+Each column header also has its own **Filter…** input. Column filters are ANDed together — for example, filtering Observer to `MT` and Resolved Location to `Kirkby` shows only records matching both. When column filters are active a **Clear column filters** button appears in the toolbar.
+
 ### Source file column
 
-The first column shows which import batch each record came from. Click the filename to filter the table to all records from that file. A blue banner appears at the top showing the record count and buttons to **Open** or **Reveal in Finder** the source file, and **Show all** to clear the filter.
-
-### Text filter
-
-Use the **Filter…** box to search across all visible columns. The count updates to show how many records match.
+The second column shows which import batch each record came from. Click the filename to filter the table to all records from that file. A blue banner appears showing the record count and buttons to **Open** or **Reveal in Finder** the source file, and **Show all** to clear the filter.
 
 ---
 
@@ -238,6 +269,7 @@ Click **Edit** next to any location. The edit panel shows:
 - **Fields** — name, grid ref, country, region, notes, lat/lon
 - **Map** — the site's polygon with all neighbouring polygons shown as grey outlines; hover a neighbour to see its name
 - **Regex patterns** — click **Edit regex patterns** to add, edit or delete name patterns for this site
+- **Remembered matches** — click **View remembered matches** to see all location strings that have been cached to this site, with the date each was confirmed and a **Remove** button to delete individual entries
 
 #### Editing a polygon
 

@@ -294,7 +294,9 @@ All communication goes through `window.api`, defined in [src/preload/index.ts](.
 
 | Method | Description |
 | --- | --- |
-| `list()` | All rows as `Sighting[]` |
+| `list()` | All rows as `Sighting[]`, with `locationMatchName` joined from the `locations` table |
+| `delete(id)` | Delete a single sighting record |
+| `update(id, changes)` | Update editable fields on a sighting record |
 
 ### `window.api.locations`
 
@@ -309,6 +311,9 @@ All communication goes through `window.api`, defined in [src/preload/index.ts](.
 | `openRegexCsvFile()` | File picker → path or `null` |
 | `importRegexCsv(filePath)` | Replace all regex patterns from CSV → `{ imported, errors }` |
 | `confirmMatch(rawString, locationId)` | Write to match cache |
+| `listCache()` | All cache entries as `{ rawString, locationName, confirmedAt }[]` |
+| `listCacheForLocation(locationId)` | Cache entries for a specific location as `{ rawString, confirmedAt }[]` |
+| `deleteCacheEntry(rawString)` | Remove a single entry from the match cache |
 | `listRegex(siteName)` | Regex patterns for one site |
 | `saveRegex(siteName, rows)` | Replace regex patterns for one site |
 
@@ -371,6 +376,21 @@ ImportPage
 - Column sorting by clicking any header
 
 On **Re-import**, the current grid state is read via `ws.getData()`, mapped back to `Record<string, unknown>[]` using `displayCols`, and sent to `import:validate-rows`. Any extra columns added via the dropdown are merged into the extended mapping before validation. If validation succeeds, the `StagingData` (including `filePath`) is passed to `onValidated` and the user proceeds to `StagingPage`.
+
+### Time cell handling
+
+Excel stores time-only values (e.g. `09:30`) as fractional day serials (0–1). With `cellDates: true`, SheetJS maps these to `Date` objects based on the Excel epoch `1899-12-30`. The `datesToIso()` function in [src/main/importers/index.ts](../src/main/importers/index.ts) detects this by checking `getFullYear() <= 1899` and formats those values as `HH:MM` rather than a date string.
+
+### Auto-mapping column names
+
+The `autoMap` function in `ImportPage.tsx` pattern-matches source column names to standard fields. Recognised patterns include:
+
+| Pattern | Maps to |
+| --- | --- |
+| `Start Time`, `First Time` | `time` |
+| `End Time`, `Last Time` | `endTime` |
+| `Latitude`, `Lat`, `Trip Latitude` | `lat` |
+| `Longitude`, `Lon`, `Trip Longitude` | `lon` |
 
 ---
 
