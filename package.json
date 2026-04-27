@@ -4,7 +4,7 @@
   "description": "LBC Bird Report — import, standardise, map and export bird observation data",
   "main": "out/main/index.js",
   "scripts": {
-    "dev": "electron-vite build && electron-builder --dir && pkill -x 'LBC Bird Report' 2>/dev/null; sleep 1 && cp release/mac-arm64/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar && rm -rf /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked && cp -R release/mac-arm64/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked && cp release/mac-arm64/LBC\\ Bird\\ Report.app/Contents/Resources/icon.icns /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/icon.icns && codesign --force --deep --sign 'Apple Development: Jonathan Cooper (JU28YW4VRS)' --entitlements build/entitlements.mac.plist /Applications/LBC\\ Bird\\ Report.app && echo 'Build complete — open LBC Bird Report from Spotlight or Applications'",
+    "dev": "electron-vite build && electron-builder --dir && pkill -x 'LBC Bird Report' 2>/dev/null; sleep 1 && cp release/mac-arm64/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar && rm -rf /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked && cp -R release/mac-arm64/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/app.asar.unpacked && cp build/electron.icns /Applications/LBC\\ Bird\\ Report.app/Contents/Resources/electron.icns && codesign --force --deep --sign 'Apple Development: Jonathan Cooper (JU28YW4VRS)' --entitlements build/entitlements.mac.plist /Applications/LBC\\ Bird\\ Report.app && echo 'Build complete — open LBC Bird Report from Spotlight or Applications'",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "dist": "electron-builder",
@@ -49,10 +49,10 @@
     "files": [
       "out/**"
     ],
-    "icon": "build/icon.icns",
+    "icon": "build/electron.icns",
     "mac": {
       "target": "dmg",
-      "icon": "build/icon.icns"
+      "icon": "build/electron.icns"
     },
     "win": {
       "target": "nsis"
