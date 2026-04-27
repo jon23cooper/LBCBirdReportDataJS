@@ -40,7 +40,10 @@ contextBridge.exposeInMainWorld('api', {
     openCsvFile: () => ipcRenderer.invoke('species:open-csv-file'),
   },
   export: {
-    sql: () => ipcRenderer.invoke('export:sql')
+    datasets: () => ipcRenderer.invoke('export:datasets'),
+    count: (filters: object) => ipcRenderer.invoke('export:count', filters),
+    xlsx: (filters: object) => ipcRenderer.invoke('export:xlsx', filters),
+    sql: (filters: object) => ipcRenderer.invoke('export:sql', filters),
   },
   batches: {
     list: () => ipcRenderer.invoke('batches:list'),

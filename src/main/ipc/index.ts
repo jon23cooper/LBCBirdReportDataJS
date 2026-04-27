@@ -10,7 +10,8 @@ import { getDb, getSqlite, reserveLbcSequence } from '../db'
 import { sightings, importBatches, locations, species as speciesTable } from '../db/schema'
 import { FieldMapping, RawRow } from '../importers/types'
 import { BatchOptions, Sighting } from '../../shared/types'
-import { eq, getTableColumns } from 'drizzle-orm'
+import { and, eq, gte, isNotNull, like, lte, sql as drizzleSql, getTableColumns } from 'drizzle-orm'
+import * as XLSX from 'xlsx'
 import { matchSpecies, invalidateSpeciesCache } from '../species/match'
 import type { ParsedSighting } from '../../shared/types'
 
@@ -458,7 +459,74 @@ export function registerIpcHandlers(): void {
     shell.openPath(storedFile)
   })
 
-  ipcMain.handle('export:sql', async () => {
+  ipcMain.handle('export:datasets', async () => {
+    const db = getDb()
+    const rows = await db
+      .selectDistinct({ dataset: sightings.dataset })
+      .from(sightings)
+      .where(isNotNull(sightings.dataset))
+    return rows.map(r => r.dataset).filter(Boolean).sort()
+  })
+
+  ipcMain.handle('export:count', async (_e, filters: ExportFilters) => {
+    const db = getDb()
+    const [row] = await db
+      .select({ count: drizzleSql<number>`count(*)` })
+      .from(sightings)
+      .where(buildWhereClause(filters))
+    return Number(row.count)
+  })
+
+  ipcMain.handle('export:xlsx', async (_e, filters: ExportFilters) => {
+    const { canceled, filePath } = await dialog.showSaveDialog({
+      defaultPath: 'birdreport.xlsx',
+      filters: [{ name: 'Excel', extensions: ['xlsx'] }]
+    })
+    if (canceled || !filePath) return null
+
+    const db = getDb()
+    const rows = await db
+      .select({ ...getTableColumns(sightings), locationName: locations.name })
+      .from(sightings)
+      .leftJoin(locations, eq(sightings.locationId, locations.id))
+      .where(buildWhereClause(filters))
+      .orderBy(sightings.date)
+
+    const data = rows.map(r => ({
+      'LBC ID': r.lbcId ?? '',
+      'First Date': r.date ?? '',
+      'Last Date': r.lastDate ?? '',
+      'Dataset': r.dataset ?? '',
+      'Common Name': r.commonName ?? '',
+      'Scientific Name': r.scientificName ?? '',
+      'Family': r.family ?? '',
+      'Count': r.count ?? '',
+      'Original Count': r.originalCount ?? '',
+      'Circa': r.circa ?? '',
+      'Age': r.age ?? '',
+      'Status': r.status ?? '',
+      'Breeding Code': r.breedingCode ?? '',
+      'Breeding Category': r.breedingCategory ?? '',
+      'Subspecies (common)': r.subspeciesCommon ?? '',
+      'Subspecies (scientific)': r.subspeciesScientific ?? '',
+      'Observer': r.observer ?? '',
+      'Original Location': r.originalLocation ?? '',
+      'Resolved Location': r.locationName ?? '',
+      'Start Time': r.time ?? '',
+      'End Time': r.endTime ?? '',
+      'Notes': r.notes ?? '',
+      'Lat': r.lat ?? '',
+      'Lon': r.lon ?? '',
+    }))
+
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(data)
+    XLSX.utils.book_append_sheet(wb, ws, 'Sightings')
+    XLSX.writeFile(wb, filePath)
+    return filePath
+  })
+
+  ipcMain.handle('export:sql', async (_e, filters: ExportFilters) => {
     const { canceled, filePath } = await dialog.showSaveDialog({
       defaultPath: 'birdreport.sql',
       filters: [{ name: 'SQL', extensions: ['sql'] }]
@@ -466,7 +534,7 @@ export function registerIpcHandlers(): void {
     if (canceled || !filePath) return null
 
     const db = getDb()
-    const allSightings = await db.select().from(sightings)
+    const filteredSightings = await db.select().from(sightings).where(buildWhereClause(filters))
     const allLocations = await db.select().from(locations)
 
     const lines: string[] = [
@@ -477,13 +545,33 @@ export function registerIpcHandlers(): void {
       buildCreateSightings(),
       '',
       ...allLocations.map(locationToInsert),
-      ...allSightings.map(sightingToInsert)
+      ...filteredSightings.map(sightingToInsert)
     ]
 
     const { writeFileSync } = await import('fs')
     writeFileSync(filePath, lines.join('\n'))
     return filePath
   })
+}
+
+interface ExportFilters {
+  dateFrom?: string
+  dateTo?: string
+  dataset?: string
+  locationId?: number
+  observer?: string
+  species?: string
+}
+
+function buildWhereClause(filters: ExportFilters) {
+  const conditions = []
+  if (filters?.dateFrom) conditions.push(gte(sightings.date, filters.dateFrom))
+  if (filters?.dateTo) conditions.push(lte(sightings.date, filters.dateTo))
+  if (filters?.dataset) conditions.push(eq(sightings.dataset, filters.dataset))
+  if (filters?.locationId) conditions.push(eq(sightings.locationId, filters.locationId))
+  if (filters?.observer) conditions.push(like(sightings.observer, `%${filters.observer}%`))
+  if (filters?.species) conditions.push(like(sightings.commonName, `%${filters.species}%`))
+  return conditions.length ? and(...conditions) : undefined
 }
 
 function q(v: string | number | null | undefined): string {

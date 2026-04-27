@@ -1,5 +1,14 @@
 import type { FieldMapping, Location, LocationRegexRow, Sighting, ParsedSighting, RowFailure, RawRow, SpeciesRecord, BatchOptions } from '../../shared/types'
 
+interface ExportFilters {
+  dateFrom?: string
+  dateTo?: string
+  dataset?: string
+  locationId?: number
+  observer?: string
+  species?: string
+}
+
 type ValidateResult =
   | { status: 'ok'; rows: ParsedSighting[]; warnings: string[] }
   | { status: 'validation-failed'; headers: string[]; allRows: RawRow[]; failures: RowFailure[] }
@@ -42,7 +51,10 @@ declare global {
         openCsvFile(): Promise<string | null>
       }
       export: {
-        sql(): Promise<string | null>
+        datasets(): Promise<string[]>
+        count(filters: ExportFilters): Promise<number>
+        xlsx(filters: ExportFilters): Promise<string | null>
+        sql(filters: ExportFilters): Promise<string | null>
       }
       batches: {
         list(): Promise<{ id: number; filename: string; format: string; importedAt: string; rowCount: number | null; storedFile: string | null }[]>
