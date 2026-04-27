@@ -16,6 +16,8 @@ declare global {
       }
       sightings: {
         list(): Promise<Sighting[]>
+        delete(id: number): Promise<void>
+        update(id: number, changes: Partial<Sighting>): Promise<void>
       }
       locations: {
         list(): Promise<Location[]>

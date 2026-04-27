@@ -9,7 +9,7 @@ import { matchLocation, invalidateLocationCache, confirmLocationMatch } from '..
 import { getDb, getSqlite, reserveLbcSequence } from '../db'
 import { sightings, importBatches, locations, species as speciesTable } from '../db/schema'
 import { FieldMapping, RawRow } from '../importers/types'
-import { BatchOptions } from '../../shared/types'
+import { BatchOptions, Sighting } from '../../shared/types'
 import { eq, getTableColumns } from 'drizzle-orm'
 import { matchSpecies, invalidateSpeciesCache } from '../species/match'
 import type { ParsedSighting } from '../../shared/types'
@@ -190,6 +190,27 @@ export function registerIpcHandlers(): void {
       return commitParsed(rows, filename, format, mapping, sourceFilePath)
     }
   )
+
+  ipcMain.handle('sightings:delete', (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    getSqlite().prepare('DELETE FROM sightings WHERE id = ?').run(id)
+  })
+
+  ipcMain.handle('sightings:update', (_e: Electron.IpcMainInvokeEvent, id: number, changes: Partial<Sighting>) => {
+    const allowed = [
+      'date', 'last_date', 'common_name', 'scientific_name', 'family', 'species',
+      'count', 'original_count', 'circa', 'age', 'status', 'breeding_code', 'breeding_category',
+      'observer', 'notes', 'time', 'end_time', 'original_location', 'location_id',
+      'subspecies_common', 'subspecies_scientific',
+    ]
+    const camelToSnake = (s: string) => s.replace(/[A-Z]/g, c => `_${c.toLowerCase()}`)
+    const entries = Object.entries(changes)
+      .map(([k, v]) => [camelToSnake(k), v])
+      .filter(([k]) => allowed.includes(k as string))
+    if (entries.length === 0) return
+    const setClauses = entries.map(([k]) => `${k} = ?`).join(', ')
+    const values = entries.map(([, v]) => v)
+    getSqlite().prepare(`UPDATE sightings SET ${setClauses} WHERE id = ?`).run(...values, id)
+  })
 
   ipcMain.handle('sightings:list', () => {
     const db = getDb()

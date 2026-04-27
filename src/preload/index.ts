@@ -13,7 +13,9 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.invoke('import:commit-staged', rows, filename, format, mapping, sourceFilePath)
   },
   sightings: {
-    list: () => ipcRenderer.invoke('sightings:list')
+    list: () => ipcRenderer.invoke('sightings:list'),
+    delete: (id: number) => ipcRenderer.invoke('sightings:delete', id),
+    update: (id: number, changes: object) => ipcRenderer.invoke('sightings:update', id, changes),
   },
   locations: {
     list: () => ipcRenderer.invoke('locations:list'),
