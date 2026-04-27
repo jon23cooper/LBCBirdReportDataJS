@@ -64,6 +64,7 @@ export default function SightingsPage(): JSX.Element {
   const [batches, setBatches] = useState<Map<number, BatchInfo>>(new Map())
   const [filter, setFilter] = useState('')
   const [batchFilter, setBatchFilter] = useState<number | null>(null)
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
   const [editing, setEditing] = useState<Sighting | null>(null)
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
   const [speciesList, setSpeciesList] = useState<SpeciesRecord[]>([])
@@ -85,10 +86,17 @@ export default function SightingsPage(): JSX.Element {
 
   const visibleCols = COLS.filter(({ key }) => rows.some(r => r[key] != null && r[key] !== ''))
   const batchFiltered = batchFilter != null ? rows.filter(r => r.importBatchId === batchFilter) : rows
-  const filtered = filter
+  const globalFiltered = filter
     ? batchFiltered.filter(r => visibleCols.some(({ key }) => String(r[key] ?? '').toLowerCase().includes(filter.toLowerCase())))
     : batchFiltered
+  const activeColFilters = Object.entries(columnFilters).filter(([, v]) => v.trim() !== '')
+  const filtered = activeColFilters.length
+    ? globalFiltered.filter(r => activeColFilters.every(([key, val]) =>
+        String(r[key as keyof Sighting] ?? '').toLowerCase().includes(val.toLowerCase())
+      ))
+    : globalFiltered
   const activeBatch = batchFilter != null ? batches.get(batchFilter) : null
+  const hasColumnFilters = activeColFilters.length > 0
 
   async function saveEdit() {
     if (!editing?.id) return
@@ -136,6 +144,9 @@ export default function SightingsPage(): JSX.Element {
           style={{ padding: '6px 10px', fontSize: 14, width: 280, border: '1px solid #ced4da', borderRadius: 4 }}
         />
         <span style={{ fontSize: 13, color: '#555' }}>{filtered.length} of {rows.length} records</span>
+        {hasColumnFilters && (
+          <button onClick={() => setColumnFilters({})} style={btnSecondary}>Clear column filters</button>
+        )}
       </div>
 
       {activeBatch && (
@@ -213,9 +224,21 @@ export default function SightingsPage(): JSX.Element {
         <table style={{ borderCollapse: 'collapse', fontSize: 13, whiteSpace: 'nowrap' }}>
           <thead>
             <tr>
-              <th style={th}></th>
-              <th style={th}>Source file</th>
-              {visibleCols.map(({ key, label }) => <th key={key} style={th}>{label}</th>)}
+              <th style={thTop}></th>
+              <th style={thTop}>Source file</th>
+              {visibleCols.map(({ key, label }) => (
+                <th key={key} style={thTop}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <span>{label}</span>
+                    <input
+                      value={columnFilters[key] ?? ''}
+                      onChange={e => setColumnFilters(prev => ({ ...prev, [key]: e.target.value }))}
+                      placeholder="Filter…"
+                      style={colFilterInput}
+                    />
+                  </div>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -260,6 +283,9 @@ export default function SightingsPage(): JSX.Element {
 }
 
 const th: React.CSSProperties = { padding: '6px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', textAlign: 'left', position: 'sticky', top: 0 }
+const thTop: React.CSSProperties = { ...th, verticalAlign: 'top' }
+const colFilterInput: React.CSSProperties = { width: '100%', fontSize: 11, padding: '2px 4px', border: '1px solid #ced4da', borderRadius: 3, fontWeight: 400, boxSizing: 'border-box' }
+const btnSecondary: React.CSSProperties = { padding: '5px 10px', background: '#f1f3f5', border: '1px solid #dee2e6', borderRadius: 4, cursor: 'pointer', fontSize: 12 }
 const td: React.CSSProperties = { padding: '5px 10px', border: '1px solid #dee2e6' }
 const btnSmall: React.CSSProperties = { padding: '3px 8px', background: '#e9ecef', border: 'none', borderRadius: 3, cursor: 'pointer', fontSize: 12 }
 const btnPrimary: React.CSSProperties = { padding: '6px 14px', background: '#1c7ed6', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer', fontSize: 13 }
