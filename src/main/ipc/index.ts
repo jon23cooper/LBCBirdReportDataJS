@@ -10,7 +10,7 @@ import { getDb, getSqlite, reserveLbcSequence } from '../db'
 import { sightings, importBatches, locations, species as speciesTable } from '../db/schema'
 import { FieldMapping, RawRow } from '../importers/types'
 import { BatchOptions } from '../../shared/types'
-import { eq } from 'drizzle-orm'
+import { eq, getTableColumns } from 'drizzle-orm'
 import { matchSpecies, invalidateSpeciesCache } from '../species/match'
 import type { ParsedSighting } from '../../shared/types'
 
@@ -192,12 +192,11 @@ export function registerIpcHandlers(): void {
   )
 
   ipcMain.handle('sightings:list', () => {
-    return getSqlite()
-      .prepare(`SELECT s.*, l.name as locationMatchName
-                FROM sightings s
-                LEFT JOIN locations l ON l.id = s.location_id
-                ORDER BY s.id`)
-      .all()
+    const db = getDb()
+    return db.select({
+      ...getTableColumns(sightings),
+      locationMatchName: locations.name,
+    }).from(sightings).leftJoin(locations, eq(sightings.locationId, locations.id))
   })
 
   ipcMain.handle('locations:list', async () => {
