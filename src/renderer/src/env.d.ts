@@ -47,6 +47,7 @@ declare global {
       species: {
         list(): Promise<SpeciesRecord[]>
         upsert(record: SpeciesRecord): Promise<void>
+        delete(id: number): Promise<void>
         importCsv(filePath: string): Promise<{ imported: number; errors: string[] }>
         openCsvFile(): Promise<string | null>
       }

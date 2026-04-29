@@ -428,6 +428,12 @@ export function registerIpcHandlers(): void {
     return { imported, errors }
   })
 
+  ipcMain.handle('species:delete', async (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    const db = getDb()
+    await db.delete(speciesTable).where(eq(speciesTable.id, id))
+    invalidateSpeciesCache()
+  })
+
   ipcMain.handle('batches:list', () => {
     return getSqlite()
       .prepare('SELECT id, filename, format, imported_at as importedAt, row_count as rowCount, stored_file as storedFile FROM import_batches ORDER BY imported_at DESC')

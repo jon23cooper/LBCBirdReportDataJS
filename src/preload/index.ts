@@ -36,6 +36,7 @@ contextBridge.exposeInMainWorld('api', {
   species: {
     list: () => ipcRenderer.invoke('species:list'),
     upsert: (record: object) => ipcRenderer.invoke('species:upsert', record),
+    delete: (id: number) => ipcRenderer.invoke('species:delete', id),
     importCsv: (filePath: string) => ipcRenderer.invoke('species:import-csv', filePath),
     openCsvFile: () => ipcRenderer.invoke('species:open-csv-file'),
   },

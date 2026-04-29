@@ -6,6 +6,7 @@ type EditingRow = SpeciesRecord & { isNew?: boolean }
 export default function SpeciesPage(): JSX.Element {
   const [records, setRecords] = useState<SpeciesRecord[]>([])
   const [editing, setEditing] = useState<EditingRow | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const [importResult, setImportResult] = useState<{ imported: number; errors: string[] } | null>(null)
   const [filter, setFilter] = useState('')
@@ -24,6 +25,12 @@ export default function SpeciesPage(): JSX.Element {
         (r.family ?? '').toLowerCase().includes(filter.toLowerCase())
       )
     : records
+
+  async function deleteSpecies(id: number) {
+    await window.api.species.delete(id)
+    setConfirmDelete(null)
+    await load()
+  }
 
   async function saveEditing() {
     if (!editing) return
@@ -139,7 +146,18 @@ export default function SpeciesPage(): JSX.Element {
                 <td style={{ ...td, fontFamily: 'monospace', fontSize: 12, color: '#555' }}>{r.scientificNameRegex ?? ''}</td>
                 <td style={td}>{r.family ?? ''}</td>
                 <td style={{ ...td, whiteSpace: 'nowrap' }}>
-                  <button onClick={() => setEditing({ ...r })} style={btnInline}>Edit</button>
+                  {confirmDelete === r.id ? (
+                    <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, color: '#c0392b' }}>Delete?</span>
+                      <button onClick={() => deleteSpecies(r.id!)} style={{ ...btnInline, color: '#c0392b', fontWeight: 600 }}>Yes</button>
+                      <button onClick={() => setConfirmDelete(null)} style={btnInline}>No</button>
+                    </span>
+                  ) : (
+                    <span style={{ display: 'flex', gap: 4 }}>
+                      <button onClick={() => { setConfirmDelete(null); setEditing({ ...r }) }} style={btnInline}>Edit</button>
+                      <button onClick={() => { setEditing(null); setConfirmDelete(r.id ?? null) }} style={{ ...btnInline, color: '#c0392b' }}>Delete</button>
+                    </span>
+                  )}
                 </td>
               </tr>
             ))}
