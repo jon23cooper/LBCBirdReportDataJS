@@ -107,6 +107,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   const [speciesFilter, setSpeciesFilter] = useState('')
   const [locationFilter, setLocationFilter] = useState('')
   const [rememberedThisSession, setRememberedThisSession] = useState<Set<string>>(new Set())
+  const [appliedThisSession, setAppliedThisSession] = useState<Set<string>>(new Set())
   const [cacheEntries, setCacheEntries] = useState<{ rawString: string; locationName: string; confirmedAt: string }[]>([])
   const [showCache, setShowCache] = useState(false)
 
@@ -154,6 +155,21 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
         speciesMatchQuality: 'manual',
       })
     }
+  }
+
+  function handleApplySpeciesToAll(origCommonName: string, commonName: string) {
+    const sp = speciesList.find(s => s.commonName === commonName)
+    if (!sp) return
+    const changes = {
+      commonName: sp.commonName,
+      scientificName: sp.scientificName,
+      family: sp.family ?? undefined,
+      speciesMatchQuality: 'manual' as const,
+    }
+    onRowsChange(rows.map(r =>
+      r.originalCommonName === origCommonName ? { ...r, ...changes } : r
+    ))
+    setAppliedThisSession(prev => new Set(prev).add(origCommonName))
   }
 
   const visibleCols = COLS.filter(({ key, alwaysShow }) => alwaysShow || rows.some(r => r[key] != null && r[key] !== ''))
@@ -215,17 +231,34 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
     const val = row[col.key]
 
     if (col.editable === 'species') {
+      const origName = row.originalCommonName ?? ''
+      const selectedName = String(val ?? '')
+      const sameOrigCount = origName ? rows.filter(r => r.originalCommonName === origName).length : 0
+      const alreadyApplied = origName !== '' && appliedThisSession.has(origName)
       return (
-        <select
-          value={String(val ?? '')}
-          onChange={e => handleSpeciesChange(i, e.target.value)}
-          style={selectStyle}
-        >
-          <option value="">(none)</option>
-          {speciesList.map(sp => (
-            <option key={sp.id ?? sp.commonName} value={sp.commonName}>{sp.commonName}</option>
-          ))}
-        </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <select
+            value={selectedName}
+            onChange={e => handleSpeciesChange(i, e.target.value)}
+            style={selectStyle}
+          >
+            <option value="">(none)</option>
+            {speciesList.map(sp => (
+              <option key={sp.id ?? sp.commonName} value={sp.commonName}>{sp.commonName}</option>
+            ))}
+          </select>
+          {sameOrigCount > 1 && selectedName && (
+            alreadyApplied
+              ? <span style={{ fontSize: 11, color: '#1a7f3c', fontWeight: 600, whiteSpace: 'nowrap' }}>✓ Applied</span>
+              : <button
+                  onClick={() => handleApplySpeciesToAll(origName, selectedName)}
+                  title={`Set all ${sameOrigCount} rows with original name "${origName}" to ${selectedName}`}
+                  style={btnRemember}
+                >
+                  Apply to all ({sameOrigCount})
+                </button>
+          )}
+        </div>
       )
     }
 
