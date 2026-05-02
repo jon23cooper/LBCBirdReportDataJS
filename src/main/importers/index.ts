@@ -38,21 +38,22 @@ function readCsv(filePath: string, skipRows = 0): { headers: string[]; rows: Raw
   return { headers, rows }
 }
 
-function datesToIso(rows: RawRow[]): RawRow[] {
+// SheetJS does not apply the 1904 epoch correction when cellDates:true; compensate manually.
+const DATE1904_OFFSET_MS = 1462 * 24 * 60 * 60 * 1000
+
+function datesToIso(rows: RawRow[], date1904 = false): RawRow[] {
   return rows.map(row =>
     Object.fromEntries(
       Object.entries(row).map(([k, v]) => {
         if (v instanceof Date) {
           // Time-only Excel cells have serial 0–1, which SheetJS maps to 1899-12-30
-          if (v.getFullYear() <= 1899) {
-            const h = String(v.getHours()).padStart(2, '0')
-            const m = String(v.getMinutes()).padStart(2, '0')
+          if (v.getUTCFullYear() <= 1899) {
+            const h = String(v.getUTCHours()).padStart(2, '0')
+            const m = String(v.getUTCMinutes()).padStart(2, '0')
             return [k, `${h}:${m}`]
           }
-          const y = v.getFullYear()
-          const mo = String(v.getMonth() + 1).padStart(2, '0')
-          const d = String(v.getDate()).padStart(2, '0')
-          return [k, `${y}-${mo}-${d}`]
+          const d = date1904 ? new Date(v.getTime() + DATE1904_OFFSET_MS) : v
+          return [k, `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`]
         }
         return [k, v]
       })
@@ -64,8 +65,9 @@ function readXlsx(filePath: string, sheetName?: string, skipRows = 0): { headers
   const wb = XLSX.readFile(filePath, { cellDates: true })
   const name = (sheetName && wb.SheetNames.includes(sheetName)) ? sheetName : wb.SheetNames[0]
   const ws = wb.Sheets[name]
+  const date1904 = wb.Workbook?.WBProps?.date1904 ?? false
   const data = XLSX.utils.sheet_to_json<RawRow>(ws, { defval: null, raw: true, range: skipRows })
-  const rows = datesToIso(data)
+  const rows = datesToIso(data, date1904)
   const headers = rows.length > 0 ? Object.keys(rows[0]) : []
   return { headers, rows }
 }
