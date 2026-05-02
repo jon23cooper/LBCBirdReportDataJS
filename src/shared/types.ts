@@ -206,4 +206,5 @@ export interface Sighting {
   originalLocation?: string | null
   sourceRef?: string | null
   rawData?: string | null
+  locationMatchName?: string | null
 }

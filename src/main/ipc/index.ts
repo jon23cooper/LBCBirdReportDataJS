@@ -217,7 +217,7 @@ export function registerIpcHandlers(): void {
     const db = getDb()
     return db.select({
       ...getTableColumns(sightings),
-      locationMatchName: locations.name,
+      locationMatchName: drizzleSql<string>`COALESCE(${locations.name}, 'Unknown')`,
     }).from(sightings).leftJoin(locations, eq(sightings.locationId, locations.id))
   })
 
