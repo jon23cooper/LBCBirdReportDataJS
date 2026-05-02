@@ -323,14 +323,31 @@ All communication goes through `window.api`, defined in [src/preload/index.ts](.
 | --- | --- |
 | `list()` | All species as `SpeciesRecord[]` |
 | `upsert(record)` | Insert or update |
+| `delete(id)` | Delete a species record by id |
 | `openCsvFile()` | File picker → path or `null` |
 | `importCsv(filePath)` | Import species list from CSV → `{ imported, errors }` |
 
 ### `window.api.export`
 
+`ExportFilters` (all fields optional):
+
+```ts
+interface ExportFilters {
+  dateFrom?: string   // ISO 8601
+  dateTo?: string     // ISO 8601
+  dataset?: string    // exact match
+  locationId?: number
+  observer?: string   // LIKE %value%
+  species?: string    // LIKE %value%
+}
+```
+
 | Method | Description |
 | --- | --- |
-| `sql()` | Save dialog → write SQL file → path or `null` |
+| `datasets()` | Distinct dataset labels present in the database → `string[]` |
+| `count(filters)` | Count of matching sighting records → `number` |
+| `xlsx(filters)` | Save dialog → write `.xlsx` file of matching sightings → path or `null` |
+| `sql(filters)` | Save dialog → write PostgreSQL SQL file of matching sightings + all locations → path or `null` |
 
 ### `window.api.batches`
 

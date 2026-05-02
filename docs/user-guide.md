@@ -26,7 +26,7 @@ Open **LBC Bird Report** from your Applications folder. The app opens with secti
 | **Sightings** | Browse all imported records |
 | **Locations** | Import and edit recording site polygons and regex patterns |
 | **Species** | Maintain the species reference list |
-| **Export** | Save a SQL file of all your data |
+| **Export** | Export filtered records as Excel or PostgreSQL SQL |
 
 Your data is stored locally at:
 
@@ -155,6 +155,8 @@ The **Species match** and **Location match** column headers each have a dropdown
 ### Species column
 
 The **Common name** column is a dropdown. If the app has not matched a species, select the correct one from the list. The scientific name and family update automatically.
+
+When you select a species and multiple rows in the import share the same original common name, an **Apply to all (N)** button appears next to the dropdown. Click it to assign that species to every row with the same original name in one step. The button changes to **✓ Applied** once used. This is useful when a large file uses a name not in the species list — set it once instead of row by row.
 
 ### Location column
 
@@ -305,9 +307,11 @@ Click **Import species CSV…** and select a CSV file with columns:
 | `commonNameRegex` | No | Regex for matching name variants |
 | `scientificNameRegex` | No | Regex for matching scientific name variants |
 
-### Adding or editing a species
+### Adding, editing or deleting a species
 
 Click **Edit** next to any species, or **Add species** to create a new entry. Fill in the fields and click **Save**.
+
+Click **Delete** next to a species to remove it. An inline confirmation appears — click **Yes** to confirm or **No** to cancel. Deleting a species does not affect sighting records that already reference it.
 
 ### How species matching works at import
 
@@ -324,13 +328,30 @@ Rows with no match are flagged in the staging review and can be corrected via th
 
 ## Exporting data
 
-The **Export** page saves your entire dataset as a SQL file.
+The **Export** page lets you filter your records and save them as an Excel spreadsheet or a PostgreSQL SQL file.
 
-Click **Save SQL file…**, choose a location, and the app writes `INSERT` statements for all sightings and locations. You can load this into any PostgreSQL database:
+### Filters
+
+| Filter | Description |
+| --- | --- |
+| **Date from / Date to** | Restrict to sightings on or after / on or before the chosen date |
+| **Dataset** | Select a specific dataset label (e.g. `LBC 2024`) |
+| **Location** | Select a single recording site |
+| **Species** | Partial text match against the common name |
+| **Observer** | Partial text match against the observer field |
+
+All filters are optional and combine (AND). The toolbar shows a live count of matching records as you adjust the filters.
+
+### Exporting
+
+- **Save Excel file…** — saves an `.xlsx` spreadsheet with one row per matching sighting, including the resolved location name.
+- **Save SQL file…** — writes PostgreSQL `INSERT` statements for matching sightings and all locations. Load into PostgreSQL with:
 
 ```bash
 psql -d your_database -f birdreport.sql
 ```
+
+Both buttons are disabled when no records match the current filters.
 
 ---
 
