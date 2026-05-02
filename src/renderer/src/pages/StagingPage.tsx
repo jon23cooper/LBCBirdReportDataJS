@@ -110,6 +110,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
   const [appliedThisSession, setAppliedThisSession] = useState<Set<string>>(new Set())
   const [cacheEntries, setCacheEntries] = useState<{ rawString: string; locationName: string; confirmedAt: string }[]>([])
   const [showCache, setShowCache] = useState(false)
+  const [confirmDeleteRow, setConfirmDeleteRow] = useState<number | null>(null)
 
   useEffect(() => {
     window.api.species.list().then(setSpeciesList).catch(() => {})
@@ -139,6 +140,11 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
 
   function updateRow(i: number, changes: Partial<ParsedSighting>) {
     onRowsChange(rows.map((r, idx) => idx === i ? { ...r, ...changes } : r))
+  }
+
+  function deleteRow(i: number) {
+    onRowsChange(rows.filter((_, idx) => idx !== i))
+    setConfirmDeleteRow(null)
   }
 
   function handleSpeciesChange(i: number, commonName: string) {
@@ -462,6 +468,7 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
         <table style={{ borderCollapse: 'collapse', fontSize: 13, whiteSpace: 'nowrap' }}>
           <thead>
             <tr>
+              <th style={th}></th>
               <th style={th}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <span>Species match</span>
@@ -503,6 +510,21 @@ export default function StagingPage({ stagingData, rows, onRowsChange, onBack, o
               const lbadge = LOCATION_QUALITY_LABEL[lq] ?? LOCATION_QUALITY_LABEL['none']
               return (
                 <tr key={i} style={{ background: i % 2 ? '#f8f9fa' : '#fff' }}>
+                  <td style={{ ...td, whiteSpace: 'nowrap' }}>
+                    {confirmDeleteRow === i ? (
+                      <span style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                        <span style={{ fontSize: 11, color: '#c0392b' }}>Remove?</span>
+                        <button onClick={() => deleteRow(i)} style={{ ...btnRemember, color: '#c0392b', background: '#ffe3e3', borderColor: '#ffa8a8' }}>Yes</button>
+                        <button onClick={() => setConfirmDeleteRow(null)} style={btnRemember}>No</button>
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDeleteRow(i)}
+                        title="Remove this row from the import"
+                        style={{ ...btnRemember, color: '#c0392b', background: '#ffe3e3', borderColor: '#ffa8a8' }}
+                      >✕</button>
+                    )}
+                  </td>
                   <td style={td}>
                     <span style={{ padding: '2px 7px', borderRadius: 10, fontSize: 11, fontWeight: 600, color: badge.color, background: badge.bg }}>
                       {badge.text}
