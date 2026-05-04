@@ -601,3 +601,118 @@ The Electron app uses camelCase (from Drizzle). The Pi API expects snake_case. T
 
 The full mapping is defined in `src/main/sync/index.ts` (to be created).
 
+
+---
+
+## Pi Integration
+
+This section covers the connection between the Electron app and the Raspberry Pi API server, including the push and sync-back workflows.
+
+### Overview
+
+```text
+Electron App (Mac)                    Raspberry Pi
+  SQLite (local)      ──push──►       Postgres 17
+                      ◄─sync──        Node/Hono API (port 3000)
+                                      Tailscale IP: 100.x.x.x
+```
+
+The Electron app connects to the Pi API using a shared API key (`ELECTRON_API_KEY`) stored in the Pi's `.env` file. This is separate from the JWT tokens used by web app users and bypasses the JWT auth middleware — used only for bulk operations.
+
+### Environment variables (Electron)
+
+Add these to `.env` at the project root (gitignored):
+
+```
+VITE_STADIA_API_KEY=...
+LBC_API_URL=http://100.x.x.x:3000   # Pi's Tailscale IP
+LBC_API_KEY=...                      # must match ELECTRON_API_KEY on the Pi
+```
+
+These are injected into the main process bundle at build time via the `electron.vite.config.ts` `define` block — they are never exposed to the renderer.
+
+### Pi API authentication for Electron
+
+Bulk operations send `Authorization: ApiKey <key>`. The relevant endpoints check this header directly without going through the `requireAuth` JWT middleware.
+
+### Sync module
+
+All push and sync-back logic lives in `src/main/sync/index.ts`. IPC handlers are registered via `registerSyncHandlers()` in `src/main/ipc/index.ts`, called from `src/main/index.ts`.
+
+### Push workflow
+
+The **Push** operation sends SQLite records to Postgres. It is batch-level — only batches with `pushed_at = null` are sent. Existing Postgres data is never overwritten by a push.
+
+**Typical start-of-season sequence:**
+
+1. **Push Locations** — upserts all locations from SQLite to Postgres via `POST /locations/bulk-upsert`. Includes GeoJSON geometry, centroid lat/lon, grid reference.
+2. **Push Species** — upserts all species from SQLite to Postgres via `POST /species/upsert`.
+3. **Push All Unpushed Batches** — for each unpushed batch:
+   - Locks the dataset (`PUT /settings/dataset_locked = true`)
+   - Queries SQLite sightings joined to locations (to include `location_name`)
+   - Sends in chunks of 500 to `POST /sightings/bulk-upsert`
+   - The Pi resolves `location_name` → `location_id` during insert
+   - On success, stamps `pushed_at` on the batch in SQLite
+   - Releases the lock
+
+**Mid-season additional batches** follow the same flow — only new unpushed batches are sent, existing Postgres records are untouched.
+
+### Sync-back workflow
+
+The **Sync Back** operation pulls all changes made in the web app since the last sync.
+
+**Steps:**
+
+1. Reads `last_sync_at` from the SQLite `settings` table (defaults to epoch if never synced)
+2. Locks the dataset
+3. Fetches all Postgres sightings changed since that timestamp via `GET /sightings/changes-since/:timestamp`
+4. For each returned record:
+   - `is_deleted = true` → hard delete from SQLite by `lbc_id`
+   - `lbc_id` present → update the matching SQLite row (Postgres values win)
+   - `lbc_id = null` (web-created) → assign a new LBC ID via `reserveLbcSequence(1)`, insert into SQLite, PATCH Postgres with the assigned ID
+5. Stamps `last_sync_at` in SQLite settings
+6. Releases the lock
+
+Date and time fields are cleaned during sync-back using `cleanDate()` (strips to `YYYY-MM-DD`) and `cleanTime()` (strips to `HH:MM`) to ensure SQLite stores the same format as imported records.
+
+### IPC handlers for sync
+
+Registered via `registerSyncHandlers()`:
+
+| IPC channel | Description |
+|---|---|
+| `sync:get-status` | Returns batch list with pushed status and last sync timestamp |
+| `sync:push-locations` | Push all locations to Postgres |
+| `sync:push-species` | Push all species to Postgres |
+| `sync:push-batch` | Push a single batch (locks/unlocks around the operation) |
+| `sync:push-all-unpushed` | Push all unpushed batches in sequence |
+| `sync:sync-back` | Pull all Postgres changes since `last_sync_at` |
+| `sync:set-lock` | Manually set or clear the dataset lock |
+
+### Sync page (renderer)
+
+`src/renderer/src/pages/SyncPage.tsx` provides the UI:
+
+- Status summary — batches pushed, batches not yet pushed, last sync-back timestamp
+- Reference Data section — Push Locations and Push Species buttons (run once per season)
+- Push Sightings section — Push All Unpushed Batches button
+- Sync Back section — Sync Back from Web button
+- Import Batches table — individual batch push buttons with push timestamps
+
+### Database schema changes for sync
+
+Added in `src/main/db/index.ts` migrations:
+
+```sql
+ALTER TABLE import_batches ADD COLUMN pushed_at TEXT;
+ALTER TABLE sightings ADD COLUMN created_at TEXT;
+ALTER TABLE sightings ADD COLUMN updated_at TEXT;
+```
+
+`created_at` and `updated_at` are set on every sighting insert. `updated_at` is updated on every `sightings:update` IPC call.
+
+### Known issues and edge cases
+
+- **Records imported before the sync columns were added** will have null `created_at`/`updated_at`. The Postgres `NOT NULL` constraint on these columns was dropped to accommodate this. Run: `UPDATE sightings SET date = substr(date, 1, 10) WHERE date LIKE '%T%'` to clean up any time suffixes in SQLite.
+- **Re-pushing already pushed batches**: `UPDATE import_batches SET pushed_at = NULL WHERE id = ?` then push again.
+- **Clearing Postgres sightings**: `TRUNCATE sightings RESTART IDENTITY` on the Pi, then reset all `pushed_at` in SQLite and re-push.
