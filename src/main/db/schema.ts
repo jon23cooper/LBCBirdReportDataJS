@@ -4,11 +4,11 @@ export const locations = sqliteTable('locations', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
   gridRef: text('grid_ref'),
-  lat: real('lat'),          // kept for manual entries
-  lon: real('lon'),          // kept for manual entries
-  centroidLat: real('centroid_lat'),  // computed from polygon
+  lat: real('lat'),
+  lon: real('lon'),
+  centroidLat: real('centroid_lat'),
   centroidLon: real('centroid_lon'),
-  geometry: text('geometry'),          // GeoJSON Polygon geometry as JSON string
+  geometry: text('geometry'),
   country: text('country'),
   region: text('region'),
   notes: text('notes')
@@ -50,7 +50,9 @@ export const sightings = sqliteTable('sightings', {
   geometryType: text('geometry_type'),
   tripMapRef: text('trip_map_ref'),
   sourceRef: text('source_ref'),
-  rawData: text('raw_data')
+  rawData: text('raw_data'),
+  createdAt: text('created_at'),
+  updatedAt: text('updated_at'),
 })
 
 export const importBatches = sqliteTable('import_batches', {
@@ -61,6 +63,7 @@ export const importBatches = sqliteTable('import_batches', {
   rowCount: integer('row_count'),
   fieldMapping: text('field_mapping'),
   storedFile: text('stored_file'),
+  pushedAt: text('pushed_at'),
 })
 
 export const species = sqliteTable('species', {
@@ -85,7 +88,6 @@ export const locationMatchCache = sqliteTable('location_match_cache', {
   confirmedAt: text('confirmed_at').notNull(),
 })
 
-// Key-value store for app-wide settings (e.g. LBC ID sequence counter)
 export const settings = sqliteTable('settings', {
   key: text('key').primaryKey(),
   value: text('value').notNull(),

@@ -126,6 +126,10 @@ const MIGRATIONS: string[] = [
   )`,
   'CREATE UNIQUE INDEX IF NOT EXISTS locations_name_unique ON locations(name)',
   'ALTER TABLE import_batches ADD COLUMN stored_file TEXT',
+  // Sync-related columns
+  'ALTER TABLE import_batches ADD COLUMN pushed_at TEXT',
+  'ALTER TABLE sightings ADD COLUMN created_at TEXT',
+  'ALTER TABLE sightings ADD COLUMN updated_at TEXT',
 ]
 
 export function initDb(): void {

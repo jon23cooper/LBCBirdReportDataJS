@@ -47,7 +47,6 @@ function validateAndMatch(
   )
 
   for (const s of parsed) {
-    // If locationName is mapped it already contains the resolved site name — do a direct lookup
     if (s.locationName) {
       const exactMatch = locationsByName.get(s.locationName.trim().toLowerCase())
       if (exactMatch) {
@@ -57,7 +56,6 @@ function validateAndMatch(
         continue
       }
     }
-    // Otherwise use originalLocation string + coordinates for regex/spatial matching
     const locMatch = matchLocation(s.originalLocation, s.lat, s.lon)
     s.locationMatchQuality = locMatch.quality
     if (locMatch.locationId != null) s.locationId = locMatch.locationId
@@ -75,18 +73,18 @@ async function commitParsed(
   mapping: Partial<FieldMapping>,
   sourceFilePath?: string,
 ): Promise<{ imported: number }> {
+  const now = new Date().toISOString()
   const lbcSeqStart = reserveLbcSequence(rows.length)
   rows.forEach((s, i) => {
     s.lbcId = `LBC#${s.date.substring(0, 4)}#${lbcSeqStart + i}`
   })
 
-  // Move the source file into the app's imports directory
   let storedFile: string | undefined
   if (sourceFilePath) {
     try {
       const importsDir = join(app.getPath('userData'), 'imports')
       mkdirSync(importsDir, { recursive: true })
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+      const timestamp = now.replace(/[:.]/g, '-')
       const dest = join(importsDir, `${timestamp}_${basename(sourceFilePath)}`)
       copyFileSync(sourceFilePath, dest)
       unlinkSync(sourceFilePath)
@@ -101,7 +99,7 @@ async function commitParsed(
     const [batch] = tx.insert(importBatches).values({
       filename,
       format,
-      importedAt: new Date().toISOString(),
+      importedAt: now,
       rowCount: rows.length,
       fieldMapping: JSON.stringify(mapping),
       storedFile,
@@ -144,6 +142,8 @@ async function commitParsed(
         geometryType:           s.geometryType,
         tripMapRef:             s.tripMapRef,
         rawData:                s.rawData,
+        createdAt:              now,
+        updatedAt:              now,
       }).run()
     }
   })
@@ -208,6 +208,8 @@ export function registerIpcHandlers(): void {
       .map(([k, v]) => [camelToSnake(k), v])
       .filter(([k]) => allowed.includes(k as string))
     if (entries.length === 0) return
+    // Always update updated_at when a sighting is edited
+    entries.push(['updated_at', new Date().toISOString()])
     const setClauses = entries.map(([k]) => `${k} = ?`).join(', ')
     const values = entries.map(([, v]) => v)
     getSqlite().prepare(`UPDATE sightings SET ${setClauses} WHERE id = ?`).run(...values, id)
@@ -436,7 +438,7 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle('batches:list', () => {
     return getSqlite()
-      .prepare('SELECT id, filename, format, imported_at as importedAt, row_count as rowCount, stored_file as storedFile FROM import_batches ORDER BY imported_at DESC')
+      .prepare('SELECT id, filename, format, imported_at as importedAt, row_count as rowCount, stored_file as storedFile, pushed_at as pushedAt FROM import_batches ORDER BY imported_at DESC')
       .all()
   })
 
