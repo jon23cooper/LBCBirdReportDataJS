@@ -663,3 +663,64 @@ function sightingToInsert(s: typeof sightings.$inferSelect): string {
   ].join(', ')
   return `INSERT INTO sightings (${cols}) VALUES (${vals});`
 }
+
+// ── Sync handlers ─────────────────────────────────────────────────────────────
+// These register after registerIpcHandlers() — called separately from main/index.ts
+
+import {
+  setLock,
+  pushLocations,
+  pushSpecies,
+  pushBatch,
+  pushAllUnpushed,
+  syncBack,
+  getSyncStatus,
+} from '../sync'
+
+export function registerSyncHandlers(): void {
+  ipcMain.handle('sync:get-status', () => {
+    return getSyncStatus()
+  })
+
+  ipcMain.handle('sync:push-locations', async () => {
+    return pushLocations()
+  })
+
+  ipcMain.handle('sync:push-species', async () => {
+    return pushSpecies()
+  })
+
+  ipcMain.handle('sync:push-batch', async (_e: Electron.IpcMainInvokeEvent, batchId: number) => {
+    await setLock(true)
+    try {
+      const result = await pushBatch(batchId)
+      return result
+    } finally {
+      await setLock(false)
+    }
+  })
+
+  ipcMain.handle('sync:push-all-unpushed', async () => {
+    await setLock(true)
+    try {
+      const result = await pushAllUnpushed()
+      return result
+    } finally {
+      await setLock(false)
+    }
+  })
+
+  ipcMain.handle('sync:sync-back', async () => {
+    await setLock(true)
+    try {
+      const result = await syncBack()
+      return result
+    } finally {
+      await setLock(false)
+    }
+  })
+
+  ipcMain.handle('sync:set-lock', async (_e: Electron.IpcMainInvokeEvent, locked: boolean) => {
+    await setLock(locked)
+  })
+}

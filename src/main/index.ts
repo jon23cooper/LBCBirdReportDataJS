@@ -1,7 +1,7 @@
-import { app, BrowserWindow, shell, session } from 'electron'
+import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
 import { initDb } from './db'
-import { registerIpcHandlers } from './ipc'
+import { registerIpcHandlers, registerSyncHandlers } from './ipc'
 
 function createWindow(): void {
   const win = new BrowserWindow({
@@ -34,6 +34,7 @@ app.whenReady().then(() => {
     console.error('DB init failed:', err)
   }
   registerIpcHandlers()
+  registerSyncHandlers()
   createWindow()
 
   app.on('activate', () => {
