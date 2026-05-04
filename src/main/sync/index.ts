@@ -51,19 +51,16 @@ async function apiPatch(path: string, body: unknown) {
   return res.json()
 }
 
-// Strip time component from date strings returned by Postgres
 function cleanDate(v: unknown): string | null {
   if (!v) return null
   return String(v).slice(0, 10)
 }
 
-// Strip seconds from time strings e.g. "09:30:00" → "09:30"
 function cleanTime(v: unknown): string | null {
   if (!v) return null
   return String(v).slice(0, 5)
 }
 
-// Include location_name so the Pi can resolve location_id
 function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
   return {
     lbc_id:                   s.lbc_id,
@@ -112,16 +109,9 @@ export async function pushLocations(): Promise<{ pushed: number }> {
   const db = getSqlite()
   const locs = db.prepare('SELECT * FROM locations').all() as Record<string, unknown>[]
   const rows = locs.map(loc => ({
-    name:         loc.name,
-    grid_ref:     loc.grid_ref,
-    lat:          loc.lat,
-    lon:          loc.lon,
-    centroid_lat: loc.centroid_lat,
-    centroid_lon: loc.centroid_lon,
-    geometry:     loc.geometry,
-    country:      loc.country,
-    region:       loc.region,
-    notes:        loc.notes,
+    name: loc.name, grid_ref: loc.grid_ref, lat: loc.lat, lon: loc.lon,
+    centroid_lat: loc.centroid_lat, centroid_lon: loc.centroid_lon,
+    geometry: loc.geometry, country: loc.country, region: loc.region, notes: loc.notes,
   }))
   const result = await apiPost('/locations/bulk-upsert', { rows })
   return { pushed: result.upserted ?? locs.length }
@@ -132,11 +122,9 @@ export async function pushSpecies(): Promise<{ pushed: number }> {
   const rows = db.prepare('SELECT * FROM species ORDER BY common_name').all() as Record<string, unknown>[]
   for (const row of rows) {
     await apiPost('/species/upsert', {
-      common_name:           row.common_name,
-      common_name_regex:     row.common_name_regex,
-      scientific_name:       row.scientific_name,
-      scientific_name_regex: row.scientific_name_regex,
-      family:                row.family,
+      common_name: row.common_name, common_name_regex: row.common_name_regex,
+      scientific_name: row.scientific_name, scientific_name_regex: row.scientific_name_regex,
+      family: row.family,
     })
   }
   return { pushed: rows.length }
@@ -154,8 +142,7 @@ export async function pushBatch(batchId: number): Promise<{ inserted: number; up
   if (rows.length === 0) return { inserted: 0, updated: 0 }
 
   const apiRows = rows.map(sightingToApiRow)
-  let totalInserted = 0
-  let totalUpdated  = 0
+  let totalInserted = 0, totalUpdated = 0
 
   for (let i = 0; i < apiRows.length; i += CHUNK) {
     const chunk = apiRows.slice(i, i + CHUNK)
@@ -176,15 +163,12 @@ export async function pushAllUnpushed(): Promise<{ batches: number; inserted: nu
     'SELECT id FROM import_batches WHERE pushed_at IS NULL ORDER BY imported_at'
   ).all() as { id: number }[]
 
-  let totalInserted = 0
-  let totalUpdated  = 0
-
+  let totalInserted = 0, totalUpdated = 0
   for (const { id } of unpushed) {
     const result = await pushBatch(id)
     totalInserted += result.inserted
     totalUpdated  += result.updated
   }
-
   return { batches: unpushed.length, inserted: totalInserted, updated: totalUpdated }
 }
 
@@ -196,10 +180,7 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
 
   const changes = await apiGet(`/sightings/changes-since/${encodeURIComponent(since)}`) as Record<string, unknown>[]
 
-  let updated  = 0
-  let deleted  = 0
-  let inserted = 0
-  let assigned = 0
+  let updated = 0, deleted = 0, inserted = 0, assigned = 0
 
   for (const change of changes) {
     const lbcId     = change.lbc_id as string | null
@@ -243,19 +224,21 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
       const date     = cleanDate(change.date)
       const year     = date?.substring(0, 4) || new Date().getFullYear().toString()
       const newLbcId = `LBC#${year}#${reserveLbcSequence(1)}`
+      // Web-created records have no species field — default to common_name
+      const species  = (change.species as string | null) ?? (change.common_name as string) ?? 'Unknown'
 
       db.prepare(`
         INSERT INTO sightings (
-          lbc_id, common_name, scientific_name, family,
+          lbc_id, species, common_name, scientific_name, family,
           subspecies_common, subspecies_scientific,
           date, last_date, time, end_time,
           count, original_count, circa, age, status,
           breeding_code, breeding_category, behavior_code,
           observer, notes, original_location,
           created_at, updated_at
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
       `).run(
-        newLbcId, change.common_name, change.scientific_name, change.family,
+        newLbcId, species, change.common_name, change.scientific_name, change.family,
         change.subspecies_common, change.subspecies_scientific,
         date, cleanDate(change.last_date),
         cleanTime(change.time), cleanTime(change.end_time),
@@ -282,24 +265,18 @@ export interface SyncStatus {
   unpushedBatches: number
   lastSyncAt:      string | null
   batches: {
-    id:         number
-    filename:   string
-    importedAt: string
-    rowCount:   number
-    pushedAt:   string | null
+    id: number; filename: string; importedAt: string; rowCount: number; pushedAt: string | null
   }[]
 }
 
 export function getSyncStatus(): SyncStatus {
   const db = getSqlite()
-
   const batches = db.prepare(
     'SELECT id, filename, imported_at as importedAt, row_count as rowCount, pushed_at as pushedAt FROM import_batches ORDER BY imported_at DESC'
   ).all() as SyncStatus['batches']
 
   const pushedBatches   = batches.filter(b => b.pushedAt !== null).length
   const unpushedBatches = batches.filter(b => b.pushedAt === null).length
-
   const syncRow = db.prepare("SELECT value FROM settings WHERE key = 'last_sync_at'").get() as { value: string } | undefined
 
   return { pushedBatches, unpushedBatches, lastSyncAt: syncRow?.value ?? null, batches }
