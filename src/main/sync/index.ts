@@ -51,6 +51,18 @@ async function apiPatch(path: string, body: unknown) {
   return res.json()
 }
 
+// Strip time component from date strings returned by Postgres
+function cleanDate(v: unknown): string | null {
+  if (!v) return null
+  return String(v).slice(0, 10)
+}
+
+// Strip seconds from time strings e.g. "09:30:00" → "09:30"
+function cleanTime(v: unknown): string | null {
+  if (!v) return null
+  return String(v).slice(0, 5)
+}
+
 // Include location_name so the Pi can resolve location_id
 function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
   return {
@@ -66,7 +78,7 @@ function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
     subspecies_common:        s.subspecies_common,
     subspecies_scientific:    s.subspecies_scientific,
     original_location:        s.original_location,
-    location_name:            s.location_name,  // joined from locations table
+    location_name:            s.location_name,
     date:                     s.date,
     last_date:                s.last_date,
     time:                     s.time,
@@ -132,7 +144,6 @@ export async function pushSpecies(): Promise<{ pushed: number }> {
 
 export async function pushBatch(batchId: number): Promise<{ inserted: number; updated: number }> {
   const db = getSqlite()
-  // Join locations so location_name is available for the Pi to resolve location_id
   const rows = db.prepare(`
     SELECT s.*, l.name as location_name
     FROM sightings s
@@ -218,7 +229,8 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
         `).run(
           change.common_name, change.scientific_name, change.family,
           change.subspecies_common, change.subspecies_scientific,
-          change.date, change.last_date, change.time, change.end_time,
+          cleanDate(change.date), cleanDate(change.last_date),
+          cleanTime(change.time), cleanTime(change.end_time),
           change.count, change.original_count, change.circa, change.age,
           change.status, change.breeding_code, change.breeding_category,
           change.behavior_code, change.observer, change.notes,
@@ -228,7 +240,8 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
         updated++
       }
     } else {
-      const year     = String(change.date ?? '').substring(0, 4) || new Date().getFullYear().toString()
+      const date     = cleanDate(change.date)
+      const year     = date?.substring(0, 4) || new Date().getFullYear().toString()
       const newLbcId = `LBC#${year}#${reserveLbcSequence(1)}`
 
       db.prepare(`
@@ -244,7 +257,8 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
       `).run(
         newLbcId, change.common_name, change.scientific_name, change.family,
         change.subspecies_common, change.subspecies_scientific,
-        change.date, change.last_date, change.time, change.end_time,
+        date, cleanDate(change.last_date),
+        cleanTime(change.time), cleanTime(change.end_time),
         change.count, change.original_count, change.circa, change.age, change.status,
         change.breeding_code, change.breeding_category, change.behavior_code,
         change.observer, change.notes, change.original_location,
