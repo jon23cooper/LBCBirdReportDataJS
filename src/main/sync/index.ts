@@ -7,13 +7,11 @@ import { getSqlite, reserveLbcSequence } from '../db'
 
 const API_URL = process.env.LBC_API_URL
 const API_KEY = process.env.LBC_API_KEY
-const CHUNK   = 500  // records per bulk-upsert request
+const CHUNK   = 500
 
 if (!API_URL || !API_KEY) {
   console.warn('[sync] LBC_API_URL or LBC_API_KEY not set — sync will be unavailable')
 }
-
-// ── HTTP helpers ──────────────────────────────────────────────────────────────
 
 async function apiGet(path: string) {
   const res = await fetch(`${API_URL}${path}`, {
@@ -53,8 +51,7 @@ async function apiPatch(path: string, body: unknown) {
   return res.json()
 }
 
-// ── Column mapping: SQLite snake_case → Postgres API ─────────────────────────
-
+// Include location_name so the Pi can resolve location_id
 function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
   return {
     lbc_id:                   s.lbc_id,
@@ -69,6 +66,7 @@ function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
     subspecies_common:        s.subspecies_common,
     subspecies_scientific:    s.subspecies_scientific,
     original_location:        s.original_location,
+    location_name:            s.location_name,  // joined from locations table
     date:                     s.date,
     last_date:                s.last_date,
     time:                     s.time,
@@ -94,35 +92,28 @@ function sightingToApiRow(s: Record<string, unknown>): Record<string, unknown> {
   }
 }
 
-// ── Lock helpers ──────────────────────────────────────────────────────────────
-
 export async function setLock(locked: boolean): Promise<void> {
   await apiPut('/settings/dataset_locked', { value: locked ? 'true' : 'false' })
 }
 
-// ── Push locations ────────────────────────────────────────────────────────────
-
 export async function pushLocations(): Promise<{ pushed: number }> {
   const db = getSqlite()
   const locs = db.prepare('SELECT * FROM locations').all() as Record<string, unknown>[]
-  for (const loc of locs) {
-    await apiPost('/locations', {
-      name:         loc.name,
-      grid_ref:     loc.grid_ref,
-      lat:          loc.lat,
-      lon:          loc.lon,
-      centroid_lat: loc.centroid_lat,
-      centroid_lon: loc.centroid_lon,
-      geometry:     loc.geometry,
-      country:      loc.country,
-      region:       loc.region,
-      notes:        loc.notes,
-    })
-  }
-  return { pushed: locs.length }
+  const rows = locs.map(loc => ({
+    name:         loc.name,
+    grid_ref:     loc.grid_ref,
+    lat:          loc.lat,
+    lon:          loc.lon,
+    centroid_lat: loc.centroid_lat,
+    centroid_lon: loc.centroid_lon,
+    geometry:     loc.geometry,
+    country:      loc.country,
+    region:       loc.region,
+    notes:        loc.notes,
+  }))
+  const result = await apiPost('/locations/bulk-upsert', { rows })
+  return { pushed: result.upserted ?? locs.length }
 }
-
-// ── Push species ──────────────────────────────────────────────────────────────
 
 export async function pushSpecies(): Promise<{ pushed: number }> {
   const db = getSqlite()
@@ -139,13 +130,15 @@ export async function pushSpecies(): Promise<{ pushed: number }> {
   return { pushed: rows.length }
 }
 
-// ── Push a single batch ───────────────────────────────────────────────────────
-
 export async function pushBatch(batchId: number): Promise<{ inserted: number; updated: number }> {
   const db = getSqlite()
-  const rows = db.prepare(
-    'SELECT * FROM sightings WHERE import_batch_id = ?'
-  ).all(batchId) as Record<string, unknown>[]
+  // Join locations so location_name is available for the Pi to resolve location_id
+  const rows = db.prepare(`
+    SELECT s.*, l.name as location_name
+    FROM sightings s
+    LEFT JOIN locations l ON l.id = s.location_id
+    WHERE s.import_batch_id = ?
+  `).all(batchId) as Record<string, unknown>[]
 
   if (rows.length === 0) return { inserted: 0, updated: 0 }
 
@@ -166,8 +159,6 @@ export async function pushBatch(batchId: number): Promise<{ inserted: number; up
   return { inserted: totalInserted, updated: totalUpdated }
 }
 
-// ── Push all unpushed batches ─────────────────────────────────────────────────
-
 export async function pushAllUnpushed(): Promise<{ batches: number; inserted: number; updated: number }> {
   const db = getSqlite()
   const unpushed = db.prepare(
@@ -185,8 +176,6 @@ export async function pushAllUnpushed(): Promise<{ batches: number; inserted: nu
 
   return { batches: unpushed.length, inserted: totalInserted, updated: totalUpdated }
 }
-
-// ── Sync back ─────────────────────────────────────────────────────────────────
 
 export async function syncBack(): Promise<{ updated: number; deleted: number; inserted: number; assigned: number }> {
   const db = getSqlite()
@@ -214,7 +203,6 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
     }
 
     if (lbcId) {
-      // Update existing SQLite record — Postgres wins during report phase
       const existing = db.prepare('SELECT id FROM sightings WHERE lbc_id = ?').get(lbcId) as { id: number } | undefined
       if (existing) {
         db.prepare(`
@@ -240,7 +228,6 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
         updated++
       }
     } else {
-      // Web-created record — assign an lbc_id and insert into SQLite
       const year     = String(change.date ?? '').substring(0, 4) || new Date().getFullYear().toString()
       const newLbcId = `LBC#${year}#${reserveLbcSequence(1)}`
 
@@ -265,20 +252,16 @@ export async function syncBack(): Promise<{ updated: number; deleted: number; in
       )
       inserted++
 
-      // Write the assigned lbc_id back to Postgres
       await apiPatch(`/sightings/${change.id}/assign-lbc-id`, { lbc_id: newLbcId })
       assigned++
     }
   }
 
-  // Store last sync timestamp
   db.prepare("INSERT INTO settings(key,value) VALUES('last_sync_at',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value")
     .run(new Date().toISOString())
 
   return { updated, deleted, inserted, assigned }
 }
-
-// ── Status ────────────────────────────────────────────────────────────────────
 
 export interface SyncStatus {
   pushedBatches:   number

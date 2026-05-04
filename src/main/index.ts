@@ -1,7 +1,39 @@
 import { app, BrowserWindow, shell } from 'electron'
 import { join } from 'path'
+import { readFileSync } from 'fs'
 import { initDb } from './db'
 import { registerIpcHandlers, registerSyncHandlers } from './ipc'
+
+// Load .env file from project root into process.env.
+// __dirname in the built main process is <project>/out/main/
+// so ../../.env resolves to <project>/.env
+function loadEnv(): void {
+  const candidates = [
+    join(__dirname, '../../.env'),           // dev: out/main → project root
+    join(app.getPath('exe'), '../../../.env') // packaged fallback
+  ]
+  for (const envPath of candidates) {
+    try {
+      const lines = readFileSync(envPath, 'utf-8').split('\n')
+      for (const line of lines) {
+        const trimmed = line.trim()
+        if (!trimmed || trimmed.startsWith('#')) continue
+        const eqIdx = trimmed.indexOf('=')
+        if (eqIdx === -1) continue
+        const key = trimmed.slice(0, eqIdx).trim()
+        const val = trimmed.slice(eqIdx + 1).trim().replace(/^["']|["']$/g, '')
+        if (key && !(key in process.env)) process.env[key] = val
+      }
+      console.log(`[env] Loaded from ${envPath}`)
+      return
+    } catch {
+      // try next candidate
+    }
+  }
+  console.warn('[env] No .env file found — LBC_API_URL and LBC_API_KEY must be set externally')
+}
+
+loadEnv()
 
 function createWindow(): void {
   const win = new BrowserWindow({

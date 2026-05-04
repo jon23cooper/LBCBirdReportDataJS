@@ -37,7 +37,7 @@ const STAGING_SORT_ORDER: Record<string, number> = {
   'none': 0, 'regex-scientific': 1, 'regex-common': 1, 'manual': 2, 'exact-scientific': 3, 'exact-common': 3,
 }
 
-const NAV: { id: Page; label: string }[] = [
+const NAV: { id: Page; label: string; dividerBefore?: boolean }[] = [
   { id: 'import',    label: 'Import' },
   { id: 'history',   label: 'History' },
   { id: 'sightings', label: 'Sightings' },
@@ -45,7 +45,7 @@ const NAV: { id: Page; label: string }[] = [
   { id: 'locations', label: 'Locations' },
   { id: 'species',   label: 'Species' },
   { id: 'export',    label: 'Export' },
-  { id: 'sync',      label: 'Sync ↑↓' },
+  { id: 'sync',      label: 'Sync ↑↓', dividerBefore: true },
 ]
 
 export default function App(): JSX.Element {
@@ -73,22 +73,25 @@ export default function App(): JSX.Element {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <nav style={navStyle}>
-        <div style={{ padding: '16px 12px', fontWeight: 700, fontSize: 15, borderBottom: '1px solid #dee2e6' }}>
-          LBC Bird Report
+        <div style={{ padding: '16px 12px', borderBottom: '1px solid #dee2e6' }}>
+          <div style={{ fontWeight: 700, fontSize: 15 }}>LBC Bird Report</div>
+          <div style={{ fontSize: 10, color: '#aaa', fontWeight: 400 }}>v0.2.0</div>
         </div>
-        {NAV.map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setPage(id)}
-            style={{
-              ...navBtn,
-              background: page === id ? '#e7f5ff' : 'transparent',
-              fontWeight: page === id ? 600 : 400,
-              ...(id === 'sync' ? { borderTop: '1px solid #dee2e6', marginTop: 'auto', color: '#1c7ed6' } : {}),
-            }}
-          >
-            {label}
-          </button>
+        {NAV.map(({ id, label, dividerBefore }) => (
+          <div key={id}>
+            {dividerBefore && <div style={{ height: 1, background: '#dee2e6', margin: '4px 0' }} />}
+            <button
+              onClick={() => setPage(id)}
+              style={{
+                ...navBtn,
+                background: page === id ? '#e7f5ff' : 'transparent',
+                fontWeight: page === id ? 600 : 400,
+                color: id === 'sync' ? '#1c7ed6' : undefined,
+              }}
+            >
+              {label}
+            </button>
+          </div>
         ))}
         {page === 'edit' && (
           <button style={{ ...navBtn, background: '#e7f5ff', fontWeight: 600, color: '#c0392b' }}>
@@ -107,30 +110,30 @@ export default function App(): JSX.Element {
 
       <main style={{ flex: 1, overflow: (page === 'edit' || page === 'staging') ? 'hidden' : 'auto', padding: 24, display: 'flex', flexDirection: 'column' }}>
         <ErrorBoundary>
-        {page === 'import'    && <ImportPage onValidationFailed={handleValidationFailed} onValidated={d => handleValidated(d, 'import')} />}
-        {page === 'history'   && <HistoryPage />}
-        {page === 'sightings' && <SightingsPage />}
-        {page === 'map'       && <MapPage />}
-        {page === 'locations' && <LocationsPage />}
-        {page === 'species'   && <SpeciesPage />}
-        {page === 'export'    && <ExportPage />}
-        {page === 'sync'      && <SyncPage />}
-        {page === 'edit' && editData && (
-          <EditPage
-            editData={editData}
-            onValidated={d => handleValidated(d, 'edit')}
-            onCancel={() => setPage('import')}
-          />
-        )}
-        {page === 'staging' && stagingData && stagingRows && (
-          <StagingPage
-            stagingData={stagingData}
-            rows={stagingRows}
-            onRowsChange={setStagingRows}
-            onBack={() => setPage(stagingFrom)}
-            onSuccess={() => { setStagingData(null); setStagingRows(null); setPage('sightings') }}
-          />
-        )}
+          {page === 'import'    && <ImportPage onValidationFailed={handleValidationFailed} onValidated={d => handleValidated(d, 'import')} />}
+          {page === 'history'   && <HistoryPage />}
+          {page === 'sightings' && <SightingsPage />}
+          {page === 'map'       && <MapPage />}
+          {page === 'locations' && <LocationsPage />}
+          {page === 'species'   && <SpeciesPage />}
+          {page === 'export'    && <ExportPage />}
+          {page === 'sync'      && <SyncPage />}
+          {page === 'edit' && editData && (
+            <EditPage
+              editData={editData}
+              onValidated={d => handleValidated(d, 'edit')}
+              onCancel={() => setPage('import')}
+            />
+          )}
+          {page === 'staging' && stagingData && stagingRows && (
+            <StagingPage
+              stagingData={stagingData}
+              rows={stagingRows}
+              onRowsChange={setStagingRows}
+              onBack={() => setPage(stagingFrom)}
+              onSuccess={() => { setStagingData(null); setStagingRows(null); setPage('sightings') }}
+            />
+          )}
         </ErrorBoundary>
       </main>
     </div>
@@ -147,6 +150,7 @@ const navStyle: React.CSSProperties = {
 }
 
 const navBtn: React.CSSProperties = {
+  width: '100%',
   padding: '10px 16px',
   border: 'none',
   cursor: 'pointer',
