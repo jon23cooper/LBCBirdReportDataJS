@@ -52,5 +52,14 @@ contextBridge.exposeInMainWorld('api', {
     revealFile: (storedFile: string) => ipcRenderer.invoke('batches:reveal-file', storedFile),
     openFile: (storedFile: string) => ipcRenderer.invoke('batches:open-file', storedFile),
     locateFile: (id: number) => ipcRenderer.invoke('batches:locate-file', id),
+  },
+  sync: {
+    getStatus: () => ipcRenderer.invoke('sync:get-status'),
+    pushLocations: () => ipcRenderer.invoke('sync:push-locations'),
+    pushSpecies: () => ipcRenderer.invoke('sync:push-species'),
+    pushBatch: (batchId: number) => ipcRenderer.invoke('sync:push-batch', batchId),
+    pushAllUnpushed: () => ipcRenderer.invoke('sync:push-all-unpushed'),
+    syncBack: () => ipcRenderer.invoke('sync:sync-back'),
+    setLock: (locked: boolean) => ipcRenderer.invoke('sync:set-lock', locked),
   }
 })

@@ -26,11 +26,12 @@ import LocationsPage from './pages/LocationsPage'
 import SpeciesPage from './pages/SpeciesPage'
 import ExportPage from './pages/ExportPage'
 import HistoryPage from './pages/HistoryPage'
+import SyncPage from './pages/SyncPage'
 import EditPage, { type EditData } from './pages/EditPage'
 import StagingPage from './pages/StagingPage'
 import type { StagingData, ParsedSighting } from '../../shared/types'
 
-type Page = 'import' | 'sightings' | 'map' | 'locations' | 'species' | 'export' | 'history' | 'edit' | 'staging'
+type Page = 'import' | 'sightings' | 'map' | 'locations' | 'species' | 'export' | 'history' | 'sync' | 'edit' | 'staging'
 
 const STAGING_SORT_ORDER: Record<string, number> = {
   'none': 0, 'regex-scientific': 1, 'regex-common': 1, 'manual': 2, 'exact-scientific': 3, 'exact-common': 3,
@@ -44,6 +45,7 @@ const NAV: { id: Page; label: string }[] = [
   { id: 'locations', label: 'Locations' },
   { id: 'species',   label: 'Species' },
   { id: 'export',    label: 'Export' },
+  { id: 'sync',      label: 'Sync ↑↓' },
 ]
 
 export default function App(): JSX.Element {
@@ -78,7 +80,12 @@ export default function App(): JSX.Element {
           <button
             key={id}
             onClick={() => setPage(id)}
-            style={{ ...navBtn, background: page === id ? '#e7f5ff' : 'transparent', fontWeight: page === id ? 600 : 400 }}
+            style={{
+              ...navBtn,
+              background: page === id ? '#e7f5ff' : 'transparent',
+              fontWeight: page === id ? 600 : 400,
+              ...(id === 'sync' ? { borderTop: '1px solid #dee2e6', marginTop: 'auto', color: '#1c7ed6' } : {}),
+            }}
           >
             {label}
           </button>
@@ -107,6 +114,7 @@ export default function App(): JSX.Element {
         {page === 'locations' && <LocationsPage />}
         {page === 'species'   && <SpeciesPage />}
         {page === 'export'    && <ExportPage />}
+        {page === 'sync'      && <SyncPage />}
         {page === 'edit' && editData && (
           <EditPage
             editData={editData}
