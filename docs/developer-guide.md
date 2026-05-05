@@ -600,3 +600,33 @@ ALTER TABLE sightings ADD COLUMN updated_at TEXT;
 - **Re-pushing already pushed batches**: `UPDATE import_batches SET pushed_at = NULL WHERE id = ?` then push again.
 - **Clearing Postgres sightings**: `TRUNCATE sightings RESTART IDENTITY` on the Pi, then reset all `pushed_at` in SQLite and re-push.
 - **Web-created records and lbc_id**: Records added via the web app have no `lbc_id` until Sync Back runs. By the time a record is deleted, a previous Sync Back will have assigned it an `lbc_id`, so deletion sync-back works correctly.
+
+### Managing web team users
+
+Web team users are managed from the **Sync → Web Team Users** section of the Electron app. This communicates with the Pi API using the `ELECTRON_API_KEY`.
+
+**To add a user:**
+1. Open the Electron app and go to the Sync page
+2. Scroll to the Web Team Users section
+3. Enter a username (e.g. `jsmith`), display name, and password
+4. Click **Add user**
+
+Usernames must be unique. Passwords are hashed with bcrypt (cost factor 12) on the Pi — they are never stored in plain text.
+
+**To reset a password**, add the same username again with a new password — the endpoint uses `ON CONFLICT (username) DO UPDATE` so it will update the password hash.
+
+**To remove a user**, click **Remove** next to their name. They will immediately be unable to log in.
+
+**Pi API endpoints for user management** (ApiKey auth):
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/users` | List all users (id, username, display_name, created_at) |
+| POST | `/users` | Add or update a user — body: `{ username, display_name, password }` |
+| DELETE | `/users/:id` | Remove a user by id |
+
+**User onboarding checklist** for each new web team member:
+1. Add them via the Sync page (or directly in Postgres with `crypt()`)
+2. Send them the app URL
+3. Send them a Tailscale invite (from the Tailscale admin console at tailscale.com)
+4. Share the USERGUIDE with them

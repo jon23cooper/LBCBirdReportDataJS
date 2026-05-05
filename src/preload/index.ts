@@ -61,5 +61,9 @@ contextBridge.exposeInMainWorld('api', {
     pushAllUnpushed: () => ipcRenderer.invoke('sync:push-all-unpushed'),
     syncBack: () => ipcRenderer.invoke('sync:sync-back'),
     setLock: (locked: boolean) => ipcRenderer.invoke('sync:set-lock', locked),
+    listUsers: () => ipcRenderer.invoke('sync:list-users'),
+    addUser: (user: { username: string; display_name: string; password: string }) =>
+      ipcRenderer.invoke('sync:add-user', user),
+    deleteUser: (id: number) => ipcRenderer.invoke('sync:delete-user', id),
   }
 })

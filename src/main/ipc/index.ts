@@ -723,4 +723,30 @@ export function registerSyncHandlers(): void {
   ipcMain.handle('sync:set-lock', async (_e: Electron.IpcMainInvokeEvent, locked: boolean) => {
     await setLock(locked)
   })
+  ipcMain.handle('sync:list-users', async () => {
+    const res = await fetch(`${process.env.LBC_API_URL}/users`, {
+      headers: { Authorization: `ApiKey ${process.env.LBC_API_KEY}` }
+    })
+    if (!res.ok) throw new Error(`GET /users failed: ${res.status}`)
+    return res.json()
+  })
+
+  ipcMain.handle('sync:add-user', async (_e: Electron.IpcMainInvokeEvent, user: { username: string; display_name: string; password: string }) => {
+    const res = await fetch(`${process.env.LBC_API_URL}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `ApiKey ${process.env.LBC_API_KEY}` },
+      body: JSON.stringify(user)
+    })
+    if (!res.ok) throw new Error(`POST /users failed: ${res.status}`)
+    return res.json()
+  })
+
+  ipcMain.handle('sync:delete-user', async (_e: Electron.IpcMainInvokeEvent, id: number) => {
+    const res = await fetch(`${process.env.LBC_API_URL}/users/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `ApiKey ${process.env.LBC_API_KEY}` }
+    })
+    if (!res.ok) throw new Error(`DELETE /users/${id} failed: ${res.status}`)
+    return res.json()
+  })
 }
