@@ -413,9 +413,9 @@ When you add a new web team member:
 
 1. Add them via the Sync page
 2. Send them the web app URL
-3. Send them a Tailscale invite (from the Tailscale admin console)
+3. Send them a Tailscale invite (from the Tailscale admin console at login.tailscale.com)
 4. Share the web app User Guide with them
-5. Tell them their username and password
+5. Tell them their username, password and the web app URL: http://100.95.100.85:8080
 
 
 ---
