@@ -630,3 +630,57 @@ Usernames must be unique. Passwords are hashed with bcrypt (cost factor 12) on t
 2. Send them the app URL
 3. Send them a Tailscale invite (from the Tailscale admin console at tailscale.com)
 4. Share the USERGUIDE with them
+
+---
+
+## Database Backups
+
+The Pi runs a daily backup of the Postgres database at 2am via cron.
+
+### Backup location
+
+```
+/home/jon_cooper/backups/lbcbirds-YYYY-MM-DD.dump
+```
+
+The last 7 days of backups are kept. Backups use Postgres custom format (`-F c`) which preserves full fidelity and compresses well.
+
+### Backup script
+
+```bash
+~/backup-lbcbirds.sh
+```
+
+Run manually at any time to take an immediate backup — useful before a major sync operation.
+
+### Restoring from backup
+
+```bash
+# Drop and recreate the database
+sudo -u postgres psql -c "DROP DATABASE lbcbirds;"
+sudo -u postgres psql -c "CREATE DATABASE lbcbirds OWNER lbcadmin;"
+
+# Restore from a specific backup file
+pg_restore -U lbcadmin -d lbcbirds ~/backups/lbcbirds-2026-05-05.dump
+```
+
+### Recovering a soft-deleted record
+
+Records deleted via the web app are soft-deleted (`is_deleted = true`) and remain in the database until Sync Back runs. To restore one:
+
+```bash
+psql -U lbcadmin -d lbcbirds -h localhost
+```
+
+```sql
+-- Find recently deleted records
+SELECT id, lbc_id, common_name, date, observer, deleted_at
+FROM sightings
+WHERE is_deleted = true
+ORDER BY deleted_at DESC;
+
+-- Restore a specific record by id
+UPDATE sightings SET is_deleted = false, deleted_at = NULL WHERE id = 123;
+```
+
+Once restored, the record will reappear in the web app immediately. If Sync Back has already run and the record has been hard-deleted from SQLite, restore from a Postgres backup or re-enter it manually from the original source spreadsheet.
