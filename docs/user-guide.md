@@ -11,7 +11,8 @@
 7. [Managing locations](#managing-locations)
 8. [Managing species](#managing-species)
 9. [Exporting data](#exporting-data)
-10. [Tips and troubleshooting](#tips-and-troubleshooting)
+10. [Syncing with the web team](#syncing-with-the-web-team)
+11. [Tips and troubleshooting](#tips-and-troubleshooting)
 
 ---
 
@@ -352,6 +353,70 @@ psql -d your_database -f birdreport.sql
 ```
 
 Both buttons are disabled when no records match the current filters.
+
+---
+
+## Syncing with the web team
+
+The **Sync** page (bottom of the left-hand sidebar, marked **Sync ↑↓**) manages the connection between this app and the Pi server that the web team uses to view and edit records.
+
+### What the Sync page does
+
+| Section | Purpose |
+| --- | --- |
+| **Reference Data** | Push locations and species to the Pi (run once at the start of each season) |
+| **Push Sightings to Web** | Send imported records to the Pi so the web team can see them |
+| **Sync Back from Web** | Pull all edits, additions and deletions made by the web team back into this database |
+| **Web Team Users** | Add or remove users who can log in to the web app |
+| **Import Batches** | Shows each batch with its push status and an individual Push button |
+
+### Start of season workflow
+
+1. Import all spreadsheets as normal
+2. Open the Sync page
+3. Click **Push Locations** — populates the Pi with all recording sites
+4. Click **Push Species** — populates the Pi with the species list
+5. Click **Push All Unpushed Batches** — sends all sighting records to the Pi
+
+The web team can now log in and start editing.
+
+### Mid-season: pushing new batches
+
+When you import new spreadsheets during the season, go to the Sync page and click **Push All Unpushed Batches** again. Only the new batches are sent — existing records on the Pi are not overwritten.
+
+### End of season: syncing back
+
+When the web team has finished editing, click **Sync Back from Web**. This pulls all their changes into this database:
+
+- Records they edited will be updated (the web team's values take precedence)
+- Records they deleted will be removed
+- Records they added via the web app will be inserted and assigned LBC IDs
+
+The result shows how many records were updated, deleted, inserted and assigned IDs.
+
+### Managing web team users
+
+The **Web Team Users** section shows everyone who currently has access to the web app. To add a new user:
+
+1. Enter a **username** (e.g. `jsmith`) — this is what they will type on the login screen
+2. Enter their **display name** (e.g. `Jane Smith`) — shown in the active users indicator
+3. Enter a **password** — they can ask you to change it later if needed
+4. Click **Add user**
+
+To remove a user, click **Remove** next to their name. They will immediately be unable to log in.
+
+To **reset a password**, add the same username again with a new password — the existing account will be updated.
+
+### New user setup checklist
+
+When you add a new web team member:
+
+1. Add them via the Sync page
+2. Send them the web app URL
+3. Send them a Tailscale invite (from the Tailscale admin console)
+4. Share the web app User Guide with them
+5. Tell them their username and password
+
 
 ---
 
