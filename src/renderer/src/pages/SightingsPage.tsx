@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { Sighting, SpeciesRecord, Location } from '../../../shared/types'
 
 type Col = keyof Sighting
@@ -63,6 +63,7 @@ export default function SightingsPage(): JSX.Element {
   const [rows, setRows] = useState<Sighting[]>([])
   const [batches, setBatches] = useState<Map<number, BatchInfo>>(new Map())
   const [filter, setFilter] = useState('')
+  const [datasetFilter, setDatasetFilter] = useState('')
   const [batchFilter, setBatchFilter] = useState<number | null>(null)
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
   const [editing, setEditing] = useState<Sighting | null>(null)
@@ -84,11 +85,15 @@ export default function SightingsPage(): JSX.Element {
     window.api.locations.list().then(setLocationsList)
   }, [])
 
+  const datasets = useMemo(() =>
+    [...new Set(rows.map(r => r.dataset).filter((d): d is string => Boolean(d)))].sort()
+  , [rows])
   const visibleCols = COLS.filter(({ key }) => rows.some(r => r[key] != null && r[key] !== ''))
   const batchFiltered = batchFilter != null ? rows.filter(r => r.importBatchId === batchFilter) : rows
+  const datasetFiltered = datasetFilter ? batchFiltered.filter(r => r.dataset === datasetFilter) : batchFiltered
   const globalFiltered = filter
-    ? batchFiltered.filter(r => visibleCols.some(({ key }) => String(r[key] ?? '').toLowerCase().includes(filter.toLowerCase())))
-    : batchFiltered
+    ? datasetFiltered.filter(r => visibleCols.some(({ key }) => String(r[key] ?? '').toLowerCase().includes(filter.toLowerCase())))
+    : datasetFiltered
   const activeColFilters = Object.entries(columnFilters).filter(([, v]) => v.trim() !== '')
   const filtered = activeColFilters.length
     ? globalFiltered.filter(r => activeColFilters.every(([key, val]) =>
@@ -143,6 +148,16 @@ export default function SightingsPage(): JSX.Element {
           onChange={e => setFilter(e.target.value)}
           style={{ padding: '6px 10px', fontSize: 14, width: 280, border: '1px solid #ced4da', borderRadius: 4 }}
         />
+        {datasets.length > 0 && (
+          <select
+            value={datasetFilter}
+            onChange={e => setDatasetFilter(e.target.value)}
+            style={{ padding: '6px 8px', fontSize: 13, border: '1px solid #ced4da', borderRadius: 4, background: datasetFilter ? '#e7f5ff' : '#fff' }}
+          >
+            <option value="">All datasets</option>
+            {datasets.map(d => <option key={d} value={d}>{d}</option>)}
+          </select>
+        )}
         <span style={{ fontSize: 13, color: '#555' }}>{filtered.length} of {rows.length} records</span>
         {hasColumnFilters && (
           <button onClick={() => setColumnFilters({})} style={btnSecondary}>Clear column filters</button>
