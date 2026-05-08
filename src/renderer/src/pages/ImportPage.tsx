@@ -104,9 +104,17 @@ function autoMap(headers: string[]): Record<string, string> {
 
 function buildFieldMapping(columnMap: Record<string, string>): Partial<FieldMapping> {
   const fm: Partial<FieldMapping> = {}
+  const notesCols: string[] = []
   for (const [col, field] of Object.entries(columnMap)) {
-    if (field) fm[field as keyof FieldMapping] = col
+    if (!field) continue
+    if (field === 'notes') {
+      notesCols.push(col)
+    } else {
+      fm[field as keyof FieldMapping] = col
+    }
   }
+  if (notesCols.length === 1) fm.notes = notesCols[0]
+  else if (notesCols.length > 1) fm.notes = notesCols
   return fm
 }
 

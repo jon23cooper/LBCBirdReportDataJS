@@ -30,6 +30,7 @@ const COLS: Col[] = [
   { key: 'locationName',          label: 'Location',              editable: 'text' },
   { key: 'locationMatchName',     label: 'Matched Location' },
   { key: 'locationId',            label: 'Location override',     editable: 'location', alwaysShow: true },
+  { key: 'tripMapRef',            label: 'Trip Map Ref',          editable: 'text' },
   { key: 'time',                  label: 'Start Time' },
   { key: 'notes',                 label: 'Notes',                 editable: 'textarea' },
 ]

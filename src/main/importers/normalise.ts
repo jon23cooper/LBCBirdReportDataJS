@@ -19,6 +19,16 @@ function extractBrackets(s: string): string | undefined {
   return m ? m[1].trim() : undefined
 }
 
+/** Concatenate one or more source columns into a single notes string, separated by "; " */
+function strNotes(row: RawRow, col: string | string[] | undefined): string | undefined {
+  if (!col) return undefined
+  const cols = Array.isArray(col) ? col : [col]
+  const parts = cols
+    .map(c => (row[c] != null ? String(row[c]).trim() : ''))
+    .filter(v => v !== '')
+  return parts.length > 0 ? parts.join('; ') : undefined
+}
+
 /** Extract subspecies scientific name: third+ token of a trinomial scientific name */
 function extractSubspeciesScientific(scientificName: string | undefined): string | undefined {
   if (!scientificName) return undefined
@@ -178,7 +188,7 @@ export function normaliseRows(
       behaviorCode:     str(row, mapping.behaviorCode),
 
       observer,
-      notes: str(row, mapping.notes),
+      notes: strNotes(row, mapping.notes),
 
       lat:               num(row, mapping.lat),
       lon:               num(row, mapping.lon),

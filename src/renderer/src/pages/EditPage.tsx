@@ -116,7 +116,7 @@ export default function EditPage({ editData, onValidated, onCancel }: {
       .map(fieldKey => ({
         fieldKey,
         label: FIELD_LABELS[fieldKey] ?? fieldKey,
-        sourceCol: editData.mapping[fieldKey as keyof FieldMapping] as string,
+        sourceCol: (v => Array.isArray(v) ? v[0] : v as string)(editData.mapping[fieldKey as keyof FieldMapping]),
         isExtra: false,
       })),
     ...extraFieldKeys.map(fieldKey => ({
@@ -133,8 +133,9 @@ export default function EditPage({ editData, onValidated, onCancel }: {
     if (!instance) return
     const ws = Array.isArray(instance) ? instance[0] : (instance.worksheets?.[0] ?? instance)
     const rawData = ws.getData() as string[][]
-    editedRowsRef.current = rawData.map(row => {
-      const obj: Record<string, unknown> = {}
+    const current = editedRowsRef.current
+    editedRowsRef.current = rawData.map((row, rowIndex) => {
+      const obj: Record<string, unknown> = { ...(current[rowIndex] ?? {}) }
       displayCols.forEach(({ sourceCol }, i) => { obj[sourceCol] = row[i + 1] })
       return obj
     })
@@ -226,8 +227,8 @@ export default function EditPage({ editData, onValidated, onCancel }: {
 
     const ws = Array.isArray(instance) ? instance[0] : (instance.worksheets?.[0] ?? instance)
     const rawData = ws.getData() as string[][]
-    const editedRows: Record<string, unknown>[] = rawData.map(row => {
-      const obj: Record<string, unknown> = {}
+    const editedRows: Record<string, unknown>[] = rawData.map((row, rowIndex) => {
+      const obj: Record<string, unknown> = { ...(editedRowsRef.current[rowIndex] ?? {}) }
       displayCols.forEach(({ sourceCol }, i) => { obj[sourceCol] = row[i + 1] })
       return obj
     })

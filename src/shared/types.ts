@@ -22,7 +22,7 @@ export interface FieldMapping {
   originalCount?: string
   circa?: string
   observer?: string
-  notes?: string
+  notes?: string | string[]
   status?: string
   age?: string
   breedingCode?: string
@@ -36,7 +36,7 @@ export interface FieldMapping {
   lbcId?: string
   occurrenceKey?: string
   dataset?: string
-  [key: string]: string | undefined
+  [key: string]: string | string[] | undefined
 }
 
 export interface LocationCandidate {
